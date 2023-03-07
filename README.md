@@ -2,7 +2,11 @@
 
 ### 와이어 프레임
 
-![wireframe](./assets/wireframe.PNG)
+![wireframe](/assets/wireframe.png)
+
+### 피그마
+
+![figma](/assets/figma_23_03_07.PNG)
 
 ### 현업자 인터뷰
 
