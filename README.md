@@ -3,6 +3,9 @@
 ## 와이어 프레임
 ![wireframe](./asset/wireframe.PNG)
 
+## 기능 명세서
+[Functional Specification](./asset/Functional_Specification.pdf)
+
 ## 현업자 인터뷰
 ## 
 
