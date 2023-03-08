@@ -2,11 +2,15 @@
 
 ### 와이어 프레임
 
-![wireframe](/assets/wireframe.png)
+![Wireframe](/assets/wireframe.png)
 
 ### 피그마
 
-![figma](/assets/figma_23_03_07.PNG)
+![Figma](/assets/%ED%94%BC%EA%B7%B8%EB%A7%88%20%EC%99%84%EC%84%B1%EB%B3%B8.PNG)
+
+### ERD
+
+![ERD](/assets/NFT_ERD.png)
 
 ### 현업자 인터뷰
 
