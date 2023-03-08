@@ -40,3 +40,7 @@ o	NFT를 컨트랙트에 보내고 구매자가 컨트렉트에서 내는게 간
 - 소프티어 코딩테스트로 인한 인원 3명 부재
 - 피그마 설계 작성
 - 블록체인 NFT 설계 학습
+
+## 03/08 업무내용
+- DB ERD 설계 진행중
+![nfteam](https://user-images.githubusercontent.com/102861657/223657119-009d04be-4209-48fe-aa25-15de8369eef9.png)
