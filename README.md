@@ -43,4 +43,5 @@ o	NFT를 컨트랙트에 보내고 구매자가 컨트렉트에서 내는게 간
 
 ## 03/08 업무내용
 - DB ERD 설계 진행중
-![nfteam](https://user-images.githubusercontent.com/102861657/223657119-009d04be-4209-48fe-aa25-15de8369eef9.png)
+![NFT_ERD](https://user-images.githubusercontent.com/102861657/223668301-bdbb5ad7-cdf4-4580-9774-a69ed8381cfb.png)
+
