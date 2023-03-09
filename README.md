@@ -6,11 +6,15 @@
 
 ### 피그마
 
-![Figma](/assets/%ED%94%BC%EA%B7%B8%EB%A7%88%20%EC%99%84%EC%84%B1%EB%B3%B8.PNG)
+![Figma](/assets/%ED%94%BC%EA%B7%B8%EB%A7%88%20%EC%99%84%EC%84%B1%EB%B3%B823_03_08.PNG)
 
 ### ERD
 
-![ERD](/assets/NFT_ERD.png)
+![ERD](/assets/NFT_ERD%2023_03_09.png)
+
+### 아키텍처 구성도
+
+![아키텍처](/assets/%ED%8A%B9%ED%99%94_%EC%95%84%ED%82%A4%ED%85%8D%EC%B3%90.png)
 
 ### 현업자 인터뷰
 
