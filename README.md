@@ -6,6 +6,9 @@
 ## 기능 명세서
 [Functional Specification](./asset/Functional_Specification.pdf)
 
+## ERD
+![ERD](./asset/ERD.PNG)
+
 ## 현업자 인터뷰
 ## 
 
