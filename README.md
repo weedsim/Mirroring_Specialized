@@ -9,6 +9,9 @@
 ## ERD
 ![ERD](./asset/ERD.PNG)
 
+## API 명세서
+### User
+![User](./asset/user.PNG)
 ## 현업자 인터뷰
 ## 
 
