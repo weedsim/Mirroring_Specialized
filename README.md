@@ -30,10 +30,12 @@
 
 ![특화_아키텍쳐.png](asset/특화_아키텍쳐.png)
 
+React에서 Vue로 변경
+
 ---
 
 ## ERD 작업
 
 ![NFT_ERD.png](asset/NFT_ERD.png)
 
-컨설턴트님과의 회의 뒤 ERD 수정.
+컨설턴트님과의 회의 뒤 ERD 수정본 (Backend)
