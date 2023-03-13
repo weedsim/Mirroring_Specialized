@@ -1,29 +1,20 @@
 <template>
   <div class="navbar">
     <span>
-      <a href="/">
+      <a href="/" class="headerlist">
         <img src="@\assets\logo.png" alt="로고" class="logo" />FANFTASY
       </a>
     </span>
     <span class="headerlist">
-      |
       <router-link to="/" style="text-decoration: none">NFT 마켓</router-link> |
       <router-link to="/about" style="text-decoration: none"
         >커뮤니티</router-link
       >
-      |
     </span>
-    <label for="" class="box" style="margin-left: 300px">
+    <label for="" class="box">
       <input
         type="text"
-        class="notting"
-        style="
-          width: 350px;
-          height: 40px;
-          display: flex;
-          justify-content: left;
-          float: left;
-        "
+        class="notting search-input"
       />
       <button
         href=""
@@ -33,25 +24,24 @@
         <img src="@/assets/Search.png" alt="" style="margin-top: 7px" />
       </button>
     </label>
-    <span>
-      <a href="">
+    <span style="margin-left: 2vw;">
+      <a href="" class="icon-margin">
         <img
           src="@\assets\chatting.png"
           alt="채팅"
-          style="margin-right: 20px"
         />
       </a>
-      <a href="">
-        <img src="@\assets\bell.png" alt="알림" style="margin-right: 20px" />
+      <a href="" class="icon-margin">
+        <img src="@\assets\bell.png" alt="알림"  />
       </a>
-      <a href="">
-        <img src="@\assets\wallet.png" alt="지갑" style="margin-right: 20px" />
+      <a href="" class="icon-margin">
+        <img src="@\assets\wallet.png" alt="지갑"  />
       </a>
-      <a href="">
+      <a href="" class="icon-margin">
         <img
           src="@\assets\base_profile.png"
           alt="기본 프로필 사진"
-          style="margin-right: 20px"
+          
         />
       </a>
     </span>
@@ -66,19 +56,24 @@ export default {
 
 <style>
 .navbar {
-  height: 50px;
+  height: 100px;
   display: flex;
   align-items: center;
+  background: white;
+  /* justify-content: space-between; */
 }
 
 .logo {
   width: 35px;
   height: 35px;
+  /* display: flex; */
+  vertical-align: center;
 }
 
 .headerlist {
-  font-size: medium;
+  font-size: large;
   text-decoration: none;
+  margin-left: 3vw;
 }
 
 .box {
@@ -86,10 +81,20 @@ export default {
   height: 40px;
   border-radius: 15px;
   border: 1px solid;
+  margin-left: 30vw;
 }
 
 .notting {
   background: none;
   border: none;
+}
+
+.search-input {
+  width: 350px;
+  height: 39px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: left;
+  float: left;
 }
 </style>

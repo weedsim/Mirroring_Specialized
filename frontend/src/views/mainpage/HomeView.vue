@@ -25,6 +25,7 @@
       <pagination />
     </template> -->
   </carousel>
+  <AllFooter />
   </div>
 </template>
 
@@ -32,6 +33,7 @@
 // @ is an alias to /src
 import LoginUserHeaders from "@/components/Headers/LoginUserHeaders.vue"
 import NotLoginUserHeaders from "@/components/Headers/NotLoginUserHeaders.vue"
+import AllFooter from "@/components/Headers/AllFooter.vue"
 // import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import { Carousel, Slide} from 'vue3-carousel'
 
@@ -42,6 +44,7 @@ export default {
     NotLoginUserHeaders,
     Carousel,
     Slide,
+    AllFooter,
     // Pagination,
     // Navigation,
   },
