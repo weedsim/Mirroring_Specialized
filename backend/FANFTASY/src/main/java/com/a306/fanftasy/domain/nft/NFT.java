@@ -1,13 +1,13 @@
 package com.a306.fanftasy.domain.nft;
 
 
+import com.a306.fanftasy.domain.user.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
@@ -21,10 +21,27 @@ import javax.persistence.Id;
 public class NFT {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nft_id")
-    long nftId;
+    private long nftId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id")
+    private User ownerId;
 
     @Column(name = "token_uri")
-    String tokenUri;
+    private String tokenUri;
 
+    @Column(name = "is_on_sale")
+    private Boolean isOnSale;
+
+    @Column(name = "current_price")
+    private Double currentPrice;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "reg_artist")
+    private User regArtist;
+
+    @Column(name = "reg_date")
+    private LocalDateTime regDate;
 }
