@@ -1,30 +1,45 @@
 <template>
   <div class="home">
-    <LoginUserHeaders />
+    <LoginUserHeaders v-if="i==1" />
     <NotLoginUserHeaders />
-    <!-- <carousel>
-      <slide>
-        <img src="@/assets/BTS.png" alt="">
-      </Slide>
-      <slide>
-        <img src="@/assets/HERO.png" alt="">
-      </Slide>
-      <slide>
-        <img src="@/assets/Musical.png" alt="">
-      </Slide>
-    </carousel> -->
-    <carousel :items-to-show="1">
-      <slide v-for="slide in 10" :key="slide">
-        <div class="carousel_item">
-          <!-- <img :src="slide.image" alt="안나오냐"> -->
-        </div>
-      </slide>
+    <br>
+    <carousel :items-to-show="1" :wrap-around="true" :autoplay="5000">
+        <slide v-for="slide in slides" :key="slide.id">
+          <div class="carousel_item">
+            <img :src="slide.image" alt="안나오냐">
+          </div>
+        </slide>
 
-    <!-- <template #addons>
+    <template #addons>
       <navigation />
       <pagination />
-    </template> -->
+    </template>
   </carousel>
+
+  <p></p>
+  <p></p>
+  <h1 class="ranking-space">
+    Ranking
+  </h1>
+  <br>
+  <button v-on:click="openNew" class="selected-ranking-button">최신순</button>
+  <button v-on:click="openNew" class="unselected-ranking-button">판매량순</button>
+  <button v-on:click="openNew" class="unselected-ranking-button">판매금액순</button>
+  <br>
+  <br>
+  <br>
+  <br>
+  <!-- <div style="display: flex">
+    <v-card
+      v-for="item in itemlist.slice(0, 5)"
+      :key="item.itemId"
+      height="350px"
+      style="margin: 8px; width: 20%"
+    >
+        <v-card-title v-text="item.name"></v-card-title>
+        <v-card-subtitle v-text="item.description"></v-card-subtitle>
+    </v-card>
+  </div> -->
   <AllFooter />
   </div>
 </template>
@@ -34,8 +49,9 @@
 import LoginUserHeaders from "@/components/Headers/LoginUserHeaders.vue"
 import NotLoginUserHeaders from "@/components/Headers/NotLoginUserHeaders.vue"
 import AllFooter from "@/components/Headers/AllFooter.vue"
-// import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import { Carousel, Slide} from 'vue3-carousel'
+import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
+import 'vue3-carousel/dist/carousel.css'
+// import { Carousel, Slide} from 'vue3-carousel'
 
 export default {
   name: 'HomeView',
@@ -45,24 +61,24 @@ export default {
     Carousel,
     Slide,
     AllFooter,
-    // Pagination,
-    // Navigation,
+    Pagination,
+    Navigation,
   },
   data() {
     return {
-      // slides:[
-      //   {
-      //     id: 1,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/BTS.png"
-      //   },
-      //   {
-      //     id: 2,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/HERO.png"
-      //   },
-      //   {
-      //     id: 3,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png"
-      //   }]
+      slides:[
+        {
+          id: 1,
+          image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/BTS.png"
+        },
+        {
+          id: 2,
+          image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/HERO.png"
+        },
+        {
+          id: 3,
+          image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png"
+        }]
     }
   }
 }
@@ -70,9 +86,9 @@ export default {
 
 <style>
 .carousel_item {
-  min-height: 200px;
-  width: 100%;
-  background-color: var(--vc-clr-primary);
+  height: 300px;
+  /* width: 100%; */
+  background-color: white;
   color: var(--vc-clr-white);
   font-size: 20px;
   border-radius: 8px;
@@ -80,4 +96,44 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
+.ranking-space {
+  display: flex;
+  justify-content: left;
+  margin-left: 12vw;
+  margin-right: 6vw;
+  float: left;
+}
+
+.selected-ranking-button{
+  width: 88px;
+  height: 28px;
+  left: 273px;
+  top: 47px;
+  float: left;
+  background: #6A3FC1;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 1vw;
+  font:bold;
+  color: white;
+}
+
+.unselected-ranking-button{
+  width: 88px;
+  height: 28px;
+  left: 273px;
+  top: 47px;
+  float: left;
+  background: #D9D9D9;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 1vw;
+  font:bold;
+  color: #6A3FC1;
+  cursor: pointer;
+}
+
 </style>
+
+
