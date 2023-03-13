@@ -4,13 +4,13 @@
 
 - dev
     - dev-front
-        - feature/기능명
-        - feature/mainpage
+        - feature-기능명
+        - feature-mainpage
     - dev-back
-        - feature/기능명
+        - feature-기능명
     - fix : 문제가 생긴 브랜치에서 분기
-        - fix-front/기능명
-        - fix-back/기능명
+        - fix-front-기능명
+        - fix-back-기능명
 - docs/문서타입[ex) README, ppt]
 </aside>
 
