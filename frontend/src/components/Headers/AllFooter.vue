@@ -2,9 +2,9 @@
   <hr>
   <br>
   <div class="footer">
-    <img src="@\assets\logo.png" alt="" class="logo">
-    <img src="@\assets\logo.png" alt="" class="logo">
-    <img src="@\assets\logo.png" alt="" class="logo">
+    <img :src="require('@/assets/logo.png')" alt="" class="logo">
+    <img :src="require('@/assets/logo.png')" alt="" class="logo">
+    <img :src="require('@/assets/logo.png')" alt="" class="logo">
   </div>
   <br>
 </template>

@@ -31,9 +31,9 @@
 
 <script>
 // @ is an alias to /src
-import LoginUserHeaders from "@/components/Headers/LoginUserHeaders.vue"
-import NotLoginUserHeaders from "@/components/Headers/NotLoginUserHeaders.vue"
-import AllFooter from "@/components/Headers/AllFooter.vue"
+import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
+import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
+import AllFooter from "@/components/headers/AllFooter.vue"
 // import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import { Carousel, Slide} from 'vue3-carousel'
 
