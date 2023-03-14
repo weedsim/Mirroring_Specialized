@@ -2,7 +2,7 @@
   <div class="navbar">
     <span>
       <a href="/" class="headerlist">
-        <img src="@\assets\logo.png" alt="로고" class="logo">FANFTASY
+        <img :src="require('@/assets/logo.png')" alt="로고" class="logo">FANFTASY
       </a>
     </span>
     <span class="headerlist">
@@ -12,19 +12,16 @@
     <label for="" class="box" >
       <input type="text" class="notting search-input">
       <button href="" class="notting" style="display: flex; justify-content: right; align-self : center;">
-        <img src="@/assets/Search.png" alt="" style="margin-top: 7px;">
+        <img :src="require('@/assets/Search.png')" alt="" style="margin-top: 7px;">
       </button>
     </label>
     <span style="margin-left: 10vw">
       <a href="" class="icon-margin">
-        <img src="@\assets\wallet.png" alt="지갑">
+        <img :src="require('@/assets/wallet.png')" alt="지갑">
       </a>
-      <router-link to="/mypageview">
-        <img
-          src="@\assets\base_profile.png"
-          alt="기본 프로필 사진"  
-        />
-      </router-link>
+      <a href="" class="icon-margin">
+        <img :src="require('@/assets/base_profile.png')" alt="기본 프로필 사진"> 
+      </a>
     </span>
   </div>
 </template>
@@ -43,6 +40,9 @@ export default {
 }
 
 .logo {
+  /* display: flex; */
+  float: left;
+  
   width: 35px;
   height: 35px;
 }

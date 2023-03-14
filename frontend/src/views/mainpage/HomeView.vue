@@ -1,83 +1,133 @@
 <template>
   <div class="home">
-    <LoginUserHeaders />
+    <LoginUserHeaders v-if="i == 1" />
     <NotLoginUserHeaders />
-    <!-- <carousel>
-      <slide>
-        <img src="@/assets/BTS.png" alt="">
-      </Slide>
-      <slide>
-        <img src="@/assets/HERO.png" alt="">
-      </Slide>
-      <slide>
-        <img src="@/assets/Musical.png" alt="">
-      </Slide>
-    </carousel> -->
-    <carousel :items-to-show="1">
-      <slide v-for="slide in 10" :key="slide">
+    <br />
+    <carousel :items-to-show="1" :wrap-around="true" :autoplay="5000">
+      <slide v-for="slide in slides" :key="slide.id">
         <div class="carousel_item">
-          <!-- <img :src="slide.image" alt="안나오냐"> -->
+          <img :src="slide.image" alt="안나오냐" />
         </div>
       </slide>
 
-    <!-- <template #addons>
-      <navigation />
-      <pagination />
-    </template> -->
-  </carousel>
-  <AllFooter />
+      <template #addons>
+        <navigation />
+        <pagination />
+      </template>
+    </carousel>
+
+    <p></p>
+    <p></p>
+    <h1 class="ranking-space">Ranking</h1>
+    <br />
+    <button v-on:click="openNew" class="selected-ranking-button">최신순</button>
+    <button v-on:click="openNew" class="unselected-ranking-button">
+      판매량순
+    </button>
+    <button v-on:click="openNew" class="unselected-ranking-button">
+      판매금액순
+    </button>
+    <br />
+    <br />
+    <br />
+    <br />
+    <div>
+    </div>
+    <AllFooter />
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import LoginUserHeaders from "@/components/Headers/LoginUserHeaders.vue"
-import NotLoginUserHeaders from "@/components/Headers/NotLoginUserHeaders.vue"
-import AllFooter from "@/components/Headers/AllFooter.vue"
-// import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
-import { Carousel, Slide} from 'vue3-carousel'
+import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
+import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
+import AllFooter from "@/components/headers/AllFooter.vue"
+import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel"
+import "vue3-carousel/dist/carousel.css"
+// import { Carousel, Slide} from 'vue3-carousel'
 
 export default {
-  name: 'HomeView',
+  name: "HomeView",
   components: {
     LoginUserHeaders,
     NotLoginUserHeaders,
     Carousel,
     Slide,
     AllFooter,
-    // Pagination,
-    // Navigation,
+    Pagination,
+    Navigation,
   },
   data() {
     return {
-      // slides:[
-      //   {
-      //     id: 1,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/BTS.png"
-      //   },
-      //   {
-      //     id: 2,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/HERO.png"
-      //   },
-      //   {
-      //     id: 3,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png"
-      //   }]
+      slides: [
+        {
+          id: 1,
+          image:
+            "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/BTS.png",
+        },
+        {
+          id: 2,
+          image:
+            "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/HERO.png",
+        },
+        {
+          id: 3,
+          image:
+            "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png",
+        },
+      ],
     }
-  }
+  },
 }
 </script>
 
 <style>
 .carousel_item {
-  min-height: 200px;
-  width: 100%;
-  background-color: var(--vc-clr-primary);
+  height: 300px;
+  /* width: 100%; */
+  background-color: white;
   color: var(--vc-clr-white);
   font-size: 20px;
   border-radius: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.ranking-space {
+  display: flex;
+  justify-content: left;
+  margin-left: 12vw;
+  margin-right: 6vw;
+  float: left;
+}
+
+.selected-ranking-button {
+  width: 88px;
+  height: 28px;
+  left: 273px;
+  top: 47px;
+  float: left;
+  background: #6a3fc1;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 1vw;
+  font: bold;
+  color: white;
+}
+
+.unselected-ranking-button {
+  width: 88px;
+  height: 28px;
+  left: 273px;
+  top: 47px;
+  float: left;
+  background: #d9d9d9;
+  border-radius: 10px;
+  border: none;
+  margin: 10px 1vw;
+  font: bold;
+  color: #6a3fc1;
+  cursor: pointer;
 }
 </style>
