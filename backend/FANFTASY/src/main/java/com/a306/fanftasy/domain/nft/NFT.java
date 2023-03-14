@@ -10,7 +10,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
@@ -23,7 +23,7 @@ public class NFT {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nft_id")
-    private long nftId;
+    private Long nftId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
