@@ -2,7 +2,7 @@
   <div class="navbar">
     <span>
       <a href="/" class="headerlist">
-        <img src="@\assets\logo.png" alt="로고" class="logo" />FANFTASY
+        <img :src="require('@/assets/logo.png')" alt="로고" class="logo" />FANFTASY
       </a>
     </span>
     <span class="headerlist">
@@ -21,25 +21,25 @@
         class="notting"
         style="display: flex; justify-content: right; align-self: center"
       >
-        <img src="@/assets/Search.png" alt="" style="margin-top: 7px" />
+        <img :src="require('@/assets/Search.png')" alt="" style="margin-top: 7px" />
       </button>
     </label>
     <span style="margin-left: 2vw;">
       <a href="" class="icon-margin">
         <img
-          src="@\assets\chatting.png"
+          :src="require('@/assets/chatting.png')"
           alt="채팅"
         />
       </a>
       <a href="" class="icon-margin">
-        <img src="@\assets\bell.png" alt="알림"  />
+        <img :src="require('@/assets/bell.png')" alt="알림"  />
       </a>
       <a href="" class="icon-margin">
-        <img src="@\assets\wallet.png" alt="지갑"  />
+        <img :src="require('@/assets/wallet.png')" alt="지갑"  />
       </a>
       <a href="" class="icon-margin">
         <img
-          src="@\assets\base_profile.png"
+          :src="require('@/assets/base_profile.png')"
           alt="기본 프로필 사진"
           
         />
