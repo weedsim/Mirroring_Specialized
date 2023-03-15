@@ -13,11 +13,12 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
     url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/fanftasy
-    password: '1234'
+    password: ssafy
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+    generate-ddl: true
