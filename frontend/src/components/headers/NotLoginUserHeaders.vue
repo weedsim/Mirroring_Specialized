@@ -43,6 +43,9 @@ export default {
 }
 
 .logo {
+  /* display: flex; */
+  float: left;
+  
   width: 35px;
   height: 35px;
 }

@@ -40,7 +40,8 @@
       <router-link to="/mypageview">
         <img
           :src="require('@/assets/base_profile.png')"
-          alt="기본 프로필 사진"  
+          alt="기본 프로필 사진"
+          
         />
       </router-link>
     </span>
