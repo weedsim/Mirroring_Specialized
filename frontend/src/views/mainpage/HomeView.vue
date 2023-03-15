@@ -16,7 +16,7 @@
     <carousel :items-to-show="1">
       <slide v-for="slide in 10" :key="slide">
         <div class="carousel_item">
-          <!-- <img :src="slide.image" alt="안나오냐"> -->
+          <img :src="slide.image" alt="안나오냐">
         </div>
       </slide>
 
@@ -50,19 +50,19 @@ export default {
   },
   data() {
     return {
-      // slides:[
-      //   {
-      //     id: 1,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/BTS.png"
-      //   },
-      //   {
-      //     id: 2,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/HERO.png"
-      //   },
-      //   {
-      //     id: 3,
-      //     image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png"
-      //   }]
+      slides:[
+        {
+          id: 1,
+          image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/BTS.png"
+        },
+        {
+          id: 2,
+          image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/HERO.png"
+        },
+        {
+          id: 3,
+          image: "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png"
+        }]
     }
   }
 }
