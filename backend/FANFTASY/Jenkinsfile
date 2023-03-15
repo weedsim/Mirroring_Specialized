@@ -4,7 +4,7 @@ pipeline {
 		stage('Gradle Build') {
 				steps {
 					dir('backend'){
-						dir('fanftasy') {
+						dir('FANFTASY') {
 							sh 'chmod +x gradlew'
 							sh './gradlew clean build -x test'
 						}
@@ -14,7 +14,7 @@ pipeline {
 		stage('Docker Build') {
 				steps { 
 				dir('backend') {
-						dir('fanftasy') {
+						dir('FANFTASY') {
 							sh 'docker build -t FANFTASY-back:latest .'
 						}
 				}
