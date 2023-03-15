@@ -32,6 +32,7 @@
     <br />
     <br />
     <div>
+      <RankingCard />
     </div>
     <AllFooter />
   </div>
@@ -42,6 +43,7 @@
 import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
 import AllFooter from "@/components/headers/AllFooter.vue"
+import RankingCard from "@/components/mainpage/RankingCard.vue"
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel"
 import "vue3-carousel/dist/carousel.css"
 // import { Carousel, Slide} from 'vue3-carousel'
@@ -56,6 +58,7 @@ export default {
     AllFooter,
     Pagination,
     Navigation,
+    RankingCard,
   },
   data() {
     return {
