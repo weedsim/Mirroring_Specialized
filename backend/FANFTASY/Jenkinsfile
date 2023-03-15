@@ -15,7 +15,7 @@ pipeline {
 				steps { 
 				dir('backend') {
 						dir('FANFTASY') {
-							sh 'docker build -t FANFTASY-back:latest .'
+							sh 'docker build -t fanftasy-back:latest .'
 						}
 				}
 			}
