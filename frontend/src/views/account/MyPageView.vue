@@ -96,16 +96,13 @@ export default {
   },
   async mounted() {
     const web = new Web3(window.ethereum);
-    console.log(window.ethereum);
 
-    console.log(await window.ethereum.request({ method: 'eth_networkVersion' }));
-
-    
+    // check chain ID
     const chainid = await web.eth.getChainId();
     console.log(chainid);
 
-    // const curnetworkId = await web.eth.
-
+    // check current network
+    console.log(await window.ethereum.networkVersion);
 
     const metamaskInstallUrl = 'https://metamask.io/download.html';
     
@@ -118,6 +115,7 @@ export default {
         const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
         this.address = accounts[0];
         console.log(accounts[0]);
+        console.log(await window.ethereum.request({ method: 'eth_accounts'}));
 
       } catch (error) {
         console.error(error);
