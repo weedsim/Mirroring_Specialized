@@ -11,17 +11,19 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+/**
+ * 구매글 등록시 req data
+ */
 public class RequestPurchaseBoard {
 
     private Long boardWriteUserId;
     private String type;
     private String boardTitle;
     private String boardContent;
-    private LocalDateTime boardRegDate;
-    private int views;
+//    private LocalDateTime boardRegDate = LocalDateTime.now();
+//    private int views;
     private String filePath;
     private String fileType;
-    private Double buyPrice;
 
     public Board toEntity(User user) {
         return Board.builder()
@@ -29,11 +31,10 @@ public class RequestPurchaseBoard {
                 .type(type)
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
-                .boardRegDate(boardRegDate)
-                .views(views)
+                .boardRegDate(LocalDateTime.now())
+                .views(0)
                 .filePath(filePath)
                 .fileType(fileType)
-                .buyPrice(buyPrice)
                 .build();
     }
 }
