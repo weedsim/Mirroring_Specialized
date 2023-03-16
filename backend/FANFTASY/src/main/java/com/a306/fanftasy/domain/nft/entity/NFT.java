@@ -19,7 +19,6 @@ import java.time.LocalDateTime;
 @ToString
 @Builder
 public class NFT {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nft_id")
@@ -36,7 +35,7 @@ public class NFT {
     private Boolean isOnSale;
 
     @Column(name = "current_price")
-    private Double currentPrice;
+    private double currentPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reg_artist")
@@ -44,4 +43,10 @@ public class NFT {
 
     @Column(name = "reg_date")
     private LocalDateTime regDate;
+
+    @Column(name = "file_uri")
+    private String fileUri;
+
+    @Column(name = "transaction_time")
+    private LocalDateTime transactionTime;
 }
