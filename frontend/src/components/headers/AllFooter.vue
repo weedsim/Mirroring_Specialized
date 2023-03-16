@@ -17,6 +17,7 @@ export default {
 
 <style>
 .footer {
+  padding-top: 3px;
   display: flex;
   justify-content: space-evenly;
 }
