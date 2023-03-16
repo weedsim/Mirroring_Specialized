@@ -1,5 +1,7 @@
 package com.a306.fanftasy.domain.nft.repository;
 
-public class NFTRepository {
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public class NFTRepository extends JpaRepository {
 
 }

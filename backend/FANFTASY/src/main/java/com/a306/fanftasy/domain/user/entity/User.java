@@ -1,4 +1,4 @@
-package com.a306.fanftasy.domain.user;
+package com.a306.fanftasy.domain.user.entity;
 
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
