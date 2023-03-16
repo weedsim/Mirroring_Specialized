@@ -47,7 +47,7 @@ export default {
     return {
       web3: null,
       // address: '0x53fd1C95DCe6f1d00aA1Ad0296899b02efB20686',
-      address: '와 배부르다',
+      address: null,
     }
   },
   components:{
@@ -95,24 +95,30 @@ export default {
     },
   },
   async mounted() {
+    const web = new Web3(window.ethereum);
+    console.log(window.ethereum);
 
-    const currentNetwork = await (new Web3(window.ethereum)).eth.net.getId();
-    console.log(currentNetwork);
+    console.log(await window.ethereum.request({ method: 'eth_networkVersion' }));
 
-    const networkId = '5777';
-    const chainId = `0x${networkId.toString(16)}`;
-    console.log(chainId)
+    
+    const chainid = await web.eth.getChainId();
+    console.log(chainid);
+
+    // const curnetworkId = await web.eth.
+
 
     const metamaskInstallUrl = 'https://metamask.io/download.html';
     
     // Check if Web3 has already been injected by MetaMask
     if (typeof window.ethereum !== 'undefined') {
-      console.log(window.ethereum);
       // Use MetaMask's provider
       this.web3 = new Web3(window.ethereum);
       try {
         // Request account access if needed
-        await window.ethereum.enable();
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        this.address = accounts[0];
+        console.log(accounts[0]);
+
       } catch (error) {
         console.error(error);
       }
