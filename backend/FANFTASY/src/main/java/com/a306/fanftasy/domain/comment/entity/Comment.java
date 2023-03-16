@@ -1,6 +1,6 @@
 package com.a306.fanftasy.domain.comment;
 
-import com.a306.fanftasy.domain.board.Board;
+import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.user.User;
 import lombok.*;
 

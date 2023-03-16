@@ -1,4 +1,4 @@
-package com.a306.fanftasy.domain.board;
+package com.a306.fanftasy.domain.board.entity;
 
 import com.a306.fanftasy.domain.nft.NFT;
 import com.a306.fanftasy.domain.user.User;
@@ -33,6 +33,9 @@ public class Board {
 
     @Column(name = "board_title")
     private String boardTitle;
+
+    @Column(name = "board_content")
+    private String boardContent;
 
     @Column(name = "board_reg_date")
     private LocalDateTime boardRegDate;
