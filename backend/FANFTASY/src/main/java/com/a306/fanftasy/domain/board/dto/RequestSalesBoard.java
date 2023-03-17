@@ -1,11 +1,10 @@
 package com.a306.fanftasy.domain.board.dto;
 
 import com.a306.fanftasy.domain.board.entity.Board;
-import com.a306.fanftasy.domain.nft.NFT;
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.user.entity.User;
 import lombok.*;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
