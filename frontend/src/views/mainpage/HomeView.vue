@@ -80,17 +80,16 @@ export default {
 
     }
   },
-  async mounted() {
-    
+  mounted() {
+    // Check if Web3 has already been injected by MetaMask
     if(typeof window.ethereum !== 'undefined'){
       console.log("설치되있음");
     }
     else {
-      await alert("저희 사이트는 METAMASK가 필수입니다.");
+      alert("저희 사이트는 METAMASK가 필수입니다.");
+      location.href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
     }
-    
   },
-  
 }
 </script>
 

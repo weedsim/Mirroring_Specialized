@@ -57,9 +57,9 @@ export default {
   },
   methods:{
     copyAddress: async function(){
-      const a = document.getElementById('metamaskAddress')
+      const a = document.getElementById('metamaskAddress');
+      console.log(a);
 
-      
 
       try {
         const accounts = await this.web3.eth.getAccounts();
@@ -68,25 +68,6 @@ export default {
         console.error(error);
       }
 
-      // await web3.eth.getAccounts()
-      // .then(function (accounts) {
-      //   console.log(accounts)
-      //   if (accounts.length === 0) {
-      //     // 지갑이 없는 경우, Metamask에 새 지갑 생성 및 가져오기 화면을 띄웁니다.
-      //     // window.open('https://metamask.io/');
-      //   } else {
-      //     // 지갑이 있는 경우, Metamask를 실행하여 지갑을 잠금 해제합니다.
-      //     window.ethereum.enable().then(function (accounts) {
-      //       console.log('Wallet address:', accounts[0]);
-      //       this.address = accounts[0];
-      //     }).catch(function (error) {
-      //       console.log('Error:', error);
-      //     });
-      //   }
-      // }).catch(function (error) {
-      //   console.log('Error:', error);
-      // });
-
       console.log('dd', a, '와:', a.textContent , '끝')
       window.navigator.clipboard.writeText(a.textContent).then(() => {
         // 복사가 완료되면 호출된다.
@@ -94,15 +75,36 @@ export default {
       });
     },
   },
+  watch() {
+
+  },
   async mounted() {
+
     const web = new Web3(window.ethereum);
 
+    // // check network RPC URL meaning Endpoint
+    // const rpcUrl = window.ethereum.getEndpoint();
+    // console.log(rpcUrl);
+    
     // check chain ID
-    const chainid = await web.eth.getChainId();
-    console.log(chainid);
+    const chainId = await web.eth.getChainId();
+    console.log(chainId); //number
+    console.log("0x" + chainId.toString(16));  //string(16)
+    const chain = await window.ethereum.request({ method: 'eth_chainId' });
+    console.log(chain); //string(16)
+    console.log(await window.ethereum.networkVersion); //string
+    console.log("1");
 
-    // check current network
-    console.log(await window.ethereum.networkVersion);
+    // const rpcUrl = "https://13.125.99.142:8545";
+    // await window.ethereum.request({
+    //   method: 'wallet_addEthereumChain',
+    //   params: [
+    //     {
+    //       chainId: chainId,
+    //       rpcUrls: [rpcUrl],
+    //     },
+    //   ],
+    // });
 
     const metamaskInstallUrl = 'https://metamask.io/download.html';
     
@@ -116,7 +118,6 @@ export default {
         this.address = accounts[0];
         console.log(accounts[0]);
         console.log(await window.ethereum.request({ method: 'eth_accounts'}));
-
       } catch (error) {
         console.error(error);
       }
