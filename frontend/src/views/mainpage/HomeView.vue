@@ -44,6 +44,7 @@ import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
 import AllFooter from "@/components/headers/AllFooter.vue"
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel"
 import "vue3-carousel/dist/carousel.css"
+// import Web3 from "web3"
 // import { Carousel, Slide} from 'vue3-carousel'
 
 export default {
@@ -76,6 +77,17 @@ export default {
             "https://lab.ssafy.com/s08-blockchain-contract-sub2/S08P22A306/-/raw/mainpage/frontend/src/assets/Musical.png",
         },
       ],
+
+    }
+  },
+  mounted() {
+    // Check if Web3 has already been injected by MetaMask
+    if(typeof window.ethereum !== 'undefined'){
+      console.log("설치되있음");
+    }
+    else {
+      alert("저희 사이트는 METAMASK가 필수입니다.");
+      location.href='https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn';
     }
   },
 }

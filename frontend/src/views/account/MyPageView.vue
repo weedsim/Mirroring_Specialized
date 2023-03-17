@@ -39,13 +39,15 @@
 import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
 import AllFooter from "@/components/headers/AllFooter.vue"
+import Web3 from "web3"
+
 export default {
   name: 'MyPageView',
   data(){
     return {
-
+      web3: null,
       // address: '0x53fd1C95DCe6f1d00aA1Ad0296899b02efB20686',
-      address: '와 배부르다',
+      address: null,
     }
   },
   components:{
@@ -54,8 +56,17 @@ export default {
     AllFooter,
   },
   methods:{
-    copyAddress: function(){
-      const a = document.getElementById('metamaskAddress')
+    copyAddress: async function(){
+      const a = document.getElementById('metamaskAddress');
+      console.log(a);
+
+
+      try {
+        const accounts = await this.web3.eth.getAccounts();
+        console.log(accounts[0]);
+      } catch (error) {
+        console.error(error);
+      }
 
       console.log('dd', a, '와:', a.textContent , '끝')
       window.navigator.clipboard.writeText(a.textContent).then(() => {
@@ -63,6 +74,58 @@ export default {
         alert("메타마스크 주소를 복사했습니다!");
       });
     },
+  },
+  watch() {
+
+  },
+  async mounted() {
+
+    const web = new Web3(window.ethereum);
+
+    // // check network RPC URL meaning Endpoint
+    // const rpcUrl = window.ethereum.getEndpoint();
+    // console.log(rpcUrl);
+    
+    // check chain ID
+    const chainId = await web.eth.getChainId();
+    console.log(chainId); //number
+    console.log("0x" + chainId.toString(16));  //string(16)
+    const chain = await window.ethereum.request({ method: 'eth_chainId' });
+    console.log(chain); //string(16)
+    console.log(await window.ethereum.networkVersion); //string
+    console.log("1");
+
+    // const rpcUrl = "https://13.125.99.142:8545";
+    // await window.ethereum.request({
+    //   method: 'wallet_addEthereumChain',
+    //   params: [
+    //     {
+    //       chainId: chainId,
+    //       rpcUrls: [rpcUrl],
+    //     },
+    //   ],
+    // });
+
+    const metamaskInstallUrl = 'https://metamask.io/download.html';
+    
+    // Check if Web3 has already been injected by MetaMask
+    if (typeof window.ethereum !== 'undefined') {
+      // Use MetaMask's provider
+      this.web3 = new Web3(window.ethereum);
+      try {
+        // Request account access if needed
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        this.address = accounts[0];
+        console.log(accounts[0]);
+        console.log(await window.ethereum.request({ method: 'eth_accounts'}));
+      } catch (error) {
+        console.error(error);
+      }
+    } else {
+      console.log('Please install MetaMask!');
+      window.open(metamaskInstallUrl, '_blank');
+    }
+
   },
 }
 </script>
