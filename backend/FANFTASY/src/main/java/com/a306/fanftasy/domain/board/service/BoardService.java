@@ -5,8 +5,8 @@ import com.a306.fanftasy.domain.board.dto.RequestPurchaseBoard;
 import com.a306.fanftasy.domain.board.dto.RequestSalesBoard;
 import com.a306.fanftasy.domain.board.dto.ResponsePurchaseBoard;
 import com.a306.fanftasy.domain.board.entity.Board;
-import com.a306.fanftasy.domain.nft.NFT;
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.user.entity.User;
 
 public interface BoardService {
 
