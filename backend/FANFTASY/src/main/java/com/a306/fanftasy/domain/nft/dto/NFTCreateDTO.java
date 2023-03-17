@@ -3,7 +3,7 @@
  * */
 package com.a306.fanftasy.domain.nft.dto;
 
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,7 +20,7 @@ import java.time.LocalDateTime;
 public class NFTCreateDTO {
     private String tokenUri;
     private double currentPrice;
-    private User regArtist;
+    private long regArtistId;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime regDate;
     private String fileUri;

@@ -5,20 +5,22 @@ import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 import com.a306.fanftasy.domain.nft.service.NFTService;
 import com.a306.fanftasy.domain.nft.service.NFTServiceImpl;
 import com.a306.fanftasy.domain.response.ResponseDefault;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@Controller
+@RestController
+@RequiredArgsConstructor
 @RequestMapping("api/nft")
 @Slf4j
 public class NFTController {
 
-    NFTService nftService;
+    private final NFTService nftService;
 
     @PostMapping
-    public ResponseEntity<?> NFTAdd(NFTCreateDTO nftCreateDto){
+    public ResponseEntity<?> NFTAdd(@RequestBody NFTCreateDTO nftCreateDto){
         log.info("NFT 생성 요청 : " + nftCreateDto.toString());
         ResponseDefault responseDefault = null;
         try{
@@ -53,10 +55,11 @@ public class NFTController {
     }
 
     @PutMapping
-    public ResponseEntity<?> NFTTrade(NFTTradeDTO nftTradeDTO){
+    public ResponseEntity<?> NFTTrade(@RequestBody NFTTradeDTO nftTradeDTO){
         log.info("NFT 거래 발생 : " + nftTradeDTO.toString());
         ResponseDefault responseDefault = null;
         try{
+            nftService.modifyNFT(nftTradeDTO);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("SUCCESS")
@@ -77,6 +80,7 @@ public class NFTController {
         log.info("NFT 리스트 조회 요청 : " + "아티스트-"+regArtistId+", 소유자"+ownerId+", 검색어"+keyword);
         ResponseDefault responseDefault = null;
         try{
+            nftService.getNFTList(regArtistId, ownerId, keyword);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("SUCCESS")

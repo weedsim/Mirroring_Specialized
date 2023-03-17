@@ -1,7 +1,7 @@
-package com.a306.fanftasy.domain.nft;
+package com.a306.fanftasy.domain.nft.entity;
 
 
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -26,7 +26,7 @@ public class NFT {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")
-    private User ownerId;
+    private User owner;
 
     @Column(name = "token_uri")
     private String tokenUri;

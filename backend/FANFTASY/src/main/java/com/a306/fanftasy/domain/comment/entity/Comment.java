@@ -1,7 +1,7 @@
-package com.a306.fanftasy.domain.comment;
+package com.a306.fanftasy.domain.comment.entity;
 
 import com.a306.fanftasy.domain.board.Board;
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.user.entity.User;
 import lombok.*;
 
 import javax.persistence.*;

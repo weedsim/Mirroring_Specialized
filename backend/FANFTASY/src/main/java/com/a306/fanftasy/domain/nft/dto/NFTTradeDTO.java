@@ -19,8 +19,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class NFTTradeDTO {
-    int nftId;
-    int buyerId;
+    long nftId;
+    long buyerId;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     LocalDateTime transactionTime;
 
