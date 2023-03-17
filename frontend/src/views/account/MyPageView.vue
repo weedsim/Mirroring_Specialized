@@ -19,7 +19,9 @@
       <img :src="require('@/assets/copy.png')" alt="복사" style="width:28px; height: 20px; padding-left: 5px; padding-right: 5px; " @click="copyAddress">
     </div>
 
-
+    <button class="chargeB">
+      NFN 충전
+    </button>
     <div>
       보유 NFT | 거래 내역 | 관심 아이템
     </div>
@@ -151,6 +153,19 @@ export default {
   height: 40px;
 }
 
+.chargeB{
+  display: flex;
+  right: 10px;
+  width: 204px;
+  height: 70px;
+  font-size: 36px;
+  font-weight: bold;
+  justify-content: center;
+  align-items: center;
+  border-radius: 15px;
+  color: white;
+  background-color: RGB(106, 63, 193);
+}
 
 #metamaskAddress{
   width: 440px;
