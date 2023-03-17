@@ -1,9 +1,6 @@
 package com.a306.fanftasy.domain.board.service;
 
-import com.a306.fanftasy.domain.board.dto.RequestModifyPurchaseBoard;
-import com.a306.fanftasy.domain.board.dto.RequestPurchaseBoard;
-import com.a306.fanftasy.domain.board.dto.RequestSalesBoard;
-import com.a306.fanftasy.domain.board.dto.ResponsePurchaseBoard;
+import com.a306.fanftasy.domain.board.dto.*;
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.user.entity.User;
@@ -20,6 +17,9 @@ public interface BoardService {
 
 
     NFT findNFTById(Long nftId);
-    void saveSalesBoard(RequestSalesBoard requestSalesBoard, User user);
+    void saveSalesBoard(RequestSalesBoard requestSalesBoard, User user, NFT nft);
 
+    ResponseSalesBoard findSalesBoardById(Long id);
+
+    void modifySalesBoard(Long id, RequestModifySalesBoard requestModifySalesBoard);
 }

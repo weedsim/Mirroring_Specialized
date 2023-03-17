@@ -1,12 +1,10 @@
 package com.a306.fanftasy.domain.board.service;
 
-import com.a306.fanftasy.domain.board.dto.RequestModifyPurchaseBoard;
-import com.a306.fanftasy.domain.board.dto.RequestPurchaseBoard;
-import com.a306.fanftasy.domain.board.dto.RequestSalesBoard;
-import com.a306.fanftasy.domain.board.dto.ResponsePurchaseBoard;
+import com.a306.fanftasy.domain.board.dto.*;
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.board.repository.BoardRepository;
 import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +20,7 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final NFTRepository nftRepository;
 
 
     /**
@@ -78,11 +77,34 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public NFT findNFTById(Long nftId) {
-        return null;
+        return nftRepository.findById(nftId).orElse(null);
     }
 
     @Override
-    public void saveSalesBoard(RequestSalesBoard requestSalesBoard, User user) {
-//        boardRepository.save(requestSalesBoard.toEntity(user));
+    public void saveSalesBoard(RequestSalesBoard requestSalesBoard, User user, NFT nft) {
+        boardRepository.save(requestSalesBoard.toEntity(user, nft));
+    }
+
+    @Override
+    public ResponseSalesBoard findSalesBoardById(Long id) {
+        Board board = boardRepository.findById(id).orElse(null);
+        if (board == null) {
+            throw new RuntimeException();
+        } else {
+            updateBoardViews(id, board.getViews());
+            ResponseSalesBoard responseSalesBoard = new ResponseSalesBoard();
+            return responseSalesBoard.fromEntity(board);
+        }
+    }
+
+    @Override
+    public void modifySalesBoard(Long id, RequestModifySalesBoard requestModifySalesBoard) {
+        Board board = boardRepository.findById(id).orElse(null);
+        if (board == null) {
+            throw new RuntimeException();
+        } else {
+            Board boardEntity = requestModifySalesBoard.toEntity(board);
+            boardRepository.save(boardEntity);
+        }
     }
 }

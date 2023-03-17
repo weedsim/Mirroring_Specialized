@@ -1,9 +1,6 @@
 package com.a306.fanftasy.domain.board.controller;
 
-import com.a306.fanftasy.domain.board.dto.RequestModifyPurchaseBoard;
-import com.a306.fanftasy.domain.board.dto.RequestPurchaseBoard;
-import com.a306.fanftasy.domain.board.dto.RequestSalesBoard;
-import com.a306.fanftasy.domain.board.dto.ResponsePurchaseBoard;
+import com.a306.fanftasy.domain.board.dto.*;
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.board.service.BoardService;
 import com.a306.fanftasy.domain.nft.entity.NFT;
@@ -58,11 +55,11 @@ public class BoardController {
     public ResponseEntity<?> purchaseBoardDetails(@PathVariable("id") Long id) {
         ResponseDefault responseDefault = null;
         try {
-            ResponsePurchaseBoard purchaseBoardById = boardService.findPurchaseBoardById(id);
+            ResponsePurchaseBoard purchaseBoard = boardService.findPurchaseBoardById(id);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("구매글 상세정보 불러오기 성공")
-                    .data(purchaseBoardById)
+                    .data(purchaseBoard)
                     .build();
             return new ResponseEntity<>(responseDefault, HttpStatus.OK);
         } catch (Exception e) {
@@ -115,8 +112,15 @@ public class BoardController {
                     .data(null)
                     .build();
             return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+        } else if (nft == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("등록된 NFT가 없습니다.")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
         } else {
-            boardService.saveSalesBoard(requestSalesBoard, user);
+            boardService.saveSalesBoard(requestSalesBoard, user, nft);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("등록 성공!")
@@ -125,6 +129,51 @@ public class BoardController {
             return new ResponseEntity<>(responseDefault, HttpStatus.OK);
         }
 
+    }
+
+    // 판매글 상세정보 조회
+    @GetMapping("/sales/{id}")
+    public ResponseEntity<?> salesBoardDetails(@PathVariable("id") Long id) {
+        ResponseDefault responseDefault = null;
+        try {
+            ResponseSalesBoard salesBoard = boardService.findSalesBoardById(id);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("판매글 상세정보 불러오기 성공")
+                    .data(salesBoard)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        } catch (Exception e) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("판매글 상세정보 불러오기 실패")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //판매글 수정
+    @PutMapping("/purchase/{id}")
+    public ResponseEntity<?> purchaseBoardModify(@PathVariable("id") Long id,
+                                                 @RequestBody RequestModifySalesBoard requestModifySalesBoard) {
+        ResponseDefault responseDefault = null;
+        try {
+            boardService.modifySalesBoard(id, requestModifySalesBoard);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("판매글 수정 성공!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        } catch (Exception e) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("판매글 상세정보 불러오기 실패")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        }
     }
 
 
