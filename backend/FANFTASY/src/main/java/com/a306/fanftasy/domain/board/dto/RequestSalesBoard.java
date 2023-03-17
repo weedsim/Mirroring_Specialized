@@ -1,9 +1,11 @@
 package com.a306.fanftasy.domain.board.dto;
 
 import com.a306.fanftasy.domain.board.entity.Board;
+import com.a306.fanftasy.domain.nft.NFT;
 import com.a306.fanftasy.domain.user.User;
 import lombok.*;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Getter
@@ -11,23 +13,32 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-/**
- * 구매글 등록시 req data
- */
-public class RequestPurchaseBoard {
+public class RequestSalesBoard {
 
     private Long boardWriteUserId;
+
+    private Long nftId;
+
     private String type;
+
     private String boardTitle;
+
     private String boardContent;
-//    private LocalDateTime boardRegDate = LocalDateTime.now();
+
+//    private LocalDateTime boardRegDate;
+
 //    private int views;
+
     private String filePath;
+
     private String fileType;
 
-    public Board toEntity(User user) {
+    private Double salePrice;
+
+    public Board toEntity(User user, NFT nft) {
         return Board.builder()
                 .boardWriteUserId(user)
+                .nftId(nft)
                 .type(type)
                 .boardTitle(boardTitle)
                 .boardContent(boardContent)
@@ -36,7 +47,7 @@ public class RequestPurchaseBoard {
                 .filePath(filePath)
                 .fileType(fileType)
                 .buyPrice(0.0)
-                .salePrice(0.0)
+                .salePrice(salePrice)
                 .build();
     }
 }

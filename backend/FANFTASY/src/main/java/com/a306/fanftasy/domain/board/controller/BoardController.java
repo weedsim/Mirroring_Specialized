@@ -1,9 +1,12 @@
 package com.a306.fanftasy.domain.board.controller;
 
+import com.a306.fanftasy.domain.board.dto.RequestModifyPurchaseBoard;
 import com.a306.fanftasy.domain.board.dto.RequestPurchaseBoard;
+import com.a306.fanftasy.domain.board.dto.RequestSalesBoard;
 import com.a306.fanftasy.domain.board.dto.ResponsePurchaseBoard;
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.board.service.BoardService;
+import com.a306.fanftasy.domain.nft.NFT;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import com.a306.fanftasy.domain.user.User;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +29,9 @@ public class BoardController {
     @PostMapping("/purchase")
     public ResponseEntity<?> purchaseBoardSave(@RequestBody RequestPurchaseBoard requestPurchaseBoard) {
         ResponseDefault responseDefault = null;
+        /**
+         * User -> UserDto 변경 수정 필요
+         */
         User user = boardService.findUserById(requestPurchaseBoard.getBoardWriteUserId());
 
         if (user == null) {
@@ -65,9 +71,62 @@ public class BoardController {
                     .messege("구매글 상세정보 불러오기 실패")
                     .data(null)
                     .build();
-            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
         }
     }
+
+    //구매글 수정
+    @PutMapping("/purchase/{id}")
+    public ResponseEntity<?> purchaseBoardModify(@PathVariable("id") Long id,
+                                                 @RequestBody RequestModifyPurchaseBoard requestModifyPurchaseBoard) {
+        ResponseDefault responseDefault = null;
+        try {
+            boardService.modifyPurchaseBoard(id, requestModifyPurchaseBoard);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("구매글 수정 성공!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        } catch (Exception e) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("구매글 상세정보 불러오기 실패")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        }
+    }
+    
+    //판매글 등록
+    @PostMapping("/sales")
+    public ResponseEntity<?> salesBoardSave(@RequestBody RequestSalesBoard requestSalesBoard) {
+        ResponseDefault responseDefault = null;
+        /**
+         * User -> UserDto 변경 수정 필요
+         */
+        User user = boardService.findUserById(requestSalesBoard.getBoardWriteUserId());
+        NFT nft = boardService.findNFTById(requestSalesBoard.getNftId());
+
+        if (user == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("회원이 아닙니다.")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+        } else {
+            boardService.saveSalesBoard(requestSalesBoard, user);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("등록 성공!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        }
+
+    }
+
 
     //구매글, 판매글, 게시물 삭제
     @DeleteMapping("/{id}")
