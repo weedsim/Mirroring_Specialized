@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Setter
 @Getter
 @ToString
 @Builder
@@ -49,4 +48,19 @@ public class NFT {
 
     @Column(name = "transaction_time")
     private LocalDateTime transactionTime;
+
+    public void updateOwner(User owner) {
+        this.owner = owner;
+    }
+
+    public void updateIsOnSale(boolean isOnSale) {
+        this.isOnSale = isOnSale;
+    }
+    public void updateCurrentPrice(double currentPrice) {
+        this.currentPrice = currentPrice;
+    }
+    public void updateTransactionTime(LocalDateTime transactionTime) {
+        this.transactionTime = transactionTime;
+    }
+
 }

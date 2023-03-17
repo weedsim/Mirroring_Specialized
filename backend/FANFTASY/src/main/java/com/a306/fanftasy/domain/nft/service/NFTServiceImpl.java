@@ -68,9 +68,9 @@ public class NFTServiceImpl implements NFTService {
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
     NFT nftEntity = nftRepository.findById(nftTradeDTO.getNftId());
     User owner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
-    nftEntity.setIsOnSale(false);
-    nftEntity.setOwner(owner);
-    nftEntity.setTransactionTime(nftTradeDTO.getTransactionTime());
+    nftEntity.updateIsOnSale(false);
+    nftEntity.updateOwner(owner);
+    nftEntity.updateTransactionTime(nftTradeDTO.getTransactionTime());
     nftRepository.save(nftEntity);
   }
 
