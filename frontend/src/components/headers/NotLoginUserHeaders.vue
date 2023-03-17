@@ -7,7 +7,7 @@
     </span>
     <span class="headerlist">
       <router-link to="/" style="text-decoration: none;">NFT 마켓</router-link> |
-      <router-link to="/about" style="text-decoration: none;">커뮤니티</router-link>
+      <router-link to="/community" style="text-decoration: none;">커뮤니티</router-link>
     </span>
     <label for="" class="box" >
       <input type="text" class="notting search-input">
