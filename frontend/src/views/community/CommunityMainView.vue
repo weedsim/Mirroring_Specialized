@@ -26,7 +26,7 @@
     <tbody>
       
       <tr v-for="(article, index) in articles" :key="index">
-        
+    
         <td>
           {{ articles.length - index}}
         </td>
@@ -46,6 +46,8 @@
           {{ article.viewed }}
         </td>
 
+        <!-- router에 detail용 community/:number 대충 만들어 둠. CommunityAddView 대충 틀 짜둠 -->
+
       </tr>
     </tbody>
   </table>
@@ -57,9 +59,13 @@
     <button :disabled="pageNum >= pageCount-1" @click="nextPage" class="page-btn">다음</button>
   </div>
 
-  <button class="writeButton">
-    글쓰기
-  </button>
+  <div style="width: 211px">
+    <router-link to="/community/add" style="text-decoration: none;">
+      <button class="writeButton" >
+        글쓰기
+      </button>
+    </router-link>
+  </div>
  
 </template>
 
@@ -69,6 +75,10 @@ import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
 
 export default {
   name: "communityMain",
+  components: {
+    LoginUserHeaders,
+    NotLoginUserHeaders,
+  },
   data() {
     return {
 // 버튼을 누르면 computed로 type별 필터링해서 articles를 반환하고 그걸 토대로 테이블에 출력하면 된다... 어떻게??
@@ -191,10 +201,7 @@ export default {
     //   return aray.slice(start,end);
     // }
   },
-  components: {
-    LoginUserHeaders,
-    NotLoginUserHeaders,
-  }
+  
 }
 </script>
 

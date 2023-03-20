@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/mainpage/HomeView.vue'
 import MyPageView from '../views/account/MyPageView.vue';
 import CommunityMainView from '../views/community/CommunityMainView.vue';
+import CommunityAddView from '../views/community/CommunityAddView.vue';
+import CommunityDetailView from '../views/community/CommunityDetailView.vue';
 
 const routes = [
   {
@@ -13,6 +15,16 @@ const routes = [
     path: '/community',
     name: 'community',
     component: CommunityMainView
+  },
+  {
+    path: '/community/add',
+    name: 'add',
+    component: CommunityAddView
+  },
+  {
+    path: '/community/:number',
+    name: 'article',
+    component: CommunityDetailView
   },
   {
     path: '/mypageview',
