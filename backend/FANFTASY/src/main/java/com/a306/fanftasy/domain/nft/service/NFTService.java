@@ -17,5 +17,9 @@ public interface NFTService {
   void modifyNFT(NFTTradeDTO nftTradeDTO);
 
 
-  List<NFTDetailDTO> getNFTListByArtist(long regArtistId);
+  List<NFTDetailDTO> getNFTListByArtistId(long regArtistId);
+
+  List<NFTDetailDTO> getNFTListByOwnerId(long regArtistId);
+
+
 }

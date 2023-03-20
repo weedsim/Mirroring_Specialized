@@ -81,10 +81,10 @@ public class NFTServiceImpl implements NFTService {
   }
 
   @Override
-  public List<NFTDetailDTO> getNFTListByArtist(long regArtistId) {
+  public List<NFTDetailDTO> getNFTListByArtistId(long regArtistId) {
     try{
     User regArtist = User.builder().userId(regArtistId).build();
-    List<NFT> entityList = nftRepository.findByRegArtist(regArtist);
+    List<NFT> entityList = nftRepository.findByRegArtistOrderByRegDateDesc(regArtist);
 
     //엔티티를 DTO로 변환
     List<NFTDetailDTO> result = entityList.stream().map(m-> NFTDetailDTO.fromEntity(m)).collect(
@@ -95,4 +95,21 @@ public class NFTServiceImpl implements NFTService {
       throw e;
     }//catch
   }//getNFTListByArtist
+
+
+  @Override
+  public List<NFTDetailDTO> getNFTListByOwnerId(long ownerId) {
+    try{
+      User owner = User.builder().userId(ownerId).build();
+      List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
+
+      //엔티티를 DTO로 변환
+      List<NFTDetailDTO> result = entityList.stream().map(m-> NFTDetailDTO.fromEntity(m)).collect(
+          Collectors.toList());
+      return result;
+    }//try
+    catch(Exception e){
+      throw e;
+    }//catch
+  }//getNFTListByOwnerId
 }

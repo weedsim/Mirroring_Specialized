@@ -9,6 +9,7 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
   NFT findById(long nftId);
 
 
-  List<NFT> findByRegArtist(User regArtist);
+  List<NFT> findByRegArtistOrderByRegDateDesc(User regArtist);
 
+  List<NFT> findByOwnerOrderByTransactionTimeDesc(User owenr);
 }

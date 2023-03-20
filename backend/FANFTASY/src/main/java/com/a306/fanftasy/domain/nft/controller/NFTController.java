@@ -83,9 +83,9 @@ public class NFTController {
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("SUCCESS")
-                    .data(nftService.getNFTListByArtist(regArtistId))
+                    .data(nftService.getNFTListByArtistId(regArtistId))
                     .build();
-            log.error("목록 조회 성공");
+            log.info("목록 조회 성공");
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
             log.error("목록 조회 실패");
@@ -93,6 +93,28 @@ public class NFTController {
                     .success(false)
                     .messege("FAIL")
                     .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
+    @GetMapping("/user/{ownerId}")
+    public ResponseEntity<?> NFTOwner(@PathVariable long ownerId){
+        log.info("NFT 리스트 조회 요청 : " + "소유자-"+ownerId);
+        ResponseDefault responseDefault = null;
+        try{
+            responseDefault = ResponseDefault.builder()
+                .success(true)
+                .messege("SUCCESS")
+                .data(nftService.getNFTListByOwnerId(ownerId))
+                .build();
+            log.info("목록 조회 성공");
+            return ResponseEntity.ok().body(responseDefault);
+        }catch (Exception e){
+            log.error("목록 조회 실패");
+            responseDefault = ResponseDefault.builder()
+                .success(false)
+                .messege("FAIL")
+                .build();
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }
