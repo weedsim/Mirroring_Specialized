@@ -4,6 +4,7 @@ import com.a306.fanftasy.domain.board.dto.*;
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.user.entity.User;
+import org.springframework.data.domain.Page;
 
 public interface BoardService {
 
@@ -12,7 +13,7 @@ public interface BoardService {
     ResponsePurchaseBoard findPurchaseBoardById(Long id);
     void updateBoardViews(Long id, int views);
     Board findBoardById(Long id);
-    void removePurchaseBoard(Long id);
+    void removeBoard(Long id);
     void modifyPurchaseBoard(Long id, RequestModifyPurchaseBoard requestModifyPurchaseBoard);
 
 
@@ -22,4 +23,13 @@ public interface BoardService {
     ResponseSalesBoard findSalesBoardById(Long id);
 
     void modifySalesBoard(Long id, RequestModifySalesBoard requestModifySalesBoard);
+
+
+    void saveArticleBoard(RequestArticleBoard requestArticleBoard, User user);
+
+    ResponseArticleBoard findArticleBoardById(Long id);
+
+    void modifyArticleBoard(Long id, RequestModifyArticleBoard requestModifyArticleBoard);
+
+    Page<Board> boardList(int page, String search, String type);
 }

@@ -2,6 +2,7 @@ package com.a306.fanftasy.domain.board.dto;
 
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.user.dto.UserPublicDTO;
 import com.a306.fanftasy.domain.user.entity.User;
 import lombok.*;
 
@@ -16,7 +17,7 @@ public class ResponseSalesBoard {
 
     private Long boardId;
 
-    private User boardWriteUserId;
+    private UserPublicDTO boardWriteUserId;
 
     private NFT nftId;
 
@@ -39,7 +40,7 @@ public class ResponseSalesBoard {
     public ResponseSalesBoard fromEntity(Board board) {
         return ResponseSalesBoard.builder()
                 .boardId(board.getBoardId())
-                .boardWriteUserId(board.getBoardWriteUserId())
+                .boardWriteUserId(UserPublicDTO.fromEntity(board.getBoardWriteUserId()))
                 .nftId(board.getNftId())
                 .type(board.getType())
                 .boardTitle(board.getBoardTitle())

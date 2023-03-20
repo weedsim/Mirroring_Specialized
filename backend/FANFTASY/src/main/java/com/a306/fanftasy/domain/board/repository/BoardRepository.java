@@ -1,6 +1,8 @@
 package com.a306.fanftasy.domain.board.repository;
 
 import com.a306.fanftasy.domain.board.entity.Board;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -13,4 +15,5 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("UPDATE Board b SET b.views = :views where b.boardId = :id")
     void updateBoardViews(Long id, int views);
 
+    Page<Board> findByBoardTitleContainingAndTypeContaining(String search, Pageable pageRequest, String type);
 }

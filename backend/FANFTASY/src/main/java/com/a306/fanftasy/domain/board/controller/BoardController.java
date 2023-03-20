@@ -8,6 +8,8 @@ import com.a306.fanftasy.domain.response.ResponseDefault;
 import com.a306.fanftasy.domain.user.entity.User;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -154,7 +156,7 @@ public class BoardController {
     }
 
     //판매글 수정
-    @PutMapping("/purchase/{id}")
+    @PutMapping("/sales/{id}")
     public ResponseEntity<?> purchaseBoardModify(@PathVariable("id") Long id,
                                                  @RequestBody RequestModifySalesBoard requestModifySalesBoard) {
         ResponseDefault responseDefault = null;
@@ -176,10 +178,81 @@ public class BoardController {
         }
     }
 
+    // 게시글 등록
+    @PostMapping("/article")
+    public ResponseEntity<?> articleBoardSave(@RequestBody RequestArticleBoard requestArticleBoard) {
+        ResponseDefault responseDefault = null;
+        /**
+         * User -> UserDto 변경 수정 필요
+         */
+        User user = boardService.findUserById(requestArticleBoard.getBoardWriteUserId());
+
+        if (user == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("회원이 아닙니다.")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+        } else {
+            boardService.saveArticleBoard(requestArticleBoard, user);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("게시글 등록 성공!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        }
+    }
+
+    // 게시글 상세정보 조회
+    @GetMapping("/article/{id}")
+    public ResponseEntity<?> articleBoardDetails(@PathVariable("id") Long id) {
+        ResponseDefault responseDefault = null;
+        try {
+            ResponseArticleBoard articleBoard = boardService.findArticleBoardById(id);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("게시글 상세정보 불러오기 성공")
+                    .data(articleBoard)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        } catch (Exception e) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("게시글 상세정보 불러오기 실패")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //게시글 수정
+    @PutMapping("/article/{id}")
+    public ResponseEntity<?> purchaseBoardModify(@PathVariable("id") Long id,
+                                                 @RequestBody RequestModifyArticleBoard requestModifyArticleBoard) {
+        ResponseDefault responseDefault = null;
+        try {
+            boardService.modifyArticleBoard(id, requestModifyArticleBoard);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("게시글 수정 성공!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        } catch (Exception e) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("게시글 상세정보 불러오기 실패")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        }
+    }
 
     //구매글, 판매글, 게시물 삭제
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> purchaseBoardRemove(@PathVariable("id") Long id) {
+    public ResponseEntity<?> boardRemove(@PathVariable("id") Long id) {
         ResponseDefault responseDefault = null;
         Board board = boardService.findBoardById(id);
         if (board == null) {
@@ -190,7 +263,7 @@ public class BoardController {
                     .build();
             return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
         } else {
-            boardService.removePurchaseBoard(id);
+            boardService.removeBoard(id);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("글 삭제 성공!")
@@ -198,6 +271,21 @@ public class BoardController {
                     .build();
             return new ResponseEntity<>(responseDefault, HttpStatus.OK);
         }
+    }
+
+    //전체 게시판 검색 조회
+    @GetMapping("/")
+    public ResponseEntity<?> boardList(@Param("page") int page, @Param("search") String search, @Param("type") String type) {
+        ResponseDefault responseDefault = null;
+        Page<Board> boardList = boardService.boardList(page, search, type);
+        Page<ResponseBoard> responseBoard = new ResponseBoard().toDtoList(boardList);
+//        Page<ResponseBoard> responseBoard = boardList.map(m -> new ResponseBoard());
+        responseDefault = ResponseDefault.builder()
+                .success(true)
+                .messege("게시판 조회")
+                .data(responseBoard)
+                .build();
+        return new ResponseEntity<>(responseDefault, HttpStatus.OK);
     }
 
 }
