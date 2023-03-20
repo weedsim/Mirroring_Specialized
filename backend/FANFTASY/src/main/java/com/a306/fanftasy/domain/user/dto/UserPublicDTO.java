@@ -20,4 +20,12 @@ public class UserPublicDTO {
     this.profileImg = user.getProfileImg();
     this.nickname = user.getNickname();
   }
+
+  public static UserPublicDTO fromEntity(User user){
+    return UserPublicDTO.builder()
+        .userId(user.getUserId())
+        .profileImg(user.getProfileImg())
+        .nickname(user.getNickname())
+        .build();
+  }
 }

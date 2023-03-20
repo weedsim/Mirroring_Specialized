@@ -8,7 +8,7 @@ import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.user.dto.UserPublicDTO;
 import com.a306.fanftasy.domain.user.entity.User;
-import java.util.Optional;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -29,6 +29,7 @@ public class NFTServiceImpl implements NFTService {
       log.info(String.valueOf(artistId));
       User artist = User.builder().userId(artistId).build(); //이 부분 수정 필요
       NFT nft = NFT.builder()
+          .title(nftCreateDTO.getTitle())
           .owner(artist)
           .tokenUri(nftCreateDTO.getTokenUri())
           .isOnSale(true)
@@ -41,7 +42,7 @@ public class NFTServiceImpl implements NFTService {
       nftRepository.save(nft);
     } catch (Exception e) {
       throw e;
-    }
+    }//catch
   }
 
   @Override
@@ -50,33 +51,48 @@ public class NFTServiceImpl implements NFTService {
       NFT nft = nftRepository.findById(nftId);
       NFTDetailDTO nftDetailDTO = NFTDetailDTO.builder()
           .nftId(nft.getNftId())
-          .owner(new UserPublicDTO(nft.getOwner()))
+          .title(nft.getTitle())
+          .owner(UserPublicDTO.fromEntity(nft.getOwner()))
           .tokenUri(nft.getTokenUri())
           .isOnSale(nft.getIsOnSale())
           .currentPrice(nft.getCurrentPrice())
-          .regArtist(new UserPublicDTO(nft.getRegArtist()))
+          .regArtist(UserPublicDTO.fromEntity(nft.getRegArtist()))
           .regDate(nft.getRegDate())
           .fileUri(nft.getFileUri())
           .build();
       return nftDetailDTO;
     } catch (Exception e) {
       throw e;
-    }
+    }//catch
   }
 
   @Override
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
-    NFT nftEntity = nftRepository.findById(nftTradeDTO.getNftId());
-    User owner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
-    nftEntity.updateIsOnSale(false);
-    nftEntity.updateOwner(owner);
-    nftEntity.updateTransactionTime(nftTradeDTO.getTransactionTime());
-    nftRepository.save(nftEntity);
+    try {
+      NFT nftEntity = nftRepository.findById(nftTradeDTO.getNftId());
+      User owner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
+      nftEntity.updateIsOnSale(false);
+      nftEntity.updateOwner(owner);
+      nftEntity.updateTransactionTime(nftTradeDTO.getTransactionTime());
+      nftRepository.save(nftEntity);
+    } catch (Exception e) {
+      throw e;
+    }//catch
   }
 
   @Override
-  public List<NFTDetailDTO> getNFTList(long regArtistId, long ownerId, String keyword) {
-//    List<NFT>
-    return null;
-  }
+  public List<NFTDetailDTO> getNFTListByArtist(long regArtistId) {
+    try{
+    User regArtist = User.builder().userId(regArtistId).build();
+    List<NFT> entityList = nftRepository.findByRegArtist(regArtist);
+
+    //엔티티를 DTO로 변환
+    List<NFTDetailDTO> result = entityList.stream().map(m-> NFTDetailDTO.fromEntity(m)).collect(
+        Collectors.toList());
+    return result;
+    }//try
+    catch(Exception e){
+      throw e;
+    }//catch
+  }//getNFTListByArtist
 }

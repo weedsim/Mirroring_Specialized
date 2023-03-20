@@ -22,6 +22,8 @@ public class NFT {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "nft_id")
     private Long nftId;
+@Column(name = "title")
+private String title;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "owner_id")

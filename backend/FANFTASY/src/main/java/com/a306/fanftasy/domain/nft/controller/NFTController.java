@@ -75,16 +75,15 @@ public class NFTController {
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }
-    @GetMapping("/list")
-    public ResponseEntity<?> NFTDetail(@RequestParam long regArtistId, long ownerId, String keyword){
-        log.info("NFT 리스트 조회 요청 : " + "아티스트-"+regArtistId+", 소유자"+ownerId+", 검색어"+keyword);
+    @GetMapping("/artist/{regArtistId}")
+    public ResponseEntity<?> NFTArtist(@PathVariable long regArtistId){
+        log.info("NFT 리스트 조회 요청 : " + "아티스트-"+regArtistId);
         ResponseDefault responseDefault = null;
         try{
-            nftService.getNFTList(regArtistId, ownerId, keyword);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("SUCCESS")
-                    .data(nftService.getNFTList(regArtistId,ownerId,keyword))
+                    .data(nftService.getNFTListByArtist(regArtistId))
                     .build();
             log.error("목록 조회 성공");
             return ResponseEntity.ok().body(responseDefault);

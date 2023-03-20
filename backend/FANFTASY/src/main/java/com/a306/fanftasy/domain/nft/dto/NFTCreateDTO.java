@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
 @Builder
 public class NFTCreateDTO {
     private String tokenUri;
+    private String title;
     private double currentPrice;
     private long regArtistId;
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")

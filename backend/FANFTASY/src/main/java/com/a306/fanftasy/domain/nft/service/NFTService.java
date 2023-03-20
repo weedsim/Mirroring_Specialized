@@ -9,11 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 public interface NFTService {
-    void addNFT(NFTCreateDTO nftCreateDTO);
 
-    NFTDetailDTO getNFT(long nftId);
+  void addNFT(NFTCreateDTO nftCreateDTO);
 
-    void modifyNFT(NFTTradeDTO nftTradeDTO);
+  NFTDetailDTO getNFT(long nftId);
 
-    List<NFTDetailDTO> getNFTList(long regArtistId, long ownerId, String keyword);
+  void modifyNFT(NFTTradeDTO nftTradeDTO);
+
+
+  List<NFTDetailDTO> getNFTListByArtist(long regArtistId);
 }
