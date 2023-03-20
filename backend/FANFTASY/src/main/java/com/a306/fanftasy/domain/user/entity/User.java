@@ -17,9 +17,8 @@ import javax.persistence.*;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user_id")
-    private Long userId;
-    private String address;
+    @Column(name = "address")
+    private Long address;
     private String email;
     private String nickname;
     @Column(name = "profile_img")
@@ -33,4 +32,6 @@ public class User {
     private String company;
     @Column(name = "refresh_token")
     private String refreshToken;
+
+
 }
