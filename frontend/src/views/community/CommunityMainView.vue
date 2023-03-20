@@ -13,14 +13,42 @@
   </div>
   <hr>
   <!-- 게시글 목록 -->
-  
-  <div v-for="i in articles" :key="i">
-    <img :src="require(`@/assets/${i.thumbnail}`)" alt="image">
-    {{ i.title }}
-    {{ i.writer }}
-    {{ i.createdAt }}
-    {{ i.viewed }}
-  </div>
+  <table>
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>제목</th>
+        <th>작성자</th>
+        <th>날짜</th>
+        <th>조회수</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+      <tr v-for="(article, index) in articles" :key="index">
+        
+        <td>
+          {{ articles.length - index}}
+        </td>
+        <td>
+          <div style="align-self: auto; font-size: 14px;">
+            <img :src="require(`@/assets/${article.thumbnail}`)" alt="image" style="height: 20px; width: 20px;"> 
+            {{ article.title }}
+          </div>
+        </td>
+        <td>
+          {{ article.writer }}
+        </td>
+        <td>
+          {{ article.createdAt }}
+        </td>
+        <td>
+          {{ article.viewed }}
+        </td>
+
+      </tr>
+    </tbody>
+  </table>
 
   <!-- 페이지네이션 -->
   
