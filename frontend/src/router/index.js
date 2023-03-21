@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/mainpage/HomeView.vue'
 import MyPageView from '../views/account/MyPageView.vue';
 import MarketListView from '../views/market/MarketListView.vue';
+import MarketDetailView from '../views/market/MarketDetailView.vue';
 import CommunityMainView from '../views/community/CommunityMainView.vue';
 
 const routes = [
@@ -19,6 +20,11 @@ const routes = [
     path: '/market',
     name: 'MarketListView',
     component: MarketListView
+  },
+  {
+    path: '/market/:id',
+    name: 'MarketDetailView',
+    component: MarketDetailView
   },
   {
     path: '/community',

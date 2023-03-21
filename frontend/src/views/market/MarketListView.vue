@@ -9,16 +9,22 @@
         <button v-on:click="selectNewest" v-if="sortnum === 0" class="selected-ranking-button">최신순</button>
         <button v-on:click="selectNewest" v-else class="unselected-ranking-button">최신순</button>
         <button v-on:click="selectSalesVolume" v-if="sortnum === 1" class="selected-ranking-button">
-          판매량순
+          잔여량순
         </button>
         <button v-on:click="selectSalesVolume" v-else class="unselected-ranking-button">
-          판매량순
+          잔여량순
         </button>
         <button v-on:click="selectSalesAmmount" v-if="sortnum === 2" class="selected-ranking-button">
-          판매금액순
+          높은가격순
         </button>
         <button v-on:click="selectSalesAmmount" v-else class="unselected-ranking-button">
-          판매금액순
+          높은가격순
+        </button>
+        <button v-on:click="selectSalesAmmount" v-if="sortnum === 3" class="selected-ranking-button">
+          낮은가격순
+        </button>
+        <button v-on:click="selectSalesAmmount" v-else class="unselected-ranking-button">
+          낮은가격순
         </button>
       </span>
       <label for="" class="box" style="display: inline-block">
@@ -36,8 +42,12 @@
           </button>
         </label>
     </div>
+    <br>
     <NFTCard />
+    <br>
+    <v-pagination :length="5"></v-pagination>
   </div>
+
 </template>
 
 <script>

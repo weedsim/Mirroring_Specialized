@@ -1,11 +1,111 @@
 <template>
-  <div >
-    <div style="display: inline-block;">
-      <v-card class="nft-card">      
-        <v-card-title style="padding: 0; display: flex; justify-content: center; position: relative;" >
-          <v-img src="@/assets/뉴진스.png" alt="" class="card-img"></v-img>
+  <div style="text-align: center;">
+    <div class="nft-card-class">
+      <router-link :to="{ name: 'MarketDetailView', params: { id: 1 }}">
+        <v-card class="nft-card">      
+          <v-card-title class="nft-card-title">
+            <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
+          </v-card-title>
+          <v-card-item class="nft-card-item">
+            <p class="item-name">
+              아티스트
+            </p>
+            <p class="item-content">
+              심호연
+            </p>
+            <p class="item-name">
+              제목
+            </p>
+            <p class="item-content">
+              코인 손해본거 놀릴 때 호연
+            </p>
+            <p class="item-name">
+              가격
+            </p>
+            <p class="item-content">
+              1.03FAN
+            </p>
+            <p class="item-name">
+              잔여수량
+            </p>
+            <p class="item-content">
+            19/50
+            </p>
+          </v-card-item>
+        </v-card>
+      </router-link>
+      <router-link :to="{ name: 'MarketDetailView', params: { id: 2 }}">
+        <v-card class="nft-card">      
+          <v-card-title class="nft-card-title">
+            <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
+          </v-card-title>
+          <v-card-item class="nft-card-item">
+            <p class="item-name">
+              아티스트
+            </p>
+            <p class="item-content">
+              심호연
+            </p>
+            <p class="item-name">
+              제목
+            </p>
+            <p class="item-content">
+              코인 손해본거 놀릴 때 호연
+            </p>
+            <p class="item-name">
+              가격
+            </p>
+            <p class="item-content">
+              1.03FAN
+            </p>
+            <p class="item-name">
+              잔여수량
+            </p>
+            <p class="item-content">
+              19/50
+            </p>
+          </v-card-item>
+        </v-card>
+      </router-link>
+        <v-card class="nft-card">      
+        <v-card-title class="nft-card-title">
+          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
         </v-card-title>
-        <v-card-item style="font-size:larger; vertical-align: center; text-align: center; ">
+        <v-card-item class="nft-card-item">
+          <p class="item-name">
+            아티스트
+          </p>
+          <p class="item-content">
+            심호연
+          </p>
+          <p class="item-name">
+            제목
+          </p>
+          <p class="item-content">
+            코인 손해본거 놀릴 때 호연
+          </p>
+          <p class="item-name">
+            가격
+          </p>
+          <p class="item-content">
+            1.03FAN
+          </p>
+          <p class="item-name">
+            잔여수량
+          </p>
+          <p class="item-content">
+          19/50
+          </p>
+        </v-card-item>
+      </v-card>
+    </div>
+    <br>
+    <div class="nft-card-class">
+      <v-card class="nft-card">      
+        <v-card-title class="nft-card-title">
+          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
+        </v-card-title>
+        <v-card-item class="nft-card-item">
           <p class="item-name">
             아티스트
           </p>
@@ -33,51 +133,65 @@
         </v-card-item>
       </v-card>
       <v-card class="nft-card">      
-        <v-card-title style="padding: 0; display: flex; justify-content: center; position: relative;" >
-          <v-img src="@/assets/뉴진스.png" alt="" class="card-img"></v-img>
+        <v-card-title class="nft-card-title">
+          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
         </v-card-title>
-        <v-card-item style="font-size:larger; vertical-align: center; text-align: center; ">
-          <br>
-          New Jeans
+        <v-card-item class="nft-card-item">
+          <p class="item-name">
+            아티스트
+          </p>
+          <p class="item-content">
+            심호연
+          </p>
+          <p class="item-name">
+            제목
+          </p>
+          <p class="item-content">
+            코인 손해본거 놀릴 때 호연
+          </p>
+          <p class="item-name">
+            가격
+          </p>
+          <p class="item-content">
+            1.03FAN
+          </p>
+          <p class="item-name">
+            잔여수량
+          </p>
+          <p class="item-content">
+          19/50
+          </p>
         </v-card-item>
       </v-card>
       <v-card class="nft-card">      
-        <v-card-title style="padding: 0; display: flex; justify-content: center; position: relative;" >
-          <v-img src="@/assets/뉴진스.png" alt="" class="card-img"></v-img>
+        <v-card-title class="nft-card-title">
+          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
         </v-card-title>
-        <v-card-item style="font-size:larger; vertical-align: center; text-align: center; ">
-          <br>
-          New Jeans
-        </v-card-item>
-      </v-card>
-    </div>
-    <br>
-    <div style="display: inline-block;">
-      <v-card class="nft-card">      
-        <v-card-title style="padding: 0; display: flex; justify-content: center; position: relative;" >
-          <v-img src="@/assets/뉴진스.png" alt="" class="card-img"></v-img>
-        </v-card-title>
-        <v-card-item style="font-size:larger; vertical-align: center; text-align: center; ">
-          <br>
-          New Jeans
-        </v-card-item>
-      </v-card>
-      <v-card class="nft-card">      
-        <v-card-title style="padding: 0; display: flex; justify-content: center; position: relative;" >
-          <v-img src="@/assets/뉴진스.png" alt="" class="card-img"></v-img>
-        </v-card-title>
-        <v-card-item style="font-size:larger; vertical-align: center; text-align: center; ">
-          <br>
-          New Jeans
-        </v-card-item>
-      </v-card>
-      <v-card class="nft-card">      
-        <v-card-title style="padding: 0; display: flex; justify-content: center; position: relative;" >
-          <v-img src="@/assets/뉴진스.png" alt="" class="card-img"></v-img>
-        </v-card-title>
-        <v-card-item style="font-size:larger; vertical-align: center; text-align: center; ">
-          <br>
-          New Jeans
+        <v-card-item class="nft-card-item">
+          <p class="item-name">
+            아티스트
+          </p>
+          <p class="item-content">
+            심호연
+          </p>
+          <p class="item-name">
+            제목
+          </p>
+          <p class="item-content">
+            코인 손해본거 놀릴 때 호연
+          </p>
+          <p class="item-name">
+            가격
+          </p>
+          <p class="item-content">
+            1.03FAN
+          </p>
+          <p class="item-name">
+            잔여수량
+          </p>
+          <p class="item-content">
+          19/50
+          </p>
         </v-card-item>
       </v-card>
     </div>
@@ -98,6 +212,18 @@ export default {
   width: 413px;
   height: 245px;
   border: solid 1px #6a3fc1;
+  margin: 20px 20px;
+  border-radius: 15px;
+}
+
+.nft-img {
+  border-radius: 15px;
+  border: solid 1px #D9D9D9;
+  width: 164px;
+  height: 222px;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 10px;
 }
 
 .item-name{
@@ -111,5 +237,23 @@ export default {
   text-align: left;
   margin-left: 1vw;
   font-size: 15px;
+}
+
+.nft-card-class{
+  display: inline-block;
+  text-align: center;
+}
+
+.nft-card-title{
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  position: relative;
+}
+
+.nft-card-item {
+  font-size:larger;
+  vertical-align: center;
+  text-align: center;
 }
 </style>
