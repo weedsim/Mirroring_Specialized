@@ -13,16 +13,14 @@ import java.nio.charset.StandardCharsets;
 import java.security.Key;
 import java.util.Date;
 
-import static acc.jwt.security.enums.JwtExpirationEnums.ACCESS_TOKEN_EXPIRATION_TIME;
-import static acc.jwt.security.enums.JwtExpirationEnums.REFRESH_TOKEN_EXPIRATION_TIME;
-
 @Slf4j
 @Component
 public class JwtTokenUtil {
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-
+    private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60; // 시간 단위
+    private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60 * 24 * 7; // 주단위
     /**
      * 토큰 추출 메서드
      * 서명했을때 secretkey 로 서명하고 토큰을 만들때 username,발급날짜,만료기간을 넣었단 payload를 가져온다.
@@ -52,11 +50,11 @@ public class JwtTokenUtil {
     }
 
     public String generateAccessToken(String username){
-        return doGenerateToken(username, ACCESS_TOKEN_EXPIRATION_TIME.getValue());
+        return doGenerateToken(username, ACCESS_TOKEN_EXPIRE_MINUTES);
     }
 
     public String generateRefreshToken(String username){
-        return doGenerateToken(username, REFRESH_TOKEN_EXPIRATION_TIME.getValue());
+        return doGenerateToken(username, REFRESH_TOKEN_EXPIRE_MINUTES);
     }
 
     /**

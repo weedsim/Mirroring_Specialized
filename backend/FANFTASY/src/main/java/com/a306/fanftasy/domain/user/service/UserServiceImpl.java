@@ -1,5 +1,8 @@
 package com.a306.fanftasy.domain.user.service;
 
+import com.a306.fanftasy.domain.user.dto.UserDetailDTO;
+import com.a306.fanftasy.domain.user.dto.UserJoinDTO;
+import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import com.a306.fanftasy.util.JwtTokenUtil;
@@ -13,20 +16,38 @@ import java.util.NoSuchElementException;
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class UserServiceImpl {
+public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
-    private String login(String address){
+    public UserLoginDTO login(String address){
         User user = userRepository.findByAddress(address).orElseThrow(() -> new NoSuchElementException("회원이 없습니다"));
-
-
         String nickname = user.getNickname();
         String accessToken = jwtTokenUtil.generateAccessToken(nickname);
-        refreshToken = saveRefreshToken(nickname);
-        return " ";
+       // String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
+        return UserLoginDTO.of(nickname,accessToken);
 
 
         }
 
+    @Override
+    public void join(UserJoinDTO userJoinDTO) {
+           userRepository.save(User.ofUser(userJoinDTO));
+    }
+
+    @Override
+    public UserDetailDTO getUserDetail(String addresss){
+        User user = userRepository.findByAddress(addresss).orElseThrow(() -> new NoSuchElementException("회원이 없습니다"));
+        return UserDetailDTO.builder()
+                .name(user.getName())
+                .address(user.getAddress())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .phone(user.getPhone())
+                .role(user.getRole())
+                .totalPrice(user.getTotalPrice())
+                .totalSales(user.getTotalSales())
+                .build();
+    }
 
 }
