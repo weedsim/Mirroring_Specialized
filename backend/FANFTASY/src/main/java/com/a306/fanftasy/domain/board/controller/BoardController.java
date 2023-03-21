@@ -39,7 +39,7 @@ public class BoardController {
                     .messege("회원이 아닙니다.")
                     .data(null)
                     .build();
-            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
         } else {
             boardService.savePurchaseBoard(requestPurchaseBoard, user);
             responseDefault = ResponseDefault.builder()
@@ -113,14 +113,14 @@ public class BoardController {
                     .messege("회원이 아닙니다.")
                     .data(null)
                     .build();
-            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
         } else if (nft == null) {
             responseDefault = ResponseDefault.builder()
                     .success(false)
                     .messege("등록된 NFT가 없습니다.")
                     .data(null)
                     .build();
-            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
         } else {
             boardService.saveSalesBoard(requestSalesBoard, user, nft);
             responseDefault = ResponseDefault.builder()
@@ -193,7 +193,7 @@ public class BoardController {
                     .messege("회원이 아닙니다.")
                     .data(null)
                     .build();
-            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
         } else {
             boardService.saveArticleBoard(requestArticleBoard, user);
             responseDefault = ResponseDefault.builder()
@@ -261,7 +261,7 @@ public class BoardController {
                     .messege("이미 삭제된 글입니다.")
                     .data(null)
                     .build();
-            return new ResponseEntity<>(responseDefault, HttpStatus.NO_CONTENT);
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
         } else {
             boardService.removeBoard(id);
             responseDefault = ResponseDefault.builder()
@@ -279,13 +279,115 @@ public class BoardController {
         ResponseDefault responseDefault = null;
         Page<Board> boardList = boardService.boardList(page, search, type);
         Page<ResponseBoard> responseBoard = new ResponseBoard().toDtoList(boardList);
-//        Page<ResponseBoard> responseBoard = boardList.map(m -> new ResponseBoard());
         responseDefault = ResponseDefault.builder()
                 .success(true)
                 .messege("게시판 조회")
                 .data(responseBoard)
                 .build();
         return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+    }
+
+    //신고 확인
+    @GetMapping("/report")
+    public ResponseEntity<?> findBoardReportType(@Param("userId") Long userId, @Param("boardId") Long boardId) {
+        ResponseDefault responseDefault = null;
+        User user = boardService.findUserById(userId);
+        Board board = boardService.findBoardById(boardId);
+
+        if (user == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("유효하지 않은 사용자입니다!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        } else if (board == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("삭제된 게시물입니다!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        } else {
+            Boolean resultType = boardService.findBoardReportType(user, board);
+            if (resultType) {
+                responseDefault = ResponseDefault.builder()
+                        .success(true)
+                        .messege("신고 취소하기")
+                        .data(true)
+                        .build();
+            } else {
+                responseDefault = ResponseDefault.builder()
+                        .success(true)
+                        .messege("신고하기")
+                        .data(false)
+                        .build();
+            }
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        }
+    }
+
+    //신고하기
+    @PostMapping("/report")
+    public ResponseEntity<?> boardReportSave(@Param("userId") Long userId, @Param("boardId") Long boardId) {
+        ResponseDefault responseDefault = null;
+        User user = boardService.findUserById(userId);
+        Board board = boardService.findBoardById(boardId);
+
+        if (user == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("유효하지 않은 사용자입니다!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        } else if (board == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("삭제된 게시물입니다!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        } else {
+            boardService.saveBoardReport(user, board);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("게시물 신고 완료!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        }
+    }
+
+    @DeleteMapping("/report")
+    public ResponseEntity<?> boardReportRemove(@Param("userId") Long userId, @Param("boardId") Long boardId) {
+        ResponseDefault responseDefault = null;
+        User user = boardService.findUserById(userId);
+        Board board = boardService.findBoardById(boardId);
+
+        if (user == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("유효하지 않은 사용자입니다!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        } else if (board == null) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("삭제된 게시물입니다!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.BAD_REQUEST);
+        } else {
+            boardService.removeBoardReport(user, board);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("신고 취소 완료!")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        }
     }
 
 }

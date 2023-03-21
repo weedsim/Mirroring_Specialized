@@ -2,6 +2,8 @@ package com.a306.fanftasy.domain.board.service;
 
 import com.a306.fanftasy.domain.board.dto.*;
 import com.a306.fanftasy.domain.board.entity.Board;
+import com.a306.fanftasy.domain.board.entity.BoardReport;
+import com.a306.fanftasy.domain.board.repository.BoardReportRepository;
 import com.a306.fanftasy.domain.board.repository.BoardRepository;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
@@ -25,6 +27,7 @@ public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final NFTRepository nftRepository;
+    private final BoardReportRepository boardReportRepository;
 
 
     /**
@@ -148,5 +151,25 @@ public class BoardServiceImpl implements BoardService {
         Pageable pageRequest = PageRequest.of(page, 10, Sort.Direction.DESC, "boardRegDate");
         Page<Board> boardList = boardRepository.findByBoardTitleContainingAndTypeContaining(search, pageRequest, type);
         return boardList;
+    }
+
+    @Override
+    public Boolean findBoardReportType(User user, Board board) {
+        int count = boardReportRepository.findBoardReportType(user, board);
+        if (count == 0) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    @Override
+    public void saveBoardReport(User user, Board board) {
+        boardReportRepository.save(new BoardReport(board, user));
+    }
+
+    @Override
+    public void removeBoardReport(User user, Board board) {
+        boardReportRepository.deleteBoardReport(user, board);
     }
 }

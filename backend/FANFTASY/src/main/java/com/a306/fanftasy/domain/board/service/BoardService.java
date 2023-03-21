@@ -32,4 +32,10 @@ public interface BoardService {
     void modifyArticleBoard(Long id, RequestModifyArticleBoard requestModifyArticleBoard);
 
     Page<Board> boardList(int page, String search, String type);
+
+    Boolean findBoardReportType(User user, Board board);
+
+    void saveBoardReport(User user, Board board);
+
+    void removeBoardReport(User user, Board board);
 }
