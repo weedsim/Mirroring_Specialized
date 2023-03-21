@@ -2,9 +2,9 @@
   <LoginUserHeaders/>
   <NotLoginUserHeaders  v-if="i == 1"/>
   <br>
-  <div class="communityMenu">
+  <div class="community-menu">
     <input type="text" placeholder="글 검색">
-    <div class="communityMenu">
+    <div class="community-menu">
       <input type="button" value="전체보기" @click="callAll" style="margin-right: 10px;">
       <input type="button" value="일반글" @click="callGeneral" style="margin-right: 10px;">
       <input type="button" value="삽니다" @click="callPurchase" style="margin-right: 10px;">
@@ -28,12 +28,14 @@
       <tr v-for="(article, index) in articles" :key="index">
     
         <td>
-          {{ articles.length - index}}
+          {{ articles.length - index }}
         </td>
         <td>
           <div style="align-self: auto; font-size: 14px;">
             <img :src="require(`@/assets/${article.thumbnail}`)" alt="image" style="height: 20px; width: 20px;"> 
-            {{ article.title }}
+            <router-link :to="{name:'communitydetail', params:{number:articles.length - index }}" style="text-decoration:none; color: black;">
+              {{ article.title }}
+            </router-link>
           </div>
         </td>
         <td>
@@ -61,7 +63,7 @@
 
   <div style="width: 211px">
     <router-link to="/community/add" style="text-decoration: none;">
-      <button class="writeButton" >
+      <button class="write-button" >
         글쓰기
       </button>
     </router-link>
@@ -142,6 +144,7 @@ export default {
     this.articles = this.articlesData
   },  
   methods:{
+    // 게시글 분류 선택
     callAll(){
       this.articles = this.articlesData
     },
@@ -175,11 +178,16 @@ export default {
       })
       this.articles = newArticles
     },
+    // 페이지네이션
     nextPage(){
       this.pageNum+=1;
     },
     prevPage(){
       this.pageNum-=1;
+    },
+    // 게시글 작성
+    writeArticle(){
+
     }
   },
   computed: {
@@ -206,7 +214,7 @@ export default {
 </script>
 
 <style>
-  .communityMenu{
+  .community-menu{
     display: flex;
   }
 
@@ -214,7 +222,7 @@ export default {
     padding: 0px 100px;
   }
 
-  .writeButton{
+  .write-button{
     display: flex;
     right: 10px;
     width: 211px;

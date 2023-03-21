@@ -1,25 +1,25 @@
 <template>
   <div>
     <LoginUserHeaders/>
-    <NotLoginUserHeaders/>
+    <NotLoginUserHeaders v-if="i == 1"/>
 
     <!-- 프로필 이미지 -->
     <div class="circle1">
       <div class="circle2">
         <div class="circle3">
-          <img :src="require('@/assets/EthereumIcon.png')" alt="로고" class="profileLogo">
+          <img :src="require('@/assets/EthereumIcon.png')" alt="로고" class="profile-logo">
         </div>
       </div>
     </div>
 
     <!-- 메타마스크 주소 -->
-    <div class="addressInline">
-      <img :src="require('@/assets/metamaskLogo.png')" alt="여우" style="width:35px; height: 25px; padding-left: 5px; padding-right: 5px;">
-      <div id="metamaskAddress">{{address}}</div>
+    <div class="address-inline">
+      <img :src="require('@/assets/metamask_logo.png')" alt="여우" style="width:35px; height: 25px; padding-left: 5px; padding-right: 5px;">
+      <div id="metamask-address">{{address}}</div>
       <img :src="require('@/assets/copy.png')" alt="복사" style="width:28px; height: 20px; padding-left: 5px; padding-right: 5px; " @click="copyAddress">
     </div>
 
-    <button class="chargeB">
+    <button class="charge-button">
       NFN 충전
     </button>
     <div>
@@ -45,14 +45,14 @@
     <v-container>
       <v-row>
         <v-col v-for="n in 14" :key="n" :cols="2" class="mx-2 ">
-          <v-card outlined tile class="holdingItem" height="200px">
-            <div class="artistCircle">
+          <v-card outlined tile class="holding-item" height="200px">
+            <div class="artist-circle">
               {{ n }}
             </div>
             <div>
               <v-img src="@/assets/minsu.jpg" alt="민수 ">
                 
-                <v-card-text class="nftInfo">
+                <v-card-text class="nft-info">
                   <div class="font-weight-bold">
                     dfdfdffdsffs
                   </div>
@@ -138,12 +138,12 @@ export default {
   background-color: white;
 }
 
-.profileLogo{
+.profile-logo{
   width: 100px;
   height: 100px;
 }
 
-.addressInline{
+.address-inline{
   display: flex;
   align-items: center;
   border-color: #9B7CF8;
@@ -153,7 +153,7 @@ export default {
   height: 40px;
 }
 
-.chargeB{
+.charge-button{
   display: flex;
   right: 10px;
   width: 204px;
@@ -167,7 +167,7 @@ export default {
   background-color: RGB(106, 63, 193);
 }
 
-#metamaskAddress{
+#metamask-address{
   width: 440px;
   /* justify-content: right; */
   /* justify-items: right; */
@@ -176,14 +176,14 @@ export default {
 }
 
 
-.holdingItem{
+.holding-item{
   border-radius: 15px;
   z-index: 0;
   border-color: #9B7CF8;
 }
 
 
-.artistCircle{
+.artist-circle{
   position: absolute;
   margin-left: 5px;
   margin-top: 5px;
@@ -197,7 +197,7 @@ export default {
   border-radius: 50%;
 }
 
-.nftInfo{
+.nft-info{
   justify-content: center;
   background-color: white;
   font-size: 10px;

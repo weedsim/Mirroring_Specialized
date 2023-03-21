@@ -18,12 +18,12 @@ const routes = [
   },
   {
     path: '/community/add',
-    name: 'add',
+    name: 'communityadd',
     component: CommunityAddView
   },
   {
     path: '/community/:number',
-    name: 'article',
+    name: 'communitydetail',
     component: CommunityDetailView
   },
   {
