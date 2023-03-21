@@ -3,14 +3,13 @@
  * */
 package com.a306.fanftasy.domain.nft.dto;
 
-import com.a306.fanftasy.domain.user.entity.User;
+import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,11 +17,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class NFTCreateDTO {
-    private String tokenUri;
     private String title;
-    private double currentPrice;
+    private String content;
+    private long totalNum; //발행량
+    private double originPrice; //발행가
     private long regArtistId;
+    private String fileUri;
+    private String fileType; //파일 종류
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime regDate;
-    private String fileUri;
+    private List<String> tokenUris;
 }
