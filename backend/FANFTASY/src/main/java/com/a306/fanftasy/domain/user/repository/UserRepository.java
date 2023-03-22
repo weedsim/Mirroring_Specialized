@@ -10,8 +10,4 @@ public interface UserRepository extends JpaRepository<User,Long> {
 
     Optional<User> findByAddress(String address);
 
-
-    List<User> findByRegArtistOrderByRegDateDesc(User regArtist);
-
-    List<User> findByOwnerOrderByTransactionTimeDesc(User owenr);
 }

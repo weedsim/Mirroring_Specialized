@@ -49,12 +49,12 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateAccessToken(String username){
-        return doGenerateToken(username, ACCESS_TOKEN_EXPIRE_MINUTES);
+    public String generateAccessToken(String address){
+        return doGenerateToken(address, ACCESS_TOKEN_EXPIRE_MINUTES);
     }
 
-    public String generateRefreshToken(String username){
-        return doGenerateToken(username, REFRESH_TOKEN_EXPIRE_MINUTES);
+    public String generateRefreshToken(String address){
+        return doGenerateToken(address, REFRESH_TOKEN_EXPIRE_MINUTES);
     }
 
     /**
