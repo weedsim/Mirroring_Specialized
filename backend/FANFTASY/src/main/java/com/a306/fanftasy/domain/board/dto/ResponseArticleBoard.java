@@ -2,6 +2,7 @@ package com.a306.fanftasy.domain.board.dto;
 
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.user.dto.UserPublicDTO;
+import com.a306.fanftasy.domain.user.entity.User;
 import lombok.*;
 
 import java.time.LocalDateTime;
@@ -11,10 +12,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-/**
- * 구매글 세부조회 resp data
- */
-public class ResponsePurchaseBoard {
+public class ResponseArticleBoard {
 
     private Long boardId;
     private UserPublicDTO boardWriteUserId;
@@ -26,8 +24,8 @@ public class ResponsePurchaseBoard {
     private String filePath;
     private String fileType;
 
-    public ResponsePurchaseBoard fromEntity(Board board) {
-        return ResponsePurchaseBoard.builder()
+    public static ResponseArticleBoard fromEntity(Board board) {
+        return ResponseArticleBoard.builder()
                 .boardId(board.getBoardId())
                 .boardWriteUserId(UserPublicDTO.fromEntity(board.getBoardWriteUserId()))
                 .type(board.getType())
