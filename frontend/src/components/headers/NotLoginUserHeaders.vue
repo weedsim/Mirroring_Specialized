@@ -34,9 +34,9 @@
         </button>
       </label>
       <span style="margin-left: 10vw;">
-        <a href="" class="icon-margin">
-          <img :src="require('@/assets/wallet.png')" alt="지갑" />
-        </a>
+        <router-link to="" class="icon-margin">
+          <img :src="require('@/assets/wallet.png')" alt="지갑" @click="installedMetamask()" />
+        </router-link>
         <router-link to="/mypage" class="icon-margin">
           <img
             :src="require('@/assets/base_profile.png')"
@@ -51,6 +51,18 @@
 <script>
 export default {
   name: "NotLoginUserHeaders",
+  methods: {
+    async installedMetamask() { 
+      if(await this.$store.dispatch('installedMetamask') !== true){
+        this.$router.push('/SignUpView');
+      }
+      else{
+        console.log("메타마스크로 로그인");
+        const accounts = await this.$store.dispatch('login');
+        console.log(accounts[0]);
+      }
+    },
+  }
 }
 </script>
 
