@@ -1,7 +1,7 @@
-package com.a306.fanftasy.domain.nft;
+package com.a306.fanftasy.domain.nft.entity;
 
 
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.user.entity.User;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -14,39 +14,49 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @DynamicInsert
 @DynamicUpdate
-@Setter
 @Getter
 @ToString
 @Builder
 public class NFT {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "nft_id")
-    private Long nftId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
-    private User ownerId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "nft_id")
+  private Long nftId;
 
-    @Column(name = "token_uri")
-    private String tokenUri;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "owner_id")
+  private User owner;
 
-    @Column(name = "is_on_sale")
-    private Boolean isOnSale;
+  @Column(name = "token_uri")
+  private String tokenUri;
 
-    @Column(name = "current_price")
-    private double currentPrice;
+  @Column(name = "is_on_sale")
+  private Boolean isOnSale;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "reg_artist")
-    private User regArtist;
+  @Column(name = "current_price")
+  private double currentPrice;
 
-    @Column(name = "reg_date")
-    private LocalDateTime regDate;
+  @Column(name = "transaction_time")
+  private LocalDateTime transactionTime;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "nft_source_id")
+  private NFTSource nftSource;
 
-    @Column(name = "file_uri")
-    private String fileUri;
+  public void updateOwner(User owner) {
+    this.owner = owner;
+  }
 
-    @Column(name = "transaction_time")
-    private LocalDateTime transactionTime;
+  public void updateIsOnSale(boolean isOnSale) {
+    this.isOnSale = isOnSale;
+  }
+
+  public void updateCurrentPrice(double currentPrice) {
+    this.currentPrice = currentPrice;
+  }
+
+  public void updateTransactionTime(LocalDateTime transactionTime) {
+    this.transactionTime = transactionTime;
+  }
+
 }

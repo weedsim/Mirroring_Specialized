@@ -4,29 +4,37 @@
 
 package com.a306.fanftasy.domain.nft.dto;
 
-import com.a306.fanftasy.domain.user.User;
+import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.user.dto.UserPublicDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import java.time.LocalDateTime;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class NFTDetailDTO {
-    private int nftId;
-    private User owner;
+    private Long nftId;
+    private UserPublicDTO owner;
     private String tokenUri;
-    private boolean isOnSale;
     private double currentPrice;
-    private User regArtist;
+    private Boolean isOnSale;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime regDate;
-    private String fileUri;
-
+    private LocalDateTime transactionTime;
+    private NFTSourceDetailDTO nftSource;
+    public static NFTDetailDTO fromEntity(NFT nft){
+        return NFTDetailDTO.builder()
+            .nftId(nft.getNftId())
+            .owner(UserPublicDTO.fromEntity(nft.getOwner()))
+            .tokenUri(nft.getTokenUri())
+            .currentPrice(nft.getCurrentPrice())
+            .nftSource(NFTSourceDetailDTO.fromEntity(nft.getNftSource()))
+            .isOnSale(nft.getIsOnSale())
+            .transactionTime(nft.getTransactionTime())
+            .build();
+    }
 }

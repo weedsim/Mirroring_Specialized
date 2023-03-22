@@ -10,7 +10,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.*;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,10 +17,14 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Builder
 public class NFTCreateDTO {
-    private String tokenUri;
-    private double currentPrice;
-    private User regArtist;
+    private String title;
+    private String content;
+    private long totalNum; //발행량
+    private double originPrice; //발행가
+    private long regArtistId;
+    private String fileUri;
+    private String fileType; //파일 종류
     @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime regDate;
-    private String fileUri;
+    private List<String> tokenUris;
 }
