@@ -4,7 +4,7 @@
       <router-link :to="{ name: 'MarketDetailView', params: { id: 1 }}">
         <v-card class="nft-card">      
           <v-card-title class="nft-card-title">
-            <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
+            <v-img src="@/assets/coin_hoyoen.png" alt="" class="nft-img"></v-img>
           </v-card-title>
           <v-card-item class="nft-card-item">
             <p class="item-name">
@@ -17,7 +17,7 @@
               제목
             </p>
             <p class="item-content">
-              코인 손해본거 놀릴 때 호연
+              노려보는 호연
             </p>
             <p class="item-name">
               가격
@@ -34,166 +34,6 @@
           </v-card-item>
         </v-card>
       </router-link>
-      <router-link :to="{ name: 'MarketDetailView', params: { id: 2 }}">
-        <v-card class="nft-card">      
-          <v-card-title class="nft-card-title">
-            <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
-          </v-card-title>
-          <v-card-item class="nft-card-item">
-            <p class="item-name">
-              아티스트
-            </p>
-            <p class="item-content">
-              심호연
-            </p>
-            <p class="item-name">
-              제목
-            </p>
-            <p class="item-content">
-              코인 손해본거 놀릴 때 호연
-            </p>
-            <p class="item-name">
-              가격
-            </p>
-            <p class="item-content">
-              1.03FAN
-            </p>
-            <p class="item-name">
-              잔여수량
-            </p>
-            <p class="item-content">
-              19/50
-            </p>
-          </v-card-item>
-        </v-card>
-      </router-link>
-        <v-card class="nft-card">      
-        <v-card-title class="nft-card-title">
-          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
-        </v-card-title>
-        <v-card-item class="nft-card-item">
-          <p class="item-name">
-            아티스트
-          </p>
-          <p class="item-content">
-            심호연
-          </p>
-          <p class="item-name">
-            제목
-          </p>
-          <p class="item-content">
-            코인 손해본거 놀릴 때 호연
-          </p>
-          <p class="item-name">
-            가격
-          </p>
-          <p class="item-content">
-            1.03FAN
-          </p>
-          <p class="item-name">
-            잔여수량
-          </p>
-          <p class="item-content">
-          19/50
-          </p>
-        </v-card-item>
-      </v-card>
-    </div>
-    <br>
-    <div class="nft-card-class">
-      <v-card class="nft-card">      
-        <v-card-title class="nft-card-title">
-          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
-        </v-card-title>
-        <v-card-item class="nft-card-item">
-          <p class="item-name">
-            아티스트
-          </p>
-          <p class="item-content">
-            심호연
-          </p>
-          <p class="item-name">
-            제목
-          </p>
-          <p class="item-content">
-            코인 손해본거 놀릴 때 호연
-          </p>
-          <p class="item-name">
-            가격
-          </p>
-          <p class="item-content">
-            1.03FAN
-          </p>
-          <p class="item-name">
-            잔여수량
-          </p>
-          <p class="item-content">
-          19/50
-          </p>
-        </v-card-item>
-      </v-card>
-      <v-card class="nft-card">      
-        <v-card-title class="nft-card-title">
-          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
-        </v-card-title>
-        <v-card-item class="nft-card-item">
-          <p class="item-name">
-            아티스트
-          </p>
-          <p class="item-content">
-            심호연
-          </p>
-          <p class="item-name">
-            제목
-          </p>
-          <p class="item-content">
-            코인 손해본거 놀릴 때 호연
-          </p>
-          <p class="item-name">
-            가격
-          </p>
-          <p class="item-content">
-            1.03FAN
-          </p>
-          <p class="item-name">
-            잔여수량
-          </p>
-          <p class="item-content">
-          19/50
-          </p>
-        </v-card-item>
-      </v-card>
-      <v-card class="nft-card">      
-        <v-card-title class="nft-card-title">
-          <v-img src="@/assets/뉴진스.png" alt="" class="nft-img"></v-img>
-        </v-card-title>
-        <v-card-item class="nft-card-item">
-          <p class="item-name">
-            아티스트
-          </p>
-          <p class="item-content">
-            심호연
-          </p>
-          <p class="item-name">
-            제목
-          </p>
-          <p class="item-content">
-            코인 손해본거 놀릴 때 호연
-          </p>
-          <p class="item-name">
-            가격
-          </p>
-          <p class="item-content">
-            1.03FAN
-          </p>
-          <p class="item-name">
-            잔여수량
-          </p>
-          <p class="item-content">
-          19/50
-          </p>
-        </v-card-item>
-      </v-card>
     </div>
   </div>
 </template>

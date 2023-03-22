@@ -3,6 +3,7 @@ import HomeView from '../views/mainpage/HomeView.vue'
 import MyPageView from '../views/account/MyPageView.vue';
 import MarketListView from '../views/market/MarketListView.vue';
 import MarketDetailView from '../views/market/MarketDetailView.vue';
+import MarketAddView from '../views/market/MarketAddView.vue';
 import CommunityMainView from '../views/community/CommunityMainView.vue';
 
 const routes = [
@@ -20,6 +21,11 @@ const routes = [
     path: '/market',
     name: 'MarketListView',
     component: MarketListView
+  },
+  {
+    path: '/market/add',
+    name: 'MarketAddView',
+    component: MarketAddView
   },
   {
     path: '/market/:id',
