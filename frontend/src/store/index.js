@@ -15,21 +15,33 @@ export default createStore({
     
   },
   actions: {
-    async getAccount() {
+    async getAccount() { // 계정 불러오기
       const account = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
       this.state.currentAccount = account;
+      return account;
     },
-    async isMember() { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 301 에러로 반환
-      const address = await this.dispatch('login');
+    async isMember(payload) { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 301 에러로 반환
+      const address = await this.dispatch('getAccount');
       console.log(address);
       axios({
         method: "get",
         url: `${this.state.API_URL}/login/${address}`,
         params: {
-          
-        }
-      }).then((res) => {
+          payload
+        },
+
+      })
+      .then((res) => {
         console.log(res);
+        VueCookies.set('', res, '10h');
+      }) 
+      .catch((error) => {
+        console.log(error);
+        if(error.response){
+          console.log(error.response.data);
+          console.log(error.response.status); //에러 숫자
+          console.log(error.response.headers);
+        }
       })
       
     },
@@ -64,9 +76,8 @@ export default createStore({
       else { // 로그인이 안되어 있을 경우
         return false;
       }
+    },
 
-      // if(account === )
-    }
   },
   modules: {
   }

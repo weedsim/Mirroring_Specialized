@@ -47,7 +47,7 @@
 import RankingCard from "@/components/mainpage/RankingCard.vue"
 import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel"
 import "vue3-carousel/dist/carousel.css"
-import VueCookies from "vue-cookies"
+// import VueCookies from "vue-cookies"
 // import Web3 from "web3"
 // import { Carousel, Slide} from 'vue3-carousel'
 
@@ -80,8 +80,6 @@ export default {
         },
       ],
       sortnum: 0,
-      accounts: "",
-      walletAddress: null,
     }
   },
   watch: {
@@ -102,41 +100,7 @@ export default {
     selectSalesVolume() {
       this.sortnum = 1
     },
-    async getWalletAddress() { // 현재의 지갑 주소를 쿠키에 저장하는 method
-      
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' }); //지갑이 없으면 생성하는 창이 새창으로 뜬다.
-      
-      try{
-
-        if(VueCookies.isKey("walletAddress") === false){ // 지갑 주소 쿠키가 없으면
-          VueCookies.set("walletAddress", accounts[0], "10h");
-          this.walletAddress = accounts[0];
-        }
-        else{
-          if(VueCookies.get("walletAddress") !== accounts[0]) { // 지갑 주소 쿠키랑 현재의 지갑 주소랑 다르면
-            VueCookies.set("walletAddress", accounts[0], "10h");
-            this.walletAddress = accounts[0];
-          }
-          console.log("thereis");
-        }
-      } catch(error){
-        console.log(error);
-      }
-      return accounts[0]; // 
-      
-    },
-    async checkWallet() {
-      const addr = await this.getWalletAddress();
-      console.log(addr);
-      if(VueCookies.isKey("walletAddress") === true){ // 지갑 주소 쿠키가 있으면
-        if(VueCookies.get("walletAddress") !== addr){ // 지갑 주소 쿠키랑 현재의 지갑 주소가 다르면 
-          console.log("QQQQ");
-        }
-        else {
-          console.log("same");
-        }
-      }
-    },
+    
 
   },
   

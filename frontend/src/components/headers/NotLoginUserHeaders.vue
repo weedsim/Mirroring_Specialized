@@ -35,7 +35,7 @@
       </label>
       <span style="margin-left: 10vw;">
         <router-link to="" class="icon-margin">
-          <img :src="require('@/assets/wallet.png')" alt="지갑" @click="installedMetamask()" />
+          <img :src="require('@/assets/wallet.png')" alt="지갑" @click="isMember()" />
         </router-link>
         <router-link to="/mypage" class="icon-margin">
           <img
@@ -52,14 +52,9 @@
 export default {
   name: "NotLoginUserHeaders",
   methods: {
-    async installedMetamask() { 
-      if(await this.$store.dispatch('installedMetamask') !== true){ // 메타마스크가 설치되야한다.
-        this.$router.push('/SignUpView');
-      }
-      else{ // 메타마스크가 설치되어있으니
-        console.log("메타마스크로 로그인");
-        await this.$store.dispatch('isMember');
-        await this.$store.dispatch('sameAccount');
+    async isMember() {
+      if(await this.$store.dispatch('installedMetamask')){ // 메타마스크가 설치되어 있으면
+        console.log("설치 되어있음");
       }
     },
   }
