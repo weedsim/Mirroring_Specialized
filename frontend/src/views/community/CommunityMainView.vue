@@ -3,7 +3,11 @@
   <NotLoginUserHeaders  v-if="i == 1"/>
   <br>
   <div class="community-menu">
-    <input type="text" placeholder="글 검색">
+    <div>
+      <input type="text" v-model="searchItem" placeholder="글 검색">
+      <v-icon icon="mdi-magnify"  @click="searchArticle"></v-icon>
+    </div>
+
     <div class="community-menu">
       <input type="button" value="전체보기" @click="callAll" style="margin-right: 10px;">
       <input type="button" value="일반글" @click="callGeneral" style="margin-right: 10px;">
@@ -83,6 +87,9 @@ export default {
   },
   data() {
     return {
+
+      searchItem: '',
+
 // 버튼을 누르면 computed로 type별 필터링해서 articles를 반환하고 그걸 토대로 테이블에 출력하면 된다... 어떻게??
       articles: [],
       // articlesData : axios로 불러오는 데이터
@@ -144,6 +151,22 @@ export default {
     this.articles = this.articlesData
   },  
   methods:{
+    searchArticle(){
+      const item = this.searchItem
+      alert(item)
+
+      this.articles = this.articlesData
+      const newArticles = []
+      this.articles.filter((article)=>{
+        alert(item)
+        alert(article.title)
+        if (item in article.title){
+          newArticles.push(article)
+        }
+      })
+      this.articles = newArticles
+    },
+
     // 게시글 분류 선택
     callAll(){
       this.articles = this.articlesData

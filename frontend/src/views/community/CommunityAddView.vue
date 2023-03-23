@@ -3,6 +3,8 @@
   <NotLoginUserHeaders  v-if="i == 1"/>
   <br />
   <div>
+    <!-- 작성이면 placeholder가 빈칸이고, 취소하면 전체 게시글로 이동 -->
+    <!-- 수정이면 placeholder에 기존 내용이 있고, 취소할 때 본래 게시글로 이동 -->
     <div>글쓰기</div>
     <div>
       제목
