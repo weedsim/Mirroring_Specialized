@@ -21,9 +21,14 @@ public class CommentReport {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id")
-    private Comment commentId;
+    private Comment commentId; // 댓글 ID
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_report_user_id")
-    private User commentReportUserId;
+    @JoinColumn(name = "comment_report_user_id", referencedColumnName = "user_id")
+    private User commentReportUserId; // 신고자 ID
+
+    public CommentReport(Comment commentId, User commentReportUserId) {
+        this.commentId = commentId;
+        this.commentReportUserId = commentReportUserId;
+    }
 }
