@@ -53,13 +53,13 @@ export default {
   name: "NotLoginUserHeaders",
   methods: {
     async installedMetamask() { 
-      if(await this.$store.dispatch('installedMetamask') !== true){
+      if(await this.$store.dispatch('installedMetamask') !== true){ // 메타마스크가 설치되야한다.
         this.$router.push('/SignUpView');
       }
-      else{
+      else{ // 메타마스크가 설치되어있으니
         console.log("메타마스크로 로그인");
-        const accounts = await this.$store.dispatch('login');
-        console.log(accounts[0]);
+        await this.$store.dispatch('isMember');
+        await this.$store.dispatch('sameAccount');
       }
     },
   }
