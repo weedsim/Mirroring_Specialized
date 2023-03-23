@@ -19,7 +19,8 @@ import java.util.UUID;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "address")
+    @Column(name = "user_id")
+    private Long userId;
     private String address;
     private String email;
     private String nickname;
