@@ -5,12 +5,29 @@ import MarketListView from '../views/market/MarketListView.vue';
 import MarketDetailView from '../views/market/MarketDetailView.vue';
 import MarketAddView from '../views/market/MarketAddView.vue';
 import CommunityMainView from '../views/community/CommunityMainView.vue';
+import CommunityAddView from '../views/community/CommunityAddView.vue';
+import CommunityDetailView from '../views/community/CommunityDetailView.vue';
 
 const routes = [
   {
     path: '/',
     name: 'home',
     component: HomeView
+  },
+  {
+    path: '/community',
+    name: 'community',
+    component: CommunityMainView
+  },
+  {
+    path: '/community/add',
+    name: 'communityadd',
+    component: CommunityAddView
+  },
+  {
+    path: '/community/:number',
+    name: 'communitydetail',
+    component: CommunityDetailView
   },
   {
     path: '/mypage',
