@@ -1,8 +1,12 @@
 import { createStore } from 'vuex'
 import VueCookies from "vue-cookies"
 import axios from "axios"
+import createPersistedState from "vuex-persistedstate"
 
-export default createStore({
+// const API_URL = "http://70.12.246.214/api"
+
+const store = createStore({
+  plugins: [createPersistedState()],
   state: {
     // API_URL : "http://70.12.246.214/api",
     API_URL : "http://localhost/api",
@@ -124,3 +128,5 @@ export default createStore({
   modules: {
   }
 })
+
+export default store

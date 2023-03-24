@@ -4,7 +4,7 @@
     <carousel :items-to-show="1" :wrap-around="true" :autoplay="5000">
       <!-- max 1540 -->
       <slide v-for="slide in slides" :key="slide.id">
-        <div class="carousel_item">
+        <div class="carousel-item">
           <img :src="slide.image" alt="안나오냐" />
         </div>
       </slide>
@@ -40,6 +40,26 @@
     <div>
       <RankingCard />
     </div>
+    <router-link to="/market" style="text-decoration: none; color: black;">
+      <div style="width:100%; height: 935px; background-color:chocolate; display: flex; justify-content: center; align-items: center;">  
+        <div>
+          등록된 아티스트의 NFT를 구매할 수 있습니다.
+          <div>
+
+            드롭스
+          </div>
+          드랍되었습니다~~~~
+        </div>
+      </div>
+    </router-link>
+
+    <router-link to="/community" style="text-decoration: none; color: black;">
+      <div style="width:100%; height: 935px; background-color:tomato; display: flex; justify-content: center; align-items: center;">
+        <div>
+          리셀몰
+        </div>
+      </div>
+    </router-link>
   </div>
 </template>
 
@@ -108,7 +128,7 @@ export default {
 </script>
 
 <style>
-.carousel_item {
+.carousel-item {
   height: 300px;
   /* width: 100%; */
   background-color: white;

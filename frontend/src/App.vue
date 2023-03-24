@@ -1,6 +1,6 @@
 <template >   
   <v-app class="page">
-    <LoginUserHeaders />
+    <LoginUserHeaders v-if="a===1"/>
     <NotLoginUserHeaders />
     <v-main >
       <router-view />
@@ -35,5 +35,13 @@ export default {
   overflow-x: auto;
   overflow:auto;
 }
+
+@font-face {
+  font-family:'KCC-Ganpan';
+  src: url('assets/fonts/KCC-Ganpan.ttf') format('truetype');
+  font-weight: 400;
+}
+
+
 
 </style>
