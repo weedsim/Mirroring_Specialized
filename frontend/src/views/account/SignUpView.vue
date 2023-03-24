@@ -34,9 +34,9 @@ export default {
         nickname: this.nickname,
         phone: this.phone,
         role: this.role,
-        company: this.company
+        company: this.company,
       }
-      this.$store.dispatch('isMember', payload)
+      this.$store.dispatch('signup', payload)
     }
   },
   computed () {
