@@ -2,7 +2,6 @@ package com.a306.fanftasy.domain.boardlike;
 
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.board.entity.Board;
-import com.a306.fanftasy.domain.nft.entity.NFT;
 import lombok.*;
 
 import javax.persistence.*;
@@ -17,8 +16,8 @@ import javax.persistence.*;
 public class BoardLike {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
-    private Long likeId;
+    @Column(name = "board_like_id")
+    private Long boardLikeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id")
