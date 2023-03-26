@@ -12,10 +12,9 @@ spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     username: root
-    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/fanftasy
-    password: 1234
-jwt:
-  secret: ssafya306secretkeyforfanftasy
+#    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/fanftasy
+    url: jdbc:mysql://13.125.99.142:3306/FANFTASY
+    password: 12345678
   jpa:
     database: mysql
     hibernate:
@@ -24,6 +23,8 @@ jwt:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     generate-ddl: true
+jwt:
+  secret: ssafya306secretkeyforfanftasy
 # Serialize 오류 해결 (다른 방법 찾아볼 것)
   jackson:
     serialization:
