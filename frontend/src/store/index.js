@@ -8,11 +8,12 @@ import createPersistedState from "vuex-persistedstate"
 const store = createStore({
   plugins: [createPersistedState()],
   state: {
-    // API_URL : "http://70.12.246.214/api",
-    API_URL : "http://localhost/api",
+    API_URL : "https://fanftasy.kro.kr/api",
+    // API_URL : "http://localhost/api",
     CurrentAccount: null,
     RefreshToken: null,
     AccessToken: null,
+    isFan: true,
   },
   getters: {
     
@@ -42,7 +43,11 @@ const store = createStore({
       VueCookies.remove("CurrentAccount");
       VueCookies.remove("AccessToken");
       VueCookies.remove("RefreshToken");
+      return true;
     },
+    isMember() {
+
+    }
   },
   actions: {
     async getAccount() { // 계정 불러오기
@@ -51,15 +56,20 @@ const store = createStore({
       return account;
     },
     async LOGIN() { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 301 에러로 반환
-      const address = await this.dispatch('getAccount');
-      console.log(address);
-      axios({
-        method: "get",
-        url: `${this.state.API_URL}/login/${address}`,
-        params: {
-          address: this.address, //지갑 주소
+      
+      await axios({
+        method: "post",
+        url: `${this.state.API_URL}/login`,
+        // params: {
+        //   address: this.address, //지갑 주소
+        //   email: payload.email,
+        //   nickname: payload.nickname,
+        //   phone: payload.phone,
+        //   company: payload.company,
+        // },
+        data: {
+          address: this.state.currentAddress, //지갑 주소
         },
-
       })
       .then((res) => {
         console.log(res);
@@ -76,7 +86,6 @@ const store = createStore({
           return false;
         }
       })
-      
     },
     async sameAccount(){ // 쿠키와 메타마스크의 현재 지갑 주소를 비교해서 같으면 true, 다르면 false
       const account = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
@@ -86,6 +95,7 @@ const store = createStore({
           return true;
         }
         else { // 다르면 다시 로그인 절차를 밟아야 한다.
+          this.commit('LogOut');
           return false;
         }
       }
