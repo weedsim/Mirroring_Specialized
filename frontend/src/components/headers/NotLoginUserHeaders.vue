@@ -11,7 +11,7 @@
         </a>
       </span>
       <span class="headerlist">
-        <router-link to="/market" style="text-decoration: none; font-family: KCC-Ganpan;">NFT 마켓</router-link>
+        <router-link to="/market" style="text-decoration: none;">NFT 마켓</router-link>
         |
         <router-link to="/community" style="text-decoration: none"
           >커뮤니티</router-link
@@ -19,7 +19,7 @@
       </span>
     </span>
     <span style="display: inline-block">
-      <label for="" class="box">
+      <!-- <label for="" class="box">
         <input type="text" class="notting search-input" />
         <button
           href=""
@@ -32,16 +32,17 @@
             style="margin-top: 7px"
           />
         </button>
-      </label>
+      </label> -->
       <span style="margin-left: 10vw;">
-        <a href="" class="icon-margin">
+        <!-- <a href="" class="icon-margin">
           <img :src="require('@/assets/wallet.png')" alt="지갑" />
-        </a>
-        <router-link to="/mypage" class="icon-margin">
-          <img
+        </a> -->
+        <router-link to="/login" class="icon-margin">
+          <!-- <img
             :src="require('@/assets/base_profile.png')"
             alt="기본 프로필 사진"
-          />
+          /> -->
+
         </router-link>
       </span>
     </span>

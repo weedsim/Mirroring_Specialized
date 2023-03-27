@@ -34,6 +34,7 @@ export default {
   width: 100%;
   overflow-x: auto;
   overflow:auto;
+  font-family: KCC-Ganpan;
 }
 
 @font-face {
