@@ -47,4 +47,5 @@ public class NFTSource {
     this.remainNum = remainNum;
   }
 
+  public void updateLikeNum(long likeNum) {this.likeNum =  likeNum;}
 }

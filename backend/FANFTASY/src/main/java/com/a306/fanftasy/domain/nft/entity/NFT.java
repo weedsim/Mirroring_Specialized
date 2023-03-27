@@ -43,6 +43,12 @@ public class NFT {
   @JoinColumn(name = "nft_source_id")
   private NFTSource nftSource;
 
+  @Column(name = "edition_num")
+  private long editionNum;
+
+  @Column(name = "nft_like_num")
+  private long nftLikeNum;
+
   public void updateOwner(User owner) {
     this.owner = owner;
   }
@@ -59,4 +65,5 @@ public class NFT {
     this.transactionTime = transactionTime;
   }
 
+  public void updateNFTLikeNum(long nftLikeNum){ this.nftLikeNum = nftLikeNum;}
 }
