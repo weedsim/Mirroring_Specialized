@@ -135,17 +135,6 @@ export default {
     console.log(await window.ethereum.networkVersion); //string
     console.log("1");
 
-    // const rpcUrl = "https://13.125.99.142:8545";
-    // await window.ethereum.request({
-    //   method: 'wallet_addEthereumChain',
-    //   params: [
-    //     {
-    //       chainId: chainId,
-    //       rpcUrls: [rpcUrl],
-    //     },
-    //   ],
-    // });
-
     const metamaskInstallUrl = 'https://metamask.io/download.html';
     
     // Check if Web3 has already been injected by MetaMask
