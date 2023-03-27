@@ -1,12 +1,14 @@
-import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/mainpage/HomeView.vue'
+import { createRouter, createWebHistory } from 'vue-router';
+import HomeView from '../views/mainpage/HomeView.vue';
 import MyPageView from '../views/account/MyPageView.vue';
 import MarketListView from '../views/market/MarketListView.vue';
 import MarketDetailView from '../views/market/MarketDetailView.vue';
 import MarketAddView from '../views/market/MarketAddView.vue';
 import CommunityMainView from '../views/community/CommunityMainView.vue';
+import SignUpView from '../views/account/SignUpView.vue';
 import CommunityAddView from '../views/community/CommunityAddView.vue';
 import CommunityDetailView from '../views/community/CommunityDetailView.vue';
+import ResellListView from '../views/resell/ResellListView.vue';
 
 const routes = [
   {
@@ -50,9 +52,14 @@ const routes = [
     component: MarketDetailView
   },
   {
-    path: '/community',
-    name: 'CommunityMainView',
-    component: CommunityMainView
+    path: '/resell',
+    name: 'ResellListView',
+    component: ResellListView
+  },
+  {
+    path: '/signup',
+    name: 'SignUpview',
+    component: SignUpView
   },
 ]
 
