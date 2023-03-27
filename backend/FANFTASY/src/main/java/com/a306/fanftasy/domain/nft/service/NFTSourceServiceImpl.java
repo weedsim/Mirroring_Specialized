@@ -28,27 +28,24 @@ public class NFTSourceServiceImpl implements NFTSourceService {
   @Override
   public List<NFTSourceListDTO> getNFTSourceList(int orderType, int page, String keyword) {
     try {
-      List<NFTSource> entityList;
+      List<NFTSource> entityList = null;
       List<NFTSourceListDTO> result;
       //(page-1)*6+1부터 page*6까지의 결과를 가져와야함
       //OrderType은 1,2,3 최신순,판매량,판매금액 순
       //keyword가 null이면 무시
-      PageRequest pageRequest = null;
       switch (orderType) {
         case 1: //최신순
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("regDate").descending());
-
+          entityList = nftSourceRepository.findByConditionOrderByRegDate(keyword);
           break;
         case 2: //잔여량 적은순
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("remainNum").ascending());
+          entityList = nftSourceRepository.findByConditionOrderByRemainNumAsc(keyword);
           break;
-        case 3: //금액순
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("originPrice").ascending());
+        case 3: //금액높은순
+          entityList = nftSourceRepository.findByConditionOrderByOriginPriceAsc(keyword);
           break;
         case 4:
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("originPrice").descending());
+          entityList = nftSourceRepository.findByConditionOrderByOriginPriceDesc(keyword);
       }//switch
-      entityList = nftSourceRepository.findByCondition(keyword, pageRequest);
       //엔티티를 DTO로 변환
       result = entityList.stream().map(m -> NFTSourceListDTO.fromEntity(m)).collect(
           Collectors.toList());
