@@ -17,7 +17,7 @@
           <div class="button-hover">
             <button class="artist-button" @click="isArtist">
               <v-img class="img-artist" src="@/assets/Micro.png" alt="artistLogo" style="height: 7vh ; width: 7vw;"></v-img>
-              <span style="margin-bottom:3vh">
+              <span style="margin-bottom:3vh; font-size:24px;">
                 ARTIST
               </span>
             </button>
@@ -26,7 +26,7 @@
           <div class="button-hover">
             <button class="fan-button" @click="isFan">
               <v-img class="img-fan" src="@/assets/fan-club.png" alt="fanLogo" style="height: 7vh ; width: 7vw;"></v-img>
-              <span style="margin-bottom:3vh">
+              <span style="margin-bottom:3vh; font-size:24px;">
                 FAN
               </span>
             </button>
@@ -133,11 +133,8 @@ export default {
   
   border: none;
   background: #FFFFFF;
-  /* box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); */
   
   border-radius: 25px;
-  /* padding: 12px 24px;
-  margin: 0 8px; */
   font-size: 16px;
   cursor: pointer;
 }
@@ -148,14 +145,11 @@ export default {
 .button-hover:hover .img-artist{
   transition: .3s;
   animation: vibration1 .3s infinite;
-  /* box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5); */
-  /* transform: scale(1.2); */
 }
-.button-hover2:hover .img-artist{
-  transition: .3s;
-  /* animation: vibration1 .3s infinite; */
+.button-hover:hover{
+  border-radius: 25px;
+  color: #6A3FC1;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
-  /* transform: scale(1.2); */
 }
 @keyframes vibration1 {
   0% {
@@ -178,7 +172,6 @@ export default {
 .button-hover:hover .img-fan{
   transition: .3s;
   animation: vibration .3s infinite;
-  /* transform: scale(1.2); */
 }
 @keyframes vibration {
   0% {
@@ -212,10 +205,7 @@ export default {
   top: 4vh;
   
   background: #FFFFFF;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.25);
   border-radius: 25px;
-  /* padding: 12px 24px;
-  margin: 0 8px; */
   font-size: 16px;
   cursor: pointer;
 }
