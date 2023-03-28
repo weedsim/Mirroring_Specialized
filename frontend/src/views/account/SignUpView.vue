@@ -30,9 +30,6 @@
         </video>
       </div>
     </div>
-    <!-- <video style="display:block; width:100px; max-width: 100%;" autoplay loop>
-      <source src="https://cdn.sanity.io/files/599r6htc/localized/4caa8274fa1a76f5df188b7969c41e2b00890801.mp4" type="video/mp4">
-    </video> -->
   </div>
 </template>
 

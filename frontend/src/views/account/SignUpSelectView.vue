@@ -139,6 +139,12 @@ export default {
   cursor: pointer;
 }
 
+.button-hover{
+  border-style: solid;
+  border-color: #DAD2E9;
+  border-radius: 25px;
+}
+
 .button-hover:not(:hover) .img-artist{
   transition: .3s;
 }
@@ -148,6 +154,7 @@ export default {
 }
 .button-hover:hover{
   border-radius: 25px;
+  border-color: #6A3FC1;
   color: #6A3FC1;
   box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.5);
 }
