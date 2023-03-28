@@ -50,17 +50,34 @@ export default {
     async connectWallet(){ // 회원가입
       this.address = await this.$store.dispatch('getAccount');
       console.log(this.address);
-      const payload = {
-        address: this.address,
-        email : this.email,
-        nickname: this.nickname,
-        phone: this.phone,
-        role: this.role,
-        company: this.company,
+      if(this.company === null){
+        this.company = 'once';
       }
-      console.log(payload);
-      this.$store.dispatch('LOGIN');
-      // await this.$store.dispatch('signup', payload);
+      this.$store.state.email = this.email;
+      this.$store.state.address = this.address;
+      this.$store.state.phone = this.phone;
+      this.$store.state.nickname = this.nickname;
+      this.$store.state.name = this.name;
+      this.$store.state.role = this.role;
+      this.$store.state.company = this.company;
+      await this.$store.dispatch('signup');
+
+      // this.email = "email1";
+      // this.nickname = "nickname1";
+      // this.profileImg = "profileImg1";
+      //   this.$store.state.email = this.email
+      //   this.$store.state.nickname = this.nickname
+      //   this.$store.state.profileImg = this.profileImg
+      
+      // await this.$store.dispatch('modiUserInfo');
+
+      // await this.$store.dispatch('userDetail');
+      // console.log(this.$store.state.name);
+      
+      // const result = await this.$store.dispatch('LOGIN');
+      // console.log("r");
+      // console.log(result);
+      console.log(this.$store.state.success);
     }
   },
   computed () {
