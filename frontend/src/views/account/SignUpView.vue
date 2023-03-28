@@ -81,8 +81,8 @@ export default {
 
 .title {
   display: flex;
-  height: 50px;
-  width: 80px;
+  /* height: 50px;
+  width: 80px; */
   font-size: 40px;
   color: purple;
 }
