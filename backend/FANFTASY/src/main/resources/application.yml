@@ -33,3 +33,15 @@ jwt:
   jackson:
     serialization:
       fail-on-empty-beans: false
+
+cloud:
+  aws:
+    s3:
+      bucket: fanftasy
+    credentials:
+      access-key: AKIAST5Q4TVWAJRQMPNY
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
