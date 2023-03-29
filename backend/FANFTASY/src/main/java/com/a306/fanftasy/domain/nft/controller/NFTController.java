@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,11 +24,11 @@ public class NFTController {
 
     //1. NFT 생성
     @PostMapping
-    public ResponseEntity<?> NFTAdd(@RequestBody NFTCreateDTO nftCreateDto){
+    public ResponseEntity<?> NFTAdd(@RequestParam("file") MultipartFile file, @RequestParam("info") NFTCreateDTO nftCreateDto){
         log.info("NFT 생성 요청 : " + nftCreateDto.toString());
         ResponseDefault responseDefault = null;
         try{
-            nftService.addNFT(nftCreateDto);
+            nftService.addNFT(file, nftCreateDto);
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){

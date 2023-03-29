@@ -17,6 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @Slf4j
@@ -28,8 +29,16 @@ public class NFTServiceImpl implements NFTService {
 
   //1. NFT 생성
   @Override
-  public void addNFT(NFTCreateDTO nftCreateDTO) {
+  public void addNFT(MultipartFile file, NFTCreateDTO nftCreateDTO) {
     try {
+      //1. 파일을 ipfs에 저장하기 => file CID return받기
+      //2. 파일을 local에 저장하기 => 로컬에 저장된 파일 주소는 일정하게?
+      //3. NFT Source 데이터 + file CID ipfs에 저장하기 => Metadata CID return 받기
+      //4. NFT생성 스마트컨트랙트 호출
+
+
+
+
       long artistId = nftCreateDTO.getRegArtistId();
       log.info(String.valueOf(artistId));
       //등록 아티스트
