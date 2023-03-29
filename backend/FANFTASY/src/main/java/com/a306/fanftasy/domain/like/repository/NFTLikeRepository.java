@@ -9,4 +9,6 @@ public interface NFTLikeRepository extends JpaRepository<NFTLike, Long> {
 
 //  @Query("SELECT n FROM NFT n WHERE n.nftSource = :nftSource And n.nftSource.regArtist = n.owner")
   NFTLike findFirstByNftAndUser(NFT nft, User user );
+
+  void deleteByNftAndUser(NFT nft, User user);
 }

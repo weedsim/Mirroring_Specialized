@@ -21,11 +21,11 @@ public class LikeController {
 
   private final LikeService likeService;
   @GetMapping("/source")
-  public ResponseEntity<?> sourceLike(@RequestParam long nftSourceId){
+  public ResponseEntity<?> sourceLike(@RequestParam long nftSourceId, @RequestParam long userId){
     log.info("NFT Source 좋아요 요청 : " + nftSourceId);
     ResponseDefault responseDefault = null;
     try{
-      likeService.sourceLike(nftSourceId);
+      likeService.sourceLike(nftSourceId, userId);
       responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
       return ResponseEntity.ok().body(responseDefault);
     }catch (Exception e){
@@ -35,11 +35,11 @@ public class LikeController {
     }
   }
   @GetMapping("/source-cancel")
-  public ResponseEntity<?> sourceCancel(@RequestParam long nftSourceId){
+  public ResponseEntity<?> sourceCancel(@RequestParam long nftSourceId, @RequestParam long userId){
     log.info("NFT Source 좋아요 취소 : " + nftSourceId);
     ResponseDefault responseDefault = null;
     try{
-      likeService.sourceCancel(nftSourceId);
+      likeService.sourceCancel(nftSourceId, userId);
       responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
       return ResponseEntity.ok().body(responseDefault);
     }catch (Exception e){
@@ -49,11 +49,11 @@ public class LikeController {
     }
   }
   @GetMapping("/nft")
-  public ResponseEntity<?> nftLike(@RequestParam long nftId){
+  public ResponseEntity<?> nftLike(@RequestParam long nftId, @RequestParam long userId){
     log.info("NFT 좋아요 요청 : " + nftId);
     ResponseDefault responseDefault = null;
     try{
-      likeService.nftLike(nftId);
+      likeService.nftLike(nftId, userId);
       responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
       return ResponseEntity.ok().body(responseDefault);
     }catch (Exception e){
@@ -63,11 +63,11 @@ public class LikeController {
     }
   }
   @GetMapping("/source-cancel")
-  public ResponseEntity<?> nftCancel(@RequestParam long nftId){
+  public ResponseEntity<?> nftCancel(@RequestParam long nftId, @RequestParam long userId){
     log.info("NFT 좋아요 취소 : " + nftId);
     ResponseDefault responseDefault = null;
     try{
-      likeService.nftCancel(nftId);
+      likeService.nftCancel(nftId, userId);
       responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
       return ResponseEntity.ok().body(responseDefault);
     }catch (Exception e){

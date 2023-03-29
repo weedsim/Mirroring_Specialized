@@ -9,5 +9,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface NFTSourceLikeRepository extends JpaRepository<NFTSourceLike, Long> {
   NFTSourceLike findFirstByNftSourceAndUser(NFTSource nftSource, User user );
-
+  void deleteByNftSourceAndUser(NFTSource nftSource, User user);
 }
