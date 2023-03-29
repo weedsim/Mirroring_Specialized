@@ -1,16 +1,22 @@
 package com.a306.fanftasy.util;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
+import com.a306.fanftasy.domain.user.entity.User;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
 
 @Slf4j
@@ -49,12 +55,12 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateAccessToken(String address ,Long userId){
-        return doGenerateToken(address, userId,ACCESS_TOKEN_EXPIRE_MINUTES);
+    public String generateAccessToken(String address ,Long userId,String role){
+        return doGenerateToken(address, userId,role,ACCESS_TOKEN_EXPIRE_MINUTES);
     }
 
-    public String generateRefreshToken(String address ,Long userId){
-        return doGenerateToken(address, userId,REFRESH_TOKEN_EXPIRE_MINUTES);
+    public String generateRefreshToken(String address ,Long userId,String role){
+        return doGenerateToken(address, userId,role,REFRESH_TOKEN_EXPIRE_MINUTES);
     }
 
 
@@ -64,13 +70,19 @@ public class JwtTokenUtil {
      * username,발급날짜,만료기간을 payload 에 넣고 application.yml 에 설정한 secretkey 로 서명 후 HS256알고리즘으로 암호화한다.
      * @param userId
      * @param Address
+     * @param role
+     * @param profileImg
+     * @param nickname
      * @param expireTime
      * @return
      */
-    private String doGenerateToken(String Address,Long userId, long expireTime){
+    private String doGenerateToken(String Address,Long userId,String profileImg, String nickname,String role, long expireTime){
         Claims claims = Jwts.claims();
         claims.put("Address", Address);
         claims.put("userId",userId);
+        claims.put("nickname",nickname);
+        claims.put("profileImg",profileImg);
+        claims.put("role",role);
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -79,13 +91,34 @@ public class JwtTokenUtil {
                 .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
                 .compact();
     }
-
-    public Boolean validateToken(String token, UserDetails userDetails){
-        String username = getUsername(token);
-        return username.equals(userDetails.getUsername())
-                && !isTokenExpired(token);
+    public Authentication getAuthentication(UserLoginDTO user, String role) {
+        return new UsernamePasswordAuthenticationToken(user, "",
+                Arrays.asList(new SimpleGrantedAuthority(role)));
     }
 
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
+            return true;
+        } catch (io.jsonwebtoken.security.SecurityException | MalformedJwtException e) {
+            log.info("잘못된 JWT 서명입니다.");
+        } catch (ExpiredJwtException e) {
+            log.info("만료된 JWT 토큰입니다.");
+        } catch (UnsupportedJwtException e) {
+            log.info("지원되지 않는 JWT 토큰입니다.");
+        } catch (IllegalArgumentException e) {
+            log.info("JWT 토큰이 잘못되었습니다.");
+        }
+        return false;
+    }
+
+    private Claims parseClaims(String accessToken) {
+        try {
+            return Jwts.parserBuilder().setSigningKey(SECRET_KEY.getBytes()).build().parseClaimsJws(accessToken).getBody();
+        } catch (ExpiredJwtException e) {
+            return e.getClaims();
+        }
+    }
     public long getRemainMilliSeconds(String token){
         Date expiration = extratAllClaims(token).getExpiration();
         Date now = new Date();
@@ -97,6 +130,14 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token).getBody();
 
         String userId = jws.get("userId").toString();
+        return Long.parseLong(userId);
+    }
+    public static String getUserNickname(String token) {
+        Claims jws = Jwts.parser()
+                .setSigningKey(SECRET_KEY.getBytes())
+                .parseClaimsJws(token).getBody();
+
+        String userId = jws.get("userni").toString();
         return Long.parseLong(userId);
     }
 }
