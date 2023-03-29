@@ -49,25 +49,28 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateAccessToken(String address){
-        return doGenerateToken(address, ACCESS_TOKEN_EXPIRE_MINUTES);
+    public String generateAccessToken(String address ,Long userId){
+        return doGenerateToken(address, userId,ACCESS_TOKEN_EXPIRE_MINUTES);
     }
 
-    public String generateRefreshToken(String address){
-        return doGenerateToken(address, REFRESH_TOKEN_EXPIRE_MINUTES);
+    public String generateRefreshToken(String address ,Long userId){
+        return doGenerateToken(address, userId,REFRESH_TOKEN_EXPIRE_MINUTES);
     }
+
 
     /**
      * 토큰 생성 매서드
      * JWT 구성 ( header.payload.signature )
      * username,발급날짜,만료기간을 payload 에 넣고 application.yml 에 설정한 secretkey 로 서명 후 HS256알고리즘으로 암호화한다.
-     * @param username
+     * @param userId
+     * @param Address
      * @param expireTime
      * @return
      */
-    private String doGenerateToken(String username, long expireTime){
+    private String doGenerateToken(String Address,Long userId, long expireTime){
         Claims claims = Jwts.claims();
-        claims.put("username", username);
+        claims.put("Address", Address);
+        claims.put("userId",userId);
 
         return Jwts.builder()
                 .setClaims(claims)

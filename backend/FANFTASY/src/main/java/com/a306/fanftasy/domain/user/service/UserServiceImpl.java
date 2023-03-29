@@ -26,11 +26,12 @@ public class UserServiceImpl implements UserService{
         System.out.println("설마설마 설마사카 "+address);
         User user = userRepository.findByAddress(address);
         if(user!=null){
+            Long userId=user.getUserId();
             String nickname=user.getNickname();
             String profileImg=user.getProfileImg();
-//        String accessToken = jwtTokenUtil.generateAccessToken(address);
-//        String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
-            return UserLoginDTO.of(nickname,address,profileImg);
+       //   String accessToken = jwtTokenUtil.generateAccessToken(address,userId)
+       //   String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
+            return UserLoginDTO.of(userId,nickname,address,profileImg);
         }
         else{
             return null;

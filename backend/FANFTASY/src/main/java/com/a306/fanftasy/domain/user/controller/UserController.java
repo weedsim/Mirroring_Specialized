@@ -36,7 +36,7 @@ public class UserController {
         String accessToken = null;
 
         if (userLoginDTO != null) {//멤버 O
-            accessToken = jwtTokenUtil.generateAccessToken(address);
+            accessToken = jwtTokenUtil.generateAccessToken(address,userLoginDTO.getUserId());
             headers.set("accessToken", accessToken);
             responseDefault = ResponseDefault.builder()
                     .success(true)
