@@ -18,7 +18,7 @@ import java.util.Date;
 public class JwtTokenUtil {
 
     @Value("${jwt.secret}")
-    private String SECRET_KEY;
+    private static String SECRET_KEY;
     private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60*3; // 시간 단위
     private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60 * 24 * 7; // 주단위
     /**
@@ -90,6 +90,14 @@ public class JwtTokenUtil {
         Date expiration = extratAllClaims(token).getExpiration();
         Date now = new Date();
         return expiration.getTime() - now.getTime();
+    }
+    public static Long getUserId(String token) {
+        Claims jws = Jwts.parser()
+                .setSigningKey(SECRET_KEY.getBytes())
+                .parseClaimsJws(token).getBody();
+
+        String userId = jws.get("userId").toString();
+        return Long.parseLong(userId);
     }
 }
 
