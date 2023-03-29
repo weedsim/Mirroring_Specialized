@@ -50,33 +50,30 @@ export default {
     async connectWallet(){ // 회원가입
       this.address = await this.$store.dispatch('getAccount');
       console.log(this.address);
-      if(this.company === null){
-        this.company = 'once';
-      }
-      this.$store.state.email = this.email;
-      this.$store.state.address = this.address;
-      this.$store.state.phone = this.phone;
-      this.$store.state.nickname = this.nickname;
-      this.$store.state.name = this.name;
-      this.$store.state.role = this.role;
-      this.$store.state.company = this.company;
-      await this.$store.dispatch('signup');
 
-      // this.email = "email1";
-      // this.nickname = "nickname1";
-      // this.profileImg = "profileImg1";
-      //   this.$store.state.email = this.email
-      //   this.$store.state.nickname = this.nickname
-      //   this.$store.state.profileImg = this.profileImg
+      // if(this.company === null){
+      //   this.company = 'once';
+      // }
+      // this.$store.state.email = this.email;
+      // this.$store.state.address = this.address;
+      // this.$store.state.phone = this.phone;
+      // this.$store.state.nickname = this.nickname;
+      // this.$store.state.name = this.name;
+      // this.$store.state.role = this.role;
+      // this.$store.state.company = this.company;
+      // await this.$store.dispatch('signup');
       
       // await this.$store.dispatch('modiUserInfo');
 
       // await this.$store.dispatch('userDetail');
-      // console.log(this.$store.state.name);
+      // console.log(this.$store.state.nickname);
       
       // const result = await this.$store.dispatch('LOGIN');
       // console.log("r");
       // console.log(result);
+
+      // await this.$store.dispatch('modiUserInfo');
+
       console.log(this.$store.state.success);
     }
   },

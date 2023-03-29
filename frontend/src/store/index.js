@@ -8,13 +8,16 @@ import createPersistedState from "vuex-persistedstate"
 const store = createStore({
   plugins: [createPersistedState()],
   state: {
-    // API_URL : "https://fanftasy.kro.kr/api",
-    API_URL : "http://70.12.247.124:8080/api",
+    API_URL : "https://fanftasy.kro.kr/api",
+    // API_URL : "http://70.12.247.124:8080/api",
     // API_URL : "http://localhost:8080/api",
     CurrentAccount: null,
     // RefreshToken: null,
     AccessToken: null,
     isFan: true,
+    isMember:false,
+    isLogin: false,
+    isSame: false,
     name: null,
     nickname: null,
     phone: null,
@@ -24,29 +27,28 @@ const store = createStore({
     totalPrice: null,
     totalSales: null,
     profileImg: null,
+    orderType: null,
+    page: null,
+    keyword: null,
     success: false,
   },
   getters: {
     
   },
   mutations: {
+
     installedMetamask() { // metamask 확장자가 설치 되어있는지 확인하는 method
       // Check if Web3 has already been injected by MetaMask
       if(typeof window.ethereum !== 'undefined'){
         console.log("설치되있음");
-        return true;
       }
       else {
         alert("저희 사이트는 METAMASK가 필수입니다.");
         //METAMASK 설치 페이지가 새 창에 뜸
         window.open('https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn', "_blank", "width=500, height=500");
-        return false;
       }
     },
-    setCookies(){ // 메타마스크의 현재 지갑 주소들 return -> 현재 연결된 거만 뜨는 상황
-      VueCookies.set("CurrentAccount", this.state.currentAccount, "10h");
-      return this.state.currentAccount;
-    },
+
     LogOut() {
       this.state.CurrentAccount = null;
       this.state.AccessToken = null;
@@ -54,31 +56,34 @@ const store = createStore({
       VueCookies.remove("CurrentAccount");
       VueCookies.remove("AccessToken");
       // VueCookies.remove("RefreshToken");
-      return true;
     },
+
     LogInStatus() {
-      if(VueCookies.isKey('RefreshToken')){
-        return true;
+      // if(VueCookies.isKey('RefreshToken')){
+      if(VueCookies.isKey('AccessToken')){
+        this.state.isLogin = true;
       }
       else {
-        return false;
+        this.state.isLogin = false;
       }
-    }
+    },
+
+
   },
   actions: {
     async getAccount() { // 계정 불러오기
       const account = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
-      console.log(account);
       this.state.currentAccount = account;
-      return account;
+      console.log(account);
     },
+
     async LOGIN() { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 404 에러
-      const account = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
+      await this.dispatch('getAccount');
       await axios({
         method: "post",
         url: `${this.state.API_URL}/user/login`,
         params: {
-          address: account, //지갑 주소
+          address: this.state.CurrentAccount, //지갑 주소
         },
       })
       .then((res) => {
@@ -90,25 +95,27 @@ const store = createStore({
       .catch((error) => {
         console.log(error);
         console.log(error.response.data.success);
-        if(!error.response.data.success){
-        this.state.success =false;
+        if(!error.response.data.success){ // 회원이 아닙니다.
+          this.state.success = false;
+          this.state.isMember = false;
         }
-        this.state.success =false;
+        this.state.success = false;
       })
       
     },
-    async sameAccount(){ // 쿠키와 메타마스크의 현재 지갑 주소를 비교해서 같으면 true, 다르면 false
-      const account = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
-      console.log(account);
-      if(VueCookies.isKey("CurrentAccount") === true) { // 이미 로그인을 했을 경우
-        if(VueCookies.get("CurrentAccount") === account) { // 마지막으로 로그인 했을 때의 쿠키와 현재의 메타마스크에 연결되있는 계정 주소가 같을 경우
-          this.state.success = true;
 
+    async sameAccount(){ // 쿠키와 메타마스크의 현재 지갑 주소를 비교해서 같으면 true, 다르면 false
+      await this.dispatch('getAccount');
+      if(VueCookies.isKey("CurrentAccount") === true) { // 이미 로그인을 했을 경우
+        if(VueCookies.get("CurrentAccount") === this.state.CurrentAccount) { // 마지막으로 로그인 했을 때의 쿠키와 현재의 메타마스크에 연결되있는 계정 주소가 같을 경우
+          this.state.isSame = true;
+          this.state.success = true;
         }
         else { // 다르면 다시 로그인 절차를 밟아야 한다.
+          this.state.isSame = false;
           this.commit('LogOut');
+          this.dispatch('LOGIN');
           this.state.success = false;
-
         }
       }
       else { // 로그인이 안되어 있을 경우
@@ -116,8 +123,9 @@ const store = createStore({
 
       }
     },
-    async signup(payload) {
-      console.log(payload);
+
+    async signup() {
+
       await axios({
         method: "post",
         url: `${this.state.API_URL}/user/join`,
@@ -125,7 +133,7 @@ const store = createStore({
           address: this.state.address, //지갑 주소
           email : this.state.email, //이메일
           nickname: this.state.nickname, //닉네임
-          phone: payload.phone, //전화번호
+          phone: this.state.phone, //전화번호
           role: this.state.role, //아티스트 or 팬
           company: this.state.company, //소속사
         },
@@ -139,8 +147,10 @@ const store = createStore({
         this.state.success = false;
       })
     },
+
     async userDetail() {
       const address = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
+      console.log(address);
       await axios({
         method: "get",
         url: `${this.state.API_URL}/user/detail`,
@@ -157,17 +167,16 @@ const store = createStore({
         console.log(err);
       })
     },
-    async modiUserInfo(payload) {
+
+    async modiUserInfo() {
       const address = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
-      console.log(payload);
       await axios({
         method: "put",
         url: `${this.state.API_URL}/user/modi`,
         data: {
           address: address,
-          email: this.state.email,
           nickname: this.state.nickname,
-          profileImg: null,
+          profileImg: this.state.profileImg,
         }
       }) .then((res) => {
         console.log(res);
@@ -177,6 +186,24 @@ const store = createStore({
         this.state.success = false;
       })
     },
+
+    async dropsAll() {
+      await axios({
+        methos: "get",
+        url: `${this.state.API_URL}/nft/market`,
+        params: {
+          orderType: this.state.orderType,
+          page: this.state.page,
+          keyword: this.state.keyword,
+        },
+      })
+      .then ((res) => {
+        console.log(res);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+    }
   },
   modules: {
   }
