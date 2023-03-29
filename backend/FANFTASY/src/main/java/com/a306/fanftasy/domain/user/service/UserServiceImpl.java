@@ -27,8 +27,6 @@ public class UserServiceImpl implements UserService{
         String accessToken = jwtTokenUtil.generateAccessToken(address);
        // String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
         return UserLoginDTO.of(nickname,accessToken,address);
-
-
         }
 
     @Override
