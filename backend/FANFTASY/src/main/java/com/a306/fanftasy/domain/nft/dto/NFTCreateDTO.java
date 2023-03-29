@@ -3,6 +3,7 @@
  * */
 package com.a306.fanftasy.domain.nft.dto;
 
+import com.a306.fanftasy.domain.user.entity.User;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +12,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @NoArgsConstructor

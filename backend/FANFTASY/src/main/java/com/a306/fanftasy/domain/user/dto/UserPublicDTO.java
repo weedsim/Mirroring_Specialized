@@ -23,9 +23,9 @@ public class UserPublicDTO {
 
   public static UserPublicDTO fromEntity(User user){
     return UserPublicDTO.builder()
-        .userId(user.getUserId())
-        .profileImg(user.getProfileImg())
-        .nickname(user.getNickname())
-        .build();
+            .userId(user.getUserId())
+            .profileImg(user.getProfileImg())
+            .nickname(user.getNickname())
+            .build();
   }
 }
