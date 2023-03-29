@@ -18,5 +18,8 @@ public class UserJoinDTO {
     private String phone;
     private String role;
 
+    private String company;
+
+
 
 }

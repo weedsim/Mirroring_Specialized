@@ -11,13 +11,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserLoginDTO {
     private String address;
+    private String profileImg;
     private String nickname;
-    private String accessToken;
-    public static UserLoginDTO of(String accessToken, String nickname,String address){
+    public static UserLoginDTO of(String nickname,String address,String profileImg){
         return UserLoginDTO.builder()
                 .nickname(nickname)
-                .accessToken(accessToken)
                 .address(address)
+                .profileImg(profileImg)
                 .build();
     }
 }

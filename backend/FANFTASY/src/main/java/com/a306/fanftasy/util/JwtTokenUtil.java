@@ -19,7 +19,7 @@ public class JwtTokenUtil {
 
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-    private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60; // 시간 단위
+    private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60*3; // 시간 단위
     private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60 * 24 * 7; // 주단위
     /**
      * 토큰 추출 메서드

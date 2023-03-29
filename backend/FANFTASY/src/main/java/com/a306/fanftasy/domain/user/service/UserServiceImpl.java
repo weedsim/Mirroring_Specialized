@@ -22,11 +22,20 @@ public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
     public UserLoginDTO login(String address){
-        User user = userRepository.findByAddress(address).orElseThrow(() -> new NoSuchElementException("회원이 없습니다"));
-        String nickname=user.getNickname();
-        String accessToken = jwtTokenUtil.generateAccessToken(address);
-       // String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
-        return UserLoginDTO.of(nickname,accessToken,address);
+        log.info(address);
+        System.out.println("설마설마 설마사카 "+address);
+        User user = userRepository.findByAddress(address);
+        if(user!=null){
+            String nickname=user.getNickname();
+            String profileImg=user.getProfileImg();
+//        String accessToken = jwtTokenUtil.generateAccessToken(address);
+//        String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
+            return UserLoginDTO.of(nickname,address,profileImg);
+        }
+        else{
+            return null;
+        }
+
 
 
         }
@@ -38,7 +47,8 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDetailDTO getUserDetail(String addresss){
-        User user = userRepository.findByAddress(addresss).orElseThrow(() -> new NoSuchElementException("회원이 없습니다"));
+        log.info("hihihi"+addresss);
+        User user = userRepository.findByAddress(addresss);
         return UserDetailDTO.builder()
                 .name(user.getName())
                 .address(user.getAddress())
@@ -54,8 +64,10 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public void updateUser(UserUpdateDTO userUpdateDTO) {
-        User user = userRepository.findByAddress(userUpdateDTO.getAddress()).orElseThrow(() -> new NoSuchElementException("회원이 없습니다"));
+        User user = userRepository.findByAddress(userUpdateDTO.getAddress());
+        log.info(userUpdateDTO.getNickname());
         if (StringUtils.hasText(userUpdateDTO.getNickname())) {
+            log.info("AAAAAAAAA");
             user.setNickname(userUpdateDTO.getNickname());
         }
         if (StringUtils.hasText(userUpdateDTO.getProfileImg())) {
