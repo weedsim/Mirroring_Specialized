@@ -59,7 +59,6 @@ public class UserServiceImpl implements UserService{
         if (StringUtils.hasText(userUpdateDTO.getProfileImg())) {
             user.setProfileImg(userUpdateDTO.getProfileImg());
         }
-
         userRepository.save(user);
     }
 
