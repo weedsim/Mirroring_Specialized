@@ -28,6 +28,8 @@ public class NFTSourceDetailDTO {
   private String fileUri; //파일 uri
   private String fileType; //파일 종류
   private long likeNum;
+  private boolean userLike;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime regDate;
   public static NFTSourceDetailDTO fromEntity(NFTSource nftSource){
@@ -44,5 +46,8 @@ public class NFTSourceDetailDTO {
         .fileUri(nftSource.getFileUri())
         .fileType(nftSource.getFileType())
         .build();
+  }
+  public void updateUserLike(boolean userLike){
+    this.userLike = userLike;
   }
 }

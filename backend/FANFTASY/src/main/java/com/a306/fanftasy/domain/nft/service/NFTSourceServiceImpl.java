@@ -61,6 +61,18 @@ public class NFTSourceServiceImpl implements NFTSourceService {
     try {
       NFTSource nftSource = nftSourceRepository.findById(nftSourceId);
       NFTSourceDetailDTO nftSourceDetailDTO = NFTSourceDetailDTO.fromEntity(nftSource);
+//      //좋아요 찾기
+//      //securitycontext holder에서 user를 꺼내서
+      //User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+      //long userId = user.getUserId();
+      //boolean userLike =false;
+      //if(nftSourceLikeRepository.findByUserAndNFTSource(user, nftSource)!=null){
+      // userLike = true;
+      // }
+      //로그인된 userid와 nftsourceid 를 통해서 nftsourcelike가 존재하는지 find
+      // 반환값이 null이 아니면 userLike = true;
+//    nftSourceDetailDTO.updateUserLike(userLike);
+
       return nftSourceDetailDTO;
     } catch (Exception e) {
       throw e;

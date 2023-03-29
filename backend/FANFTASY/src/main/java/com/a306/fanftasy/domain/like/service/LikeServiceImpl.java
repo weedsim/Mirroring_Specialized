@@ -31,7 +31,7 @@ public class LikeServiceImpl implements  LikeService{
   public void sourceLike(long nftSourceId, long userId) {
     //user와 nftsourceId를 통해서 sourcelikeDB에 추가한 후,
     NFTSource nftSource = nftSourceRepository.findById(nftSourceId);
-    User user = userRepository.findById(userId);
+    User user = userRepository.findByUserId(userId);
 
     NFTSourceLike nftSourceLike = NFTSourceLike.builder()
             .nftSource(nftSource)
@@ -47,7 +47,7 @@ public class LikeServiceImpl implements  LikeService{
   public void sourceCancel(long nftSourceId, long userId) {
     //user와 nftsourceId를 통해서 sourcelikeDB에서 삭제한 후,
     NFTSource nftSource = nftSourceRepository.findById(nftSourceId);
-    User user = userRepository.findById(userId);
+    User user = userRepository.findByUserId(userId);
     nftSourceLikeRepository.deleteByNftSourceAndUser(nftSource, user);
     //sourcelike에 좋아요 수 내리기
     long likenum = nftSource.getLikeNum();
@@ -59,7 +59,7 @@ public class LikeServiceImpl implements  LikeService{
   public void nftLike(long nftId, long userId) {
     //user와 nftsourceId를 통해서 nftlikeDB에 추가한 후,
     NFT nft = nftRepository.findById(nftId);
-    User user = userRepository.findById(userId);
+    User user = userRepository.findByUserId(userId);
 
     NFTLike nftLike = NFTLike.builder()
         .nft(nft)
@@ -75,7 +75,7 @@ public class LikeServiceImpl implements  LikeService{
   public void nftCancel(long nftId, long userId) {
     //user와 nftsourceId를 통해서 nftlikeDB에서 삭제한 후,
     NFT nft = nftRepository.findById(nftId);
-    User user = userRepository.findById(userId);
+    User user = userRepository.findByUserId(userId);
     nftLikeRepository.deleteByNftAndUser(nft, user);
     //nftlike에 좋아요 수 내리기
     long likenum = nft.getNftLikeNum();

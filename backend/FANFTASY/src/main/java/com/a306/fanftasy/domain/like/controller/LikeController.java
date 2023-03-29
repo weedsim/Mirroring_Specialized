@@ -62,7 +62,7 @@ public class LikeController {
       return ResponseEntity.badRequest().body(responseDefault);
     }
   }
-  @GetMapping("/source-cancel")
+  @GetMapping("/nft-cancel")
   public ResponseEntity<?> nftCancel(@RequestParam long nftId, @RequestParam long userId){
     log.info("NFT 좋아요 취소 : " + nftId);
     ResponseDefault responseDefault = null;
