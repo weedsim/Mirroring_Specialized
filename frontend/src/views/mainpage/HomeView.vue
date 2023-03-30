@@ -324,17 +324,10 @@ html, body {
   cursor: pointer;
 }
 
-.my-template-container {
-  /* Other styles for your template container here */
-  overflow: hidden;
-}
-.home::-webkit-scrollbar {
-  display: none;
-} 
-/* {
-  overflow-x: hidden !important;
-  overflow-y: hidden !important;
-  overflow: hidden !important;
+/* .home {
+  min-width: 1540px;
+  overflow-x: auto;
+  overflow:auto;
 } */
 
 /* .footer-space {

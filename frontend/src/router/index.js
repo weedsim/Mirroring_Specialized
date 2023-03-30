@@ -9,6 +9,7 @@ import SignUpView from '../views/account/SignUpView.vue';
 import CommunityAddView from '../views/community/CommunityAddView.vue';
 import CommunityDetailView from '../views/community/CommunityDetailView.vue';
 import ResellListView from '../views/resell/ResellListView.vue';
+import SignUpSelectView from '../views/account/SignUpSelectView.vue';
 
 const routes = [
   {
@@ -60,6 +61,11 @@ const routes = [
     path: '/signup',
     name: 'SignUpview',
     component: SignUpView
+  },
+  {
+    path: '/select',
+    name: 'SignUpSelectView',
+    component: SignUpSelectView,
   },
 ]
 
