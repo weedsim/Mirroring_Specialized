@@ -11,8 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
 import java.util.NoSuchElementException;
 @Service
 @Slf4j
@@ -21,6 +23,8 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final S3Service s3Service;
+
     public UserLoginDTO login(String address){
         log.info(address);
         User user = userRepository.findByAddress(address);
@@ -29,21 +33,16 @@ public class UserServiceImpl implements UserService{
             String nickname=user.getNickname();
             String profileImg=user.getProfileImg();
             String role = user.getRole();
-       //   String accessToken = jwtTokenUtil.generateAccessToken(address,userId)
-       //   String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
             return UserLoginDTO.of(userId,nickname,address,role,profileImg);
         }
         else{
             return null;
         }
-
-
-
-        }
+    }
 
     @Override
     public void join(UserJoinDTO userJoinDTO) {
-           userRepository.save(User.ofUser(userJoinDTO));
+        userRepository.save(User.ofUser(userJoinDTO));
     }
 
     @Override
@@ -66,19 +65,23 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserUpdateDTO userUpdateDTO) {
         User user = userRepository.findByAddress(userUpdateDTO.getAddress());
         log.info(userUpdateDTO.getNickname());
-        if (StringUtils.hasText(userUpdateDTO.getNickname())) {
-            user.setNickname(userUpdateDTO.getNickname());
-        }
-        if (StringUtils.hasText(userUpdateDTO.getProfileImg())) {
-            user.setProfileImg(userUpdateDTO.getProfileImg());
-        }
+        user.setAddress(userUpdateDTO.getAddress());
+        user.setEmail(userUpdateDTO.getEmail());
+        user.setNickname(userUpdateDTO.getNickname());
+
+//        if (StringUtils.hasText(userUpdateDTO.getNickname())) {
+//            user.setNickname(userUpdateDTO.getNickname());
+//        }
+//        if (StringUtils.hasText(userUpdateDTO.getProfileImg())) {
+//            user.setProfileImg(userUpdateDTO.getProfileImg());
+//        }
 
         userRepository.save(user);
     }
 
     @Override
     public User findByUserId(Long userId) {
-       User user=userRepository.findByUserId(userId);
+       User user = userRepository.findByUserId(userId);
        return user;
     }
 
