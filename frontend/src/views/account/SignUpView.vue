@@ -44,12 +44,15 @@ export default {
     else{
       this.role = 'artist';
     }
-      
+    
   },
   methods: {
     async connectWallet(){ // 회원가입
-      this.address = await this.$store.dispatch('getAccount');
-      console.log(this.address);
+      await this.$store.dispatch('changeNetWork');
+
+
+      // this.address = await this.$store.dispatch('getAccount');
+      // console.log(this.address);
 
       // if(this.company === null){
       //   this.company = 'once';
@@ -68,12 +71,10 @@ export default {
       // await this.$store.dispatch('userDetail');
       // console.log(this.$store.state.nickname);
       
-      // const result = await this.$store.dispatch('LOGIN');
-      // console.log("r");
-      // console.log(result);
+      // await this.$store.dispatch('LOGIN');
 
       // await this.$store.dispatch('modiUserInfo');
-
+      
       console.log(this.$store.state.success);
     }
   },

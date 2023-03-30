@@ -14,6 +14,9 @@ const store = createStore({
     CurrentAccount: null,
     // RefreshToken: null,
     AccessToken: null,
+    chainId: '0x538',
+    rpcUrl: "https://fanftasy.kro.kr/network",
+    currentChainId: null,
     isFan: true,
     isMember:false,
     isLogin: false,
@@ -71,6 +74,60 @@ const store = createStore({
 
   },
   actions: {
+    async changeNetWork() {
+      const chain = await window.ethereum.request({ method: 'eth_chainId' });
+      console.log(chain);
+      this.state.currentChainId = chain;
+      const haveNet = false;
+      if(chain !== this.state.chainId) {
+        await window.ethereum.request({ 
+          method: 'wallet_switchEthereumChain',
+          params : [{
+            chainId: this.state.chainId,
+          }]
+        })
+        .then((res) => {
+          console.log(res);
+          this.state.success = true;
+          this.haveNet = true;
+        })
+        .catch((err) => {
+          console.log(err.code);
+          if(err.code === 4902){
+            this.haveNet = false;
+          }
+        })
+        console.log("다름");
+      }
+      else {
+        console.log("같음");
+        this.haveNet = true;
+        this.state.success = true;
+      }
+
+      if(haveNet === false){
+        await window.ethereum.request({ 
+          method: 'wallet_addEthereumChain',
+          params : [{
+            chainId: this.state.chainId,
+            chainName: "A306FANFTASY",
+            rpcUrls : [
+              this.state.rpcUrl
+            ],
+            nativeCurrency: {
+              'name' : "NFN",
+              'symbol' : "NFN",
+              'decimals' : 18
+            }
+          }]
+        })
+        .catch ((err) => {
+          console.log(err);
+        })
+      }
+
+    },
+
     async getAccount() { // 계정 불러오기
       const account = (await window.ethereum.request({ method: 'eth_requestAccounts' }))[0];
       this.state.currentAccount = account;
