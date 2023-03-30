@@ -1,7 +1,7 @@
 <template >   
   <v-app class="page">
-    <!-- <LoginUserHeaders/> -->
-    <NotLoginUserHeaders/>
+    <NotLoginUserHeaders :isLOGIN="isLOGIN" />
+    <!-- <LoginUserHeaders v-else /> -->
     <v-main >
       <router-view />
     </v-main>
@@ -13,6 +13,7 @@
 import AllFooter from "@/components/headers/AllFooter.vue"
 // import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
+import VueCookies from "vue-cookies"
 
 
 export default {
@@ -23,8 +24,21 @@ export default {
     NotLoginUserHeaders
   },
   data: () => ({
-    //
+    
   }),
+  created() {
+    console.log(this.IsLOGIN);
+    console.log(VueCookies.get('nickname'));
+  },
+  watch() {
+    
+  },
+  computed: {
+    // 반응형으로 계산된 속성
+    IsLOGIN() {
+      return VueCookies.isKey('AccessToken');
+    }
+  },
 }
 </script>
 
