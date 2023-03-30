@@ -8,5 +8,5 @@ import pinata.PinataException;
 
 public interface PinataService {
 String fileToPinata(MultipartFile file) throws PinataException, IOException;
-String jsonToPinata(String info, String fileCID) throws IOException, PinataException;
+NFTCreateDTO jsonToPinata(String info, String fileCID) throws IOException, PinataException;
 }

@@ -31,9 +31,11 @@ public class NFTSource {
   @JoinColumn(name = "reg_artist")
   private User regArtist; //등록 아티스트
 
-  @Column(name = "file_uri")
-  private String fileUri; //파일 uri
+  @Column(name = "file_CID")
+  private String fileCID; //파일 uri
 
+  @Column(name = "meta_CID")
+  private String metaCID;
   @Column(name = "file_type")
   private String fileType; //파일 종류
   @Column(name = "reg_date")

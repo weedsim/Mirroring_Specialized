@@ -29,11 +29,9 @@ public class NFTServiceImpl implements NFTService {
 
   //1. NFT 생성
   @Override
-  public void addNFT(MultipartFile file, NFTCreateDTO nftCreateDTO) {
+  public void addNFT(NFTCreateDTO nftCreateDTO) {
     try {
-      //1. 파일을 ipfs에 저장하기 => file CID return받기
-      //2. 파일을 local에 저장하기 => 로컬에 저장된 파일 주소는 일정하게?
-      //3. NFT Source 데이터 + file CID ipfs에 저장하기 => Metadata CID return 받기
+      //3. NFT Source 데이터 + file CID ipfs + Metadata CID이 DTO에 담겨서 들어옴
       //4. NFT생성 스마트컨트랙트 호출
       long artistId = nftCreateDTO.getRegArtistId();
       log.info(String.valueOf(artistId));
@@ -42,7 +40,7 @@ public class NFTServiceImpl implements NFTService {
       //등록 갯수
       long totalNum = nftCreateDTO.getTotalNum();
       double originPrice = nftCreateDTO.getOriginPrice();
-//      LocalDateTime regDate = nftCreateDTO.getRegDate();
+      LocalDateTime regDate = nftCreateDTO.getRegDate();
       //NFT Source생성
       NFTSource nftSource = NFTSource.builder()
           .title(nftCreateDTO.getTitle())
@@ -51,8 +49,9 @@ public class NFTServiceImpl implements NFTService {
           .originPrice(originPrice)
           .regArtist(artist)
           .fileType(nftCreateDTO.getFileType())
-//          .fileUri(nftCreateDTO.getFileUri())
-//          .regDate(regDate)
+          .fileUri(nftCreateDTO.getFileCID())
+          .metaCID(nftCreateDTO.getMetaCID())
+          .regDate(regDate)
           .remainNum(totalNum)
           .likeNum(0)
           .build();

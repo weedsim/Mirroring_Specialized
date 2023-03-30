@@ -29,12 +29,15 @@ public class NFTController {
         log.info("NFT 생성 요청 : " + info);
         ResponseDefault responseDefault = null;
         try{
+            //받아온 file과 info를 통해서 IPFS에 저장하고 CID를 반환함.
+            //해당 정보를 DB에 저장
             log.info("파일 pinata 저장 시작");
             String fileCID = pinataService.fileToPinata(file);
             log.info("fileCID : " + fileCID);
-            String metaCID = pinataService.jsonToPinata(info, fileCID); //메타데이터를 저장하고, source를 저장하기
-            log.info("metaCID : " + metaCID);
-//            nftService.addNFT(file, nftCreateDto);
+            NFTCreateDTO nftCreateDTO = pinataService.jsonToPinata(info, fileCID); //메타데이터를 저장하고, source를 저장하기
+            log.info("NFTCreateDTO : " + nftCreateDTO.toString());
+            //CID를 통해서 스마트 컨트랙트 호출하고 발행량 만큼 NFT발급
+            nftService.addNFT(nftCreateDTO);
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){

@@ -11,7 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface NFTService {
 
-  void addNFT(MultipartFile file, NFTCreateDTO nftCreateDTO);
+  void addNFT(NFTCreateDTO nftCreateDTO);
 
 
   NFTDetailDTO getNFT(long nftId);
