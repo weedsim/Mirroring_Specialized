@@ -1,6 +1,10 @@
 package com.a306.fanftasy.config;
 
+import com.a306.fanftasy.domain.user.repository.UserRepository;
 import com.a306.fanftasy.security.RestAuthenticationEntryPoint;
+import com.a306.fanftasy.util.JwtFilter;
+import com.a306.fanftasy.util.JwtTokenUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.access.annotation.Secured;
@@ -14,6 +18,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -32,6 +37,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    web.ignoring()
 //        .antMatchers("/**");
 //  }
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder)throws Exception{
@@ -53,6 +62,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+        JwtTokenUtil jwtTokenUtil=new JwtTokenUtil();
         http
                 .cors()//CORS 황성화
                 .and()
@@ -73,8 +83,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .permitAll()
                 .anyRequest()//.hasRole("USER")
                 .authenticated();
-
-
+                //jwt 토큰 필터 추가
+                http.addFilterBefore(new JwtFilter(jwtTokenUtil),
+                        UsernamePasswordAuthenticationFilter.class);
 
 
     }

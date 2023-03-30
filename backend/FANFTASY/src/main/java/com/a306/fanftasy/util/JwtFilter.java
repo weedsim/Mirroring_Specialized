@@ -3,7 +3,10 @@ package com.a306.fanftasy.util;
 
 import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -13,7 +16,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
+@Slf4j
 @RequiredArgsConstructor
     public class JwtFilter extends OncePerRequestFilter {
 
@@ -29,20 +34,28 @@ import java.io.IOException;
 
             // 2. validateToken 으로 토큰 유효성 검사
             // 정상 토큰이면 해당 토큰으로 Authentication 을 가져와서 SecurityContext 에 저장
-            if (StringUtils.hasText(accessToken) && jwtTokenUtil.validateToken(jwt)) {
-                long id = jwtTokenUtil.getUserId(accessToken);
-                String nickName = jwtTokenUtil.getUserNickName(accessToken);
-                String role = jwtTokenUtil.getUserRole(
-                UserLoginDTO userLoginDTO=new UserLoginDTO();
-                Authentication authentication = jwtTokenUtil.getAuthentication(userLoginDTO,role);
+            if (StringUtils.hasText(accessToken) && jwtTokenUtil.validateToken(accessToken)) {
+                log.info("유효한 토큰입니다.");
+                UserLoginDTO userLoginDTO=jwtTokenUtil.getUserLoginDto(accessToken);
+                Authentication authentication = getAuthentication(userLoginDTO,userLoginDTO.getRole());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+                filterChain.doFilter(request, response);
+            }
+            else{
+                log.info("유효하지 않은 토큰입니다.");
+                filterChain.doFilter(request, response);
             }
 
-            filterChain.doFilter(request, response);
+
         }
 
         // Request Header 에서 토큰 정보를 꺼내오기
+        public Authentication getAuthentication(UserLoginDTO user, String role) {
+            return new UsernamePasswordAuthenticationToken(user, "",
+                    Arrays.asList(new SimpleGrantedAuthority(role)));
+        }
 
-    }
+
+}
 
 

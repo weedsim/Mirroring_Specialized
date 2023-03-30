@@ -6,6 +6,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -24,7 +25,7 @@ import java.util.Date;
 public class JwtTokenUtil {
 
     @Value("${jwt.secret}")
-    private static String SECRET_KEY;
+    private String SECRET_KEY;
     private static final long ACCESS_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60*3; // 시간 단위
     private static final long REFRESH_TOKEN_EXPIRE_MINUTES = 1000L * 60 * 60 * 24 * 7; // 주단위
     /**
@@ -55,12 +56,12 @@ public class JwtTokenUtil {
         return expiration.before(new Date());
     }
 
-    public String generateAccessToken(String address ,Long userId,String role){
-        return doGenerateToken(address, userId,role,ACCESS_TOKEN_EXPIRE_MINUTES);
+    public String generateAccessToken(String address,Long userId,String profileImg, String nickname,String role){
+        return doGenerateToken(address, userId,profileImg,nickname ,role,ACCESS_TOKEN_EXPIRE_MINUTES);
     }
 
-    public String generateRefreshToken(String address ,Long userId,String role){
-        return doGenerateToken(address, userId,role,REFRESH_TOKEN_EXPIRE_MINUTES);
+    public String generateRefreshToken(String address,Long userId,String profileImg, String nickname,String role){
+        return doGenerateToken(address, userId,profileImg,nickname, role,REFRESH_TOKEN_EXPIRE_MINUTES);
     }
 
 
@@ -69,20 +70,22 @@ public class JwtTokenUtil {
      * JWT 구성 ( header.payload.signature )
      * username,발급날짜,만료기간을 payload 에 넣고 application.yml 에 설정한 secretkey 로 서명 후 HS256알고리즘으로 암호화한다.
      * @param userId
-     * @param Address
+     * @param address
      * @param role
      * @param profileImg
      * @param nickname
      * @param expireTime
      * @return
      */
-    private String doGenerateToken(String Address,Long userId,String profileImg, String nickname,String role, long expireTime){
+
+    private String doGenerateToken(String address,Long userId,String profileImg, String nickname,String role, long expireTime) {
         Claims claims = Jwts.claims();
-        claims.put("Address", Address);
-        claims.put("userId",userId);
-        claims.put("nickname",nickname);
-        claims.put("profileImg",profileImg);
-        claims.put("role",role);
+        claims.put("Address", address);
+        claims.put("userId", userId);
+        claims.put("nickname", nickname);
+        claims.put("profileImg", profileImg);
+        claims.put("role", role);
+
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -91,11 +94,6 @@ public class JwtTokenUtil {
                 .signWith(getSigningKey(SECRET_KEY), SignatureAlgorithm.HS256)
                 .compact();
     }
-    public Authentication getAuthentication(UserLoginDTO user, String role) {
-        return new UsernamePasswordAuthenticationToken(user, "",
-                Arrays.asList(new SimpleGrantedAuthority(role)));
-    }
-
     public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token);
@@ -124,7 +122,7 @@ public class JwtTokenUtil {
         Date now = new Date();
         return expiration.getTime() - now.getTime();
     }
-    public static Long getUserId(String token) {
+    public  Long getUserId(String token) {
         Claims jws = Jwts.parser()
                 .setSigningKey(SECRET_KEY.getBytes())
                 .parseClaimsJws(token).getBody();
@@ -132,13 +130,40 @@ public class JwtTokenUtil {
         String userId = jws.get("userId").toString();
         return Long.parseLong(userId);
     }
-    public static String getUserNickname(String token) {
+//    public static String getUserNickname(String token) {
+//        Claims jws = Jwts.parser()
+//                .setSigningKey(SECRET_KEY.getBytes())
+//                .parseClaimsJws(token).getBody();
+//
+//        String nickname = jws.get("nickname").toString();
+//        return nickname;
+//    }
+//    public static String getUserProfileImg(String token) {
+//        Claims jws = Jwts.parser()
+//                .setSigningKey(SECRET_KEY.getBytes())
+//                .parseClaimsJws(token).getBody();
+//
+//        String profileImg = jws.get("profileImg").toString();
+//        return profileImg;
+//    }
+    public  UserLoginDTO getUserLoginDto(String token) {
         Claims jws = Jwts.parser()
                 .setSigningKey(SECRET_KEY.getBytes())
                 .parseClaimsJws(token).getBody();
+        long userId = Long.parseLong(jws.get("userId").toString());
+        String nickname = jws.get("nickname").toString();
+        String profileImg = jws.get("profileImg").toString();
+        String role = jws.get("role").toString();
+        String address=jws.get("address").toString();
 
-        String userId = jws.get("userni").toString();
-        return Long.parseLong(userId);
+
+        return UserLoginDTO.builder()
+                .userId(userId)
+                .address(address)
+                .nickname(nickname)
+                .profileImg(profileImg)
+                .role(role)
+                .build();
     }
 }
 
