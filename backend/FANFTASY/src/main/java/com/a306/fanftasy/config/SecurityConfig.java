@@ -57,35 +57,57 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
 
-
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        //filter 거치지않도록 설정
+        web.ignoring()
+                .antMatchers("/api/user/login","/api/user/join");
+    }
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
+
         JwtTokenUtil jwtTokenUtil=new JwtTokenUtil();
-        http
-                .cors()//CORS 황성화
-                .and()
-                .sessionManagement()//세션관리 활성화
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 생성 X -> RESTful 웹 서비스에서 권장함.
-                .and()
-                .csrf()//CSRF 보호 비활성화 ->RESTful에서는 어차피 쓸모 없어서 꺼도 됨.
-                .disable()
-                .formLogin()//login 페이지 비활성화
-                .disable()
-                .httpBasic()//http 기본 인증 비활성화 토큰기반으로 인증
-                .disable()
-                .exceptionHandling()//인증예외처리 인증되지않은 요청에 대한 응답을 처리하는데 사용됩니다.
-                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
-                .and()
-                .authorizeRequests()
-                .antMatchers("/api/**")
-                .permitAll()
-                .anyRequest()//.hasRole("USER")
-                .authenticated();
-                //jwt 토큰 필터 추가
-                http.addFilterBefore(new JwtFilter(jwtTokenUtil),
-                        UsernamePasswordAuthenticationFilter.class);
+        http.csrf().disable();
+
+        http.httpBasic().disable()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);//토큰 기반 인증을 위해 세션 생성x
+//                .and()
+//                .authorizeRequests()
+        http.authorizeRequests()//권한 설정
+                .antMatchers("/api/user/login","/api/user/join")
+                .permitAll() //메인페이지는 모든 사용자에게 가능하게
+                .anyRequest().authenticated();
+        //jwt 토큰 필터 추가
+        http.addFilterBefore(new JwtFilter(jwtTokenUtil),
+                UsernamePasswordAuthenticationFilter.class);
+    }
+//        http
+//                .addFilterBefore(new JwtFilter(jwtTokenUtil),
+//                UsernamePasswordAuthenticationFilter.class)
+//                .cors()//CORS 황성화
+//                .and()
+//                .sessionManagement()//세션관리 활성화
+//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)//세션 생성 X -> RESTful 웹 서비스에서 권장함.
+//                .and()
+//                .csrf()//CSRF 보호 비활성화 ->RESTful에서는 어차피 쓸모 없어서 꺼도 됨.
+//                .disable()
+//                .formLogin()//login 페이지 비활성화
+//                .disable()
+//                .httpBasic()//http 기본 인증 비활성화 토큰기반으로 인증
+//                .disable()
+//                .exceptionHandling()//인증예외처리 인증되지않은 요청에 대한 응답을 처리하는데 사용됩니다.
+//                .authenticationEntryPoint(new RestAuthenticationEntryPoint())
+//                .and()
+//                .authorizeRequests()
+//                .antMatchers("/api/join","/api/login")
+//                .permitAll()
+//                .anyRequest()//.hasRole("USER")
+//                .authenticated();
+//                //jwt 토큰 필터 추가
+
 
 
     }
@@ -102,7 +124,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                .and()
 //                .build();
-//    }
-}
+// }
+//}
 
 
