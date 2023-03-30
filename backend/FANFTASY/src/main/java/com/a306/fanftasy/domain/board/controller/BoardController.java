@@ -420,11 +420,5 @@ public class BoardController {
         }
     }
 
-//    @GetMapping("/images")
-//    public ResponseEntity<List<Image>> getImages() {
-//        List<Image> images = myService.getImages();
-//        return new ResponseEntity<>(images, HttpStatus.OK);
-//    }
-
 
 }

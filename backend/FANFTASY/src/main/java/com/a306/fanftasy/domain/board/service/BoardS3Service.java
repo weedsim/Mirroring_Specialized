@@ -38,18 +38,11 @@ public class BoardS3Service {
         String originalFilename = multipartFile.getOriginalFilename(); // test.PNG
         int index = originalFilename.lastIndexOf("."); // 4
         String ext = originalFilename.substring(index + 1); // PNG
-        System.out.println("====================");
-        System.out.println("objectMetadata : " + objectMetadata);
-        System.out.println("originalFilename : " + originalFilename);
-        System.out.println("index : " + index);
-        System.out.println("ext : " + ext);
 
         String storeFileName = UUID.randomUUID() + "." + ext; // random + . + PNG
         String name = "board";
         String key = name + "/" + storeFileName; // 파일 위치(test/) + 및 파일명
 //        String key = "test/" + storeFileName; // 파일 위치(test/) + 및 파일명
-        System.out.println("storeFileName : " + storeFileName);
-        System.out.println("key : " + key);
 
         try (InputStream inputStream = multipartFile.getInputStream()) {
             amazonS3Client.putObject(new PutObjectRequest(bucket, key, inputStream, objectMetadata)
@@ -57,7 +50,6 @@ public class BoardS3Service {
         }
 
         String storeFileUrl = amazonS3Client.getUrl(bucket, key).toString(); // 버켓 url/ + key(파일위치 + 파일명)
-        System.out.println("storeFileUrl : " + storeFileUrl);
         RequestArticleBoard requestArticleBoard = new RequestArticleBoard();
         requestArticleBoard.setFilePath(storeFileUrl);
         User user = userRepository.findById(1L).orElse(null);
