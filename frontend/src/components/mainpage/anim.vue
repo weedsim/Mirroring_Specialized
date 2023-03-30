@@ -8,7 +8,7 @@
             <span class="anim-span">하나되는&nbsp;</span>
             <span class="anim-span">세상&nbsp;</span>
         </div>
-        <div class="main-title-fanftasy" style=" font-size: 40px; text-align: end;">
+        <div class="main-title-fanftasy" style=" text-align: end; ">
           FANFTASY
         </div>
     </h1>
@@ -24,7 +24,7 @@ export default {
 <style>
 
 .anim-h1 {
-  font-family: "Kern";
+  /* font-family: kern; */
   max-width: 40ch;
   text-align: center;
   transform: scale(0.94);
@@ -38,6 +38,7 @@ export default {
 
 .anim-span {
   display: inline-block;
+  font-size: 45px;
   opacity: 0;
   filter: blur(4px);
 }
@@ -84,6 +85,7 @@ export default {
     background-clip: text;
     animation: color-change 3.0s linear forwards;
     background-size: 200% 100%;
+    font-size: 60px;
 }
 
 @keyframes color-change{
