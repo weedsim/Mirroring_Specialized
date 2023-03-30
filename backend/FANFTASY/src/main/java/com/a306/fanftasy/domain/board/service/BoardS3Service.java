@@ -20,7 +20,7 @@ import java.util.UUID;
 
 @RequiredArgsConstructor
 @Service
-public class S3Service {
+public class BoardS3Service {
 
     private final AmazonS3Client amazonS3Client;
     private final BoardRepository boardRepository;
