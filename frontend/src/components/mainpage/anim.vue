@@ -1,6 +1,6 @@
 <template>
   <div style="display:flex; align-items: center; height: 400px;">
-    <div class="anim-h1">
+    <div class="anim-h1 font-n">
         <div>
             <span class="anim-span fanftasy-nft">NFT</span>
             <span class="anim-span">를&nbsp;</span>
@@ -50,8 +50,6 @@ export default {
   font-size: 45px;
   opacity: 0;
   filter: blur(4px);
-  font-size: 22px;
-  font-family: 'Kern';
 }
 
 .anim-span:nth-child(1) {
@@ -104,6 +102,7 @@ export default {
     background-clip: text;
     animation: color-change 3.0s linear forwards;
     background-size: 100% 100%;
+    font-size: 60px;
 }
 
 @keyframes color-change{
