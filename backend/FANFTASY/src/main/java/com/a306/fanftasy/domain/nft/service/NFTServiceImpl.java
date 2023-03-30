@@ -35,10 +35,6 @@ public class NFTServiceImpl implements NFTService {
       //2. 파일을 local에 저장하기 => 로컬에 저장된 파일 주소는 일정하게?
       //3. NFT Source 데이터 + file CID ipfs에 저장하기 => Metadata CID return 받기
       //4. NFT생성 스마트컨트랙트 호출
-
-
-
-
       long artistId = nftCreateDTO.getRegArtistId();
       log.info(String.valueOf(artistId));
       //등록 아티스트
@@ -46,7 +42,7 @@ public class NFTServiceImpl implements NFTService {
       //등록 갯수
       long totalNum = nftCreateDTO.getTotalNum();
       double originPrice = nftCreateDTO.getOriginPrice();
-      LocalDateTime regDate = nftCreateDTO.getRegDate();
+//      LocalDateTime regDate = nftCreateDTO.getRegDate();
       //NFT Source생성
       NFTSource nftSource = NFTSource.builder()
           .title(nftCreateDTO.getTitle())
@@ -55,8 +51,8 @@ public class NFTServiceImpl implements NFTService {
           .originPrice(originPrice)
           .regArtist(artist)
           .fileType(nftCreateDTO.getFileType())
-          .fileUri(nftCreateDTO.getFileUri())
-          .regDate(regDate)
+//          .fileUri(nftCreateDTO.getFileUri())
+//          .regDate(regDate)
           .remainNum(totalNum)
           .likeNum(0)
           .build();
@@ -64,18 +60,18 @@ public class NFTServiceImpl implements NFTService {
       log.info("nft 콘텐츠 등록 완료");
       //개별 nft 생성
       long nftSourceId = nftSource.getNftSourceId();
-      for (String tokenUri : nftCreateDTO.getTokenUris()
-      ) {
-        NFT nft = NFT.builder()
-            .owner(artist)
-            .tokenUri(tokenUri)
-            .isOnSale(true)
-            .currentPrice(originPrice)
-            .transactionTime(regDate)
-            .nftSource(nftSource)
-            .build();
-        nftRepository.save(nft);
-      }//for-each
+//      for (String tokenUri : nftCreateDTO.getTokenUris()
+//      ) {
+//        NFT nft = NFT.builder()
+//            .owner(artist)
+//            .tokenUri(tokenUri)
+//            .isOnSale(true)
+//            .currentPrice(originPrice)
+//            .transactionTime(regDate)
+//            .nftSource(nftSource)
+//            .build();
+//        nftRepository.save(nft);
+//      }//for-each
     } catch (Exception e) {
       throw e;
     }//catch

@@ -24,9 +24,9 @@ public class NFTCreateDTO {
     private long totalNum; //발행량
     private double originPrice; //발행가
     private long regArtistId;
-    private String fileUri;
+//    private String fileUri;
     private String fileType; //파일 종류
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    private LocalDateTime regDate;
-    private List<String> tokenUris;
+//    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
+//    private LocalDateTime regDate;
+//    private List<String> tokenUris;
 }

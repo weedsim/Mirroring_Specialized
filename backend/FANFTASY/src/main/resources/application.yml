@@ -35,3 +35,4 @@ jwt:
   jackson:
     serialization:
       fail-on-empty-beans: false
+

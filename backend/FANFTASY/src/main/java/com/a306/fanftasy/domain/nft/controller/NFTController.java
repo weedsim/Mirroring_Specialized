@@ -6,6 +6,7 @@ import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.service.NFTService;
 import com.a306.fanftasy.domain.nft.service.NFTSourceService;
+import com.a306.fanftasy.domain.nft.service.PinataService;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,17 +19,22 @@ import org.springframework.web.multipart.MultipartFile;
 @RequestMapping("api/nft")
 @Slf4j
 public class NFTController {
-
     private final NFTService nftService;
     private final NFTSourceService nftSourceService;
+    private final PinataService pinataService;
 
     //1. NFT 생성
     @PostMapping
-    public ResponseEntity<?> NFTAdd(@RequestParam("file") MultipartFile file, @RequestParam("info") NFTCreateDTO nftCreateDto){
-        log.info("NFT 생성 요청 : " + nftCreateDto.toString());
+    public ResponseEntity<?> NFTAdd(@RequestParam("file") MultipartFile file, @RequestParam("info") String info){
+        log.info("NFT 생성 요청 : " + info);
         ResponseDefault responseDefault = null;
         try{
-            nftService.addNFT(file, nftCreateDto);
+            log.info("파일 pinata 저장 시작");
+            String fileCID = pinataService.fileToPinata(file);
+            log.info("fileCID : " + fileCID);
+            String metaCID = pinataService.jsonToPinata(info, fileCID); //메타데이터를 저장하고, source를 저장하기
+            log.info("metaCID : " + metaCID);
+//            nftService.addNFT(file, nftCreateDto);
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
