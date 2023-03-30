@@ -5,6 +5,7 @@ import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.board.service.BoardService;
 import com.a306.fanftasy.domain.board.service.ImageService;
 import com.a306.fanftasy.domain.board.service.MyService;
+import com.a306.fanftasy.domain.board.service.S3Service;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import com.a306.fanftasy.domain.user.entity.User;
@@ -29,6 +30,7 @@ public class BoardController {
     private final BoardService boardService;
     private final ImageService imageService;
     private final MyService myService;
+    private final S3Service s3Service;
 
     // 구매글 등록
     @PostMapping("/purchase")
@@ -401,7 +403,8 @@ public class BoardController {
         String imageUrl = null;
         ResponseDefault responseDefault = null;
         try {
-            imageUrl = myService.uploadImage(file);
+//            imageUrl = myService.uploadImage(file);
+            s3Service.saveUploadFile(file);
             responseDefault = ResponseDefault.builder()
                     .success(true)
                     .messege("성공")
