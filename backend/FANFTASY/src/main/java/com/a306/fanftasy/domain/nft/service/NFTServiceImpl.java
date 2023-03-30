@@ -10,6 +10,8 @@ import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
 import com.a306.fanftasy.domain.user.entity.User;
+import com.a306.fanftasy.domain.user.repository.UserRepository;
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.methods.response.Web3ClientVersion;
+import org.web3j.protocol.http.HttpService;
 
 @Service
 @Slf4j
@@ -26,21 +31,24 @@ public class NFTServiceImpl implements NFTService {
 
   private final NFTRepository nftRepository;
   private final NFTSourceRepository nftSourceRepository;
+  private final UserRepository userRepository;
 
   //1. NFT 생성
   @Override
-  public void addNFT(NFTCreateDTO nftCreateDTO) {
+  public void addNFT(NFTCreateDTO nftCreateDTO) throws IOException {
     try {
+      log.info("---------------------------------");
       //3. NFT Source 데이터 + file CID ipfs + Metadata CID이 DTO에 담겨서 들어옴
       //4. NFT생성 스마트컨트랙트 호출
       long artistId = nftCreateDTO.getRegArtistId();
-      log.info(String.valueOf(artistId));
       //등록 아티스트
-      User artist = User.builder().userId(artistId).build(); //이 부분 수정 필요?
+      User artist = userRepository.findByUserId(artistId);
       //등록 갯수
       long totalNum = nftCreateDTO.getTotalNum();
       double originPrice = nftCreateDTO.getOriginPrice();
       LocalDateTime regDate = nftCreateDTO.getRegDate();
+      String metaCID = nftCreateDTO.getMetaCID();
+      log.info("NFT Source 저장 시작");
       //NFT Source생성
       NFTSource nftSource = NFTSource.builder()
           .title(nftCreateDTO.getTitle())
@@ -49,28 +57,36 @@ public class NFTServiceImpl implements NFTService {
           .originPrice(originPrice)
           .regArtist(artist)
           .fileType(nftCreateDTO.getFileType())
-          .fileUri(nftCreateDTO.getFileCID())
-          .metaCID(nftCreateDTO.getMetaCID())
+          .fileCID(nftCreateDTO.getFileCID())
+          .metaCID(metaCID)
           .regDate(regDate)
           .remainNum(totalNum)
           .likeNum(0)
           .build();
       nftSourceRepository.save(nftSource);
       log.info("nft 콘텐츠 등록 완료");
+
       //개별 nft 생성
-      long nftSourceId = nftSource.getNftSourceId();
-//      for (String tokenUri : nftCreateDTO.getTokenUris()
-//      ) {
-//        NFT nft = NFT.builder()
-//            .owner(artist)
-//            .tokenUri(tokenUri)
-//            .isOnSale(true)
-//            .currentPrice(originPrice)
-//            .transactionTime(regDate)
-//            .nftSource(nftSource)
-//            .build();
-//        nftRepository.save(nft);
-//      }//for-each
+
+      String artistAddress = artist.getAddress();
+
+      log.info("개별 nft 생성 시작");
+      for (int i = 1; i<=totalNum; i++
+      ) {
+        //스마트 컨트랙트로 tokenUri 받아오기
+        //smartContract(artistAddress, metaCID)
+        String tokenUri = "get tokenUri from BlockChain Network";
+        NFT nft = NFT.builder()
+            .owner(artist)
+            .tokenUri(tokenUri)
+            .isOnSale(true)
+            .currentPrice(originPrice)
+            .transactionTime(regDate)
+            .nftSource(nftSource)
+            .editionNum(i)
+            .build();
+        nftRepository.save(nft);
+      }//for-each
     } catch (Exception e) {
       throw e;
     }//catch
@@ -82,7 +98,6 @@ public class NFTServiceImpl implements NFTService {
     try{
       User owner = User.builder().userId(ownerId).build();
       List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
-
       //엔티티를 DTO로 변환
       List<NFTListDTO> result = entityList.stream().map(m-> NFTListDTO.fromEntity(m)).collect(
           Collectors.toList());
@@ -110,15 +125,39 @@ public class NFTServiceImpl implements NFTService {
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
     try {
       NFT nftEntity = nftRepository.findById(nftTradeDTO.getNftId());
-      User owner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
+      User nowOwner = nftEntity.getOwner();
+      String nowOwnerAddress = nowOwner.getAddress();
+      User newOwner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
+      String newOwnerAddress = newOwner.getAddress();
+      double price = nftTradeDTO.getTransactionPrice();
+      String tokenUri = nftEntity.getTokenUri();
+      //스마트 컨트랙트 호출해서
+      //1. tokenUri에 해당되는 nft 소유자 newOwner로 변경해주고
+      //2. newOwner의 잔액을 nowOwner의 잔액으로 변경시키는 트랜잭션 필요
+      //trade(nowOwnerAddress, newOwnerAddress, tokenUri, price)
       nftEntity.updateIsOnSale(false);
-      nftEntity.updateOwner(owner);
-      nftEntity.updateTransactionTime(nftTradeDTO.getTransactionTime());
-      nftEntity.updateCurrentPrice(nftTradeDTO.getTransactionPrice());
+      nftEntity.updateOwner(newOwner);
+      nftEntity.updateTransactionTime(LocalDateTime.now());
+      nftEntity.updateCurrentPrice(price);
       nftRepository.save(nftEntity);
     } catch (Exception e) {
       throw e;
     }//catch
   }
 
+  private String CONTRACT_ADDRESS = "컨트랙트 주소";
+  //smartContract
+  public String createNFT(String artistAddress, String metaCID) throws IOException {
+    //NFT 발행 트랜잭션 호출하는 method
+    Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
+    Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
+    System.out.println(web3ClientVersion.getWeb3ClientVersion());
+    return null;
+  }
+  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price) throws IOException {
+    //NFT 거래 트랜잭션을 발생시키는 method
+    Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
+    Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
+    System.out.println(web3ClientVersion.getWeb3ClientVersion());
+  }
 }

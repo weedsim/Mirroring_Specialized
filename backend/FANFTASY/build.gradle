@@ -34,6 +34,7 @@ dependencies {
 	implementation group: 'io.github.zinebfadili', name: 'pinata-java-sdk', version: '2.1.0'
 //	testImplementation 'org.springframework.security:spring-security-test'
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation group: 'org.web3j', name: 'core', version: '5.0.0'
 }
 
 tasks.named('test') {

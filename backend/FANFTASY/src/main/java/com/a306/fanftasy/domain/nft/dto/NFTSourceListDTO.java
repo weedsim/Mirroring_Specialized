@@ -28,7 +28,7 @@ public class NFTSourceListDTO {
     private long likeNum;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime regDate;
-    private String fileUri;
+    private String fileCID;
     private String fileType;
     public static NFTSourceListDTO fromEntity(NFTSource nftSource){
         return NFTSourceListDTO.builder()
@@ -40,7 +40,7 @@ public class NFTSourceListDTO {
             .remainNum(nftSource.getRemainNum())
             .likeNum(nftSource.getLikeNum())
             .regDate(nftSource.getRegDate())
-            .fileUri(nftSource.getFileUri())
+            .fileCID(nftSource.getFileCID())
             .fileType(nftSource.getFileType())
             .build();
     }

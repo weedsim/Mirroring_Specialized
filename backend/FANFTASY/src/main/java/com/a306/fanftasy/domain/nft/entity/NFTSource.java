@@ -23,14 +23,11 @@ public class NFTSource {
   private String content; //내용
   @Column(name = "total_num")
   private long totalNum; //발행량
-
   @Column(name = "origin_price")
   private double originPrice; //발행가
-
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "reg_artist")
   private User regArtist; //등록 아티스트
-
   @Column(name = "file_CID")
   private String fileCID; //파일 uri
 
@@ -44,10 +41,8 @@ public class NFTSource {
   private long remainNum; //잔여량
   @Column(name = "like_num")
   private long likeNum;//좋아요수
-
   public void updateRemainNum(long remainNum) {
     this.remainNum = remainNum;
   }
-
   public void updateLikeNum(long likeNum) {this.likeNum =  likeNum;}
 }

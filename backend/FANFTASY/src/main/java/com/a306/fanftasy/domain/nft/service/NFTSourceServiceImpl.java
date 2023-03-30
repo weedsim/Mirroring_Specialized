@@ -9,6 +9,8 @@ import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
 import com.a306.fanftasy.domain.user.entity.User;
+import com.a306.fanftasy.domain.user.repository.UserRepository;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,7 @@ public class NFTSourceServiceImpl implements NFTSourceService {
 
   private final NFTSourceRepository nftSourceRepository;
   private final NFTRepository nftRepository;
+  private final UserRepository userRepository;
 
   @Override
   public List<NFTSourceListDTO> getNFTSourceList(int orderType, int page, String keyword) {
@@ -99,15 +102,21 @@ public class NFTSourceServiceImpl implements NFTSourceService {
       User owner = User.builder().userId(nftSourceTradeDTO.getBuyerId()).build();
       //해당 컨텐츠에 해당되는 nft중에 하나만 반환
       NFT nftEntity = nftRepository.findFirstByNftSourceAndOwner(nftSourceEntity,nftSourceEntity.getRegArtist());
+      if(nftEntity == null) throw new NullPointerException();
       log.info("거래될 nft : " + nftEntity.toString());
       //대상 nft에 대해서 변경저장
       nftEntity.updateIsOnSale(false);
       nftEntity.updateOwner(owner);
-      nftEntity.updateTransactionTime(nftSourceTradeDTO.getTransactionTime());
+      nftEntity.updateTransactionTime(LocalDateTime.now());
       nftRepository.save(nftEntity);
       //해당 컨텐츠에 대해서 잔여량 수정
       nftSourceEntity.updateRemainNum(remainNum-1);
       nftSourceRepository.save(nftSourceEntity);
+      //판매 아티스트 총 금액과 갯수 늘려주기
+      User artist = nftSourceEntity.getRegArtist();
+      artist.plusTotalSales(1);
+      artist.plusTotalPrice(nftSourceEntity.getOriginPrice());
+      userRepository.save(artist);
     }//try
     catch (Exception e) {
       throw e;

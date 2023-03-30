@@ -3,7 +3,6 @@ package com.a306.fanftasy.domain.nft.controller;
 import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceTradeDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
-import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.service.NFTService;
 import com.a306.fanftasy.domain.nft.service.NFTSourceService;
 import com.a306.fanftasy.domain.nft.service.PinataService;

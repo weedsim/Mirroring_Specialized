@@ -26,6 +26,7 @@ public class NFTDetailDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime transactionTime;
     private NFTSourceDetailDTO nftSource;
+    private long editionNum;
     public static NFTDetailDTO fromEntity(NFT nft){
         return NFTDetailDTO.builder()
             .nftId(nft.getNftId())
@@ -35,6 +36,7 @@ public class NFTDetailDTO {
             .nftSource(NFTSourceDetailDTO.fromEntity(nft.getNftSource()))
             .isOnSale(nft.getIsOnSale())
             .transactionTime(nft.getTransactionTime())
+            .editionNum(nft.getEditionNum())
             .build();
     }
 }

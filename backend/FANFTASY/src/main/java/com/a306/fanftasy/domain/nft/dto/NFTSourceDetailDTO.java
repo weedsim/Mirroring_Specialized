@@ -25,7 +25,7 @@ public class NFTSourceDetailDTO {
   private long remainNum;
   private double originPrice; //발행가
   private UserPublicDTO regArtist;
-  private String fileUri; //파일 uri
+  private String fileCID; //파일 uri
   private String fileType; //파일 종류
   private long likeNum;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -41,7 +41,7 @@ public class NFTSourceDetailDTO {
         .remainNum(nftSource.getRemainNum())
         .likeNum(nftSource.getLikeNum())
         .regDate(nftSource.getRegDate())
-        .fileUri(nftSource.getFileUri())
+        .fileCID(nftSource.getFileCID())
         .fileType(nftSource.getFileType())
         .build();
   }

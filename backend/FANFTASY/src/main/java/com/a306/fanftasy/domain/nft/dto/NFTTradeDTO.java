@@ -23,7 +23,4 @@ public class NFTTradeDTO {
     long buyerId;
 
     double transactionPrice;
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
-    LocalDateTime transactionTime;
-
 }

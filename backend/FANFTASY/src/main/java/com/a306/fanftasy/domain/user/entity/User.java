@@ -51,4 +51,10 @@ public class User {
         return user;
     }
 
+    public void plusTotalSales(int num){
+        this.totalSales += num;
+    }
+    public void plusTotalPrice(double price){
+        this.totalPrice += price;
+    }
 }
