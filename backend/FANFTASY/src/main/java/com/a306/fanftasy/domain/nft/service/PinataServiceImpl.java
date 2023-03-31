@@ -2,7 +2,6 @@ package com.a306.fanftasy.domain.nft.service;
 
 import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
 
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -48,7 +47,7 @@ public class PinataServiceImpl implements PinataService{
       fos.close();
       PinataResponse pinataResponse = pinata.pinFileToIpfs(conFile);
       log.info(pinataResponse.getBody());
-      String fileCID = cidFromResponse(pinataResponse.getBody());
+      String fileCID = "https://ipfs.io/ipfs/"+cidFromResponse(pinataResponse.getBody());
       return fileCID;
     }catch(PinataException e){
       throw e;
@@ -70,7 +69,7 @@ public class PinataServiceImpl implements PinataService{
     log.info("변환된 json : "+ jsonObject);
     PinataResponse pinataResponse = pinata.pinJsonToIpfs(jsonObject);
     log.info(pinataResponse.getBody());
-    String metaCID = cidFromResponse(pinataResponse.getBody());
+    String metaCID = "https://ipfs.io/ipfs/"+cidFromResponse(pinataResponse.getBody());
     jsonObject.put("metaCID", metaCID);
 
     //jsonObject를 DTO로 반환
@@ -80,8 +79,6 @@ public class PinataServiceImpl implements PinataService{
     log.info("변환된 dto : "+ nftCreateDTO);
     return nftCreateDTO;
   }
-
-
 
   public String cidFromResponse(String json) throws JsonProcessingException {
     try {
