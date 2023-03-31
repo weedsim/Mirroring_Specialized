@@ -4,8 +4,13 @@
     <NotLoginUserHeaders/>
     <v-main >
       <router-view />
+      <AllFooter class="footer-space footer_section"/>
     </v-main>
-    <AllFooter class="footer-space footer_section"/>
+    <div id="gotoup" style="cursor:pointer; display: none;" onclick="window.scrollTo({top:0, behavior: 'smooth'});">
+      <span class="goto-up">
+        <v-img src="@/assets/arrow-up-circle.png" alt="" style="width: 50px; margin-left: 4px;"></v-img>
+      </span>
+    </div>
   </v-app>
 </template>
 
@@ -20,6 +25,26 @@ window.onload = function(){
   },100);
 }
 
+
+window.addEventListener('scroll', () => {
+  const div1 = document.getElementById('gotoup');
+  const scrollPosition = window.scrollY;
+
+  if (scrollPosition > 500) {
+    div1.style.display = 'block';
+  } else {
+    div1.style.display = 'none';
+  }
+});
+
+// window.scroll(function() {
+//   if (this.scrollPosition > 500) {
+//     document.querySelector('#gotoup').display = 'block';
+//   } else {
+//     document.querySelector('#gotoup').display = 'none';
+//   }
+// });
+  
 
 export default {
   name: 'App',
@@ -79,6 +104,11 @@ export default {
   font-weight: 400;
 }
 
-
+.goto-up {
+  position: fixed;
+  bottom: 40px;
+  right: 90px;
+  text-align: center;
+}
 
 </style>
