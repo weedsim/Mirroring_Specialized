@@ -77,15 +77,25 @@ export default {
   data() {
     return {
       nickname: VueCookies.get('nickname'),
+      logIn: VueCookies.isKey('AccessToken'),
     }
+  },
+  watch: {
+    nickname: function () {
+
+      console.log(VueCookies.isKey('AccessToken'));
+      this.logIn = VueCookies.isKey('AccessToken');
+    },
   },
   computed: {
     // 반응형으로 계산된 속성
     IsLOGIN() {
-      return VueCookies.isKey('AccessToken');
-    }
+      console.log(this.logIn);
+      return this.logIn === true;
+    },
   },
   methods: {
+    
     async isMember() {
       await this.$store.dispatch('LOGIN');
 

@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import VueCookies from 'vue-cookies';
+// import VueCookies from 'vue-cookies';
 
 export default {
   name: "SignUpView",
@@ -93,10 +93,9 @@ export default {
       console.log(this.$store.state.success);
 
       if(this.$store.state.success) {
-        await this.$store.dispatch('LOGIN');
-        if(VueCookies.isKey('AccessToken')){
-          this.$router.push('/');
-        }
+        // await this.$store.dispatch('LOGIN');
+        alert("회원가입 되었습니다. 로그인하여주십시오.");
+        this.$router.push('/');
       }
     }
   },

@@ -17,7 +17,7 @@ const store = createStore({
     currentChainId: null,
     isFan: true,
     isMember:false,
-    isLogin: VueCookies.isKey("AccessToken"),
+    isLogIn: VueCookies.isKey('AccessToken'),
     isSame: false,
     name: null,
     nickname: VueCookies.get('nickname'),
@@ -36,7 +36,9 @@ const store = createStore({
     haveNet: null,
   },
   getters: {
-    
+    isLogin: function() { 
+      return VueCookies.isKey('AccessToken');
+    }
   },
   mutations: {
 
