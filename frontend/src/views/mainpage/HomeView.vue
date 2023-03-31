@@ -1,14 +1,15 @@
 <template>
-  <div class="home">
-    <div class="content section" style="vertical-align: center;">
+  <div class="home my-template-container">
+    <div class="content section" style="vertical-align: center">
       <div class="content1 df">
         <span class="fl main-ff" style="vertical-align: center">
-          <p class="main-font main-font-1">NFT를 통해 팬과 아티스트가 하나되는 세상</p>
+          <!-- <p class="main-font main-font-1">NFT를 통해 팬과 아티스트가 하나되는 세상</p>
           <br> 
-          <p class="main-font main-font-2">FANFTASY</p>
+          <p class="main-font main-font-2">FANFTASY</p> -->
+          <animMain />
         </span>
-        <span style="padding-top: 20vh; border-color: black;">
-          <v-img src="@/assets/maingif.gif" style="width:350px; height: 550px;"></v-img>
+        <span style="padding-top: 20vh; border-color: black">
+          <!-- <v-img src="@/assets/maingif.gif" style="width:350px; height: 550px;"></v-img> -->
         </span>
       </div>
     </div>
@@ -26,75 +27,101 @@
     </carousel> -->
 
     <div class="content section">
-      <router-link to="/market" style="text-decoration: none; color: black">
-        <div
-          style="
+      <div
+        style="
+          width: 100%;
+          height: 100vh;
+          background-color: white;
+          padding-top: 100px;
+          text-align: center;
+          /* display: flex; */
+          justify-content: center;
+          align-items: center;
+        "
+      >
+        <!-- <h1 class="ranking-space">Ranking</h1>
+          <br />
+          <button
+          v-on:click="selectNewest"
+          v-if="sortnum === 0"
+          class="selected-ranking-button"
+          >
+          최신순
+        </button>
+        <button
+        v-on:click="selectNewest"
+        v-else
+        class="unselected-ranking-button"
+        >
+        최신순
+      </button>
+      <button
+      v-on:click="selectSalesVolume"
+      v-if="sortnum === 1"
+            class="selected-ranking-button"
+          >
+          판매량순
+        </button>
+        <button
+        v-on:click="selectSalesVolume"
+        v-else
+        class="unselected-ranking-button"
+        >
+        판매량순
+      </button>
+      <button
+      v-on:click="selectSalesAmmount"
+      v-if="sortnum === 2"
+      class="selected-ranking-button"
+      >
+      판매금액순
+    </button>
+    <button
+    v-on:click="selectSalesAmmount"
+    v-else
+    class="unselected-ranking-button"
+    >
+    판매금액순
+  </button> -->
+        <router-link to="/market" style="text-decoration: none; color: black">
+          <span style="font-size: 45px">🎁Drops</span>
+        </router-link>
+        <br />
+        <br />
+        <div style="font-size: 25px">
+          등록된 아티스트의 NFT를 구매할 수 있습니다.
+        </div>
+        <br />
+        <div>
+          <NFTCard v-for="i in 4" :key="i" class="nft-card-class"/>
+          <!-- <br />
+          <NFTCard v-for="i in 4" :key="i" class="nft-card-class"/> -->
+        </div>
+      </div>
+    </div>
+
+    <div class="content section">
+      <div
+      style="
             width: 100%;
-            height: 935px;
-            background-color: chocolate;
-            display: flex;
+            height: 100vh;
+            background-color: lightgray;
+            padding-top: 100px;
+            text-align: center;
+            /* display: flex; */
             justify-content: center;
             align-items: center;
-          "
+            "
         >
-          <!-- <h1 class="ranking-space">Ranking</h1>
-          <br />
-          <button
-            v-on:click="selectNewest"
-            v-if="sortnum === 0"
-            class="selected-ranking-button"
-          >
-            최신순
-          </button>
-          <button
-            v-on:click="selectNewest"
-            v-else
-            class="unselected-ranking-button"
-          >
-            최신순
-          </button>
-          <button
-            v-on:click="selectSalesVolume"
-            v-if="sortnum === 1"
-            class="selected-ranking-button"
-          >
-            판매량순
-          </button>
-          <button
-            v-on:click="selectSalesVolume"
-            v-else
-            class="unselected-ranking-button"
-          >
-            판매량순
-          </button>
-          <button
-            v-on:click="selectSalesAmmount"
-            v-if="sortnum === 2"
-            class="selected-ranking-button"
-          >
-            판매금액순
-          </button>
-          <button
-            v-on:click="selectSalesAmmount"
-            v-else
-            class="unselected-ranking-button"
-          >
-            판매금액순
-          </button> -->
+        <router-link to="/community" style="text-decoration: none; color: black">
+          <span style="font-size: 45px">🙋‍♀️리셀몰🙋‍♂️</span>
+        </router-link>
           <br />
           <br />
-          <br />
-          <br />
-          <div>
-            <RankingCard />
-          </div>
-          <div>
-            등록된 아티스트의 NFT를 구매할 수 있습니다.
-            <div>드롭스</div>
-            드랍되었습니다~~~~
+          <div style="font-size: 25px">
+            유저간 보유 NFT를 사고 팔 수 있습니다.
           </div>
         </div>
-      </router-link>
     </div>
 
     <div class="content section">
@@ -102,14 +129,19 @@
         <div
           style="
             width: 100%;
-            height: 935px;
-            background-color: tomato;
-            display: flex;
+            height: 100vh;
+            background-color: violet;
+            padding-top: 100px;
+            text-align: center;
+            /* display: flex; */
             justify-content: center;
             align-items: center;
           "
         >
-          <div>리셀몰</div>
+          <div style="font-size: 45px">✨나의 NFT</div>
+          <p style="padding-top: 35vh; font-size: 30px">
+            현재 보유하고 있는 NFT가 없습니다. NFT를 구매해보세요!
+          </p>
         </div>
       </router-link>
     </div>
@@ -117,7 +149,9 @@
 </template>
 
 <script>
-import RankingCard from "@/components/mainpage/RankingCard.vue"
+import animMain from "@/components/mainpage/anim.vue"
+import NFTCard from "@/components/market/NFTCard.vue"
+// import RankingCard from "@/components/mainpage/RankingCard.vue"
 // import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel"
 // import "vue3-carousel/dist/carousel.css"
 // import VueCookies from "vue-cookies"
@@ -128,53 +162,57 @@ import RankingCard from "@/components/mainpage/RankingCard.vue"
 //     e.preventDefault();
 // },{passive : false})
 
-window.onload = function(){
-      const elm = document.querySelectorAll('.section');
-      const elmCount = elm.length;
-      elm.forEach(function(item, index){
-        item.addEventListener('mousewheel', function(event){
-          event.preventDefault();
-          let delta = 0;
+window.onload = function () {
+  const elm = document.querySelectorAll(".section")
+  const elmCount = elm.length
+  elm.forEach(function (item, index) {
+    item.addEventListener("mousewheel", function (event) {
+      event.preventDefault()
+      let delta = 0
 
-          if (!event) event = window.event;
-          if (event.wheelDelta) {
-              delta = event.wheelDelta / 120;
-              if (window.opera) delta = -delta;
-          } 
-          else if (event.detail)
-              delta = -event.detail / 3;
+      if (!event) event = window.event
+      if (event.wheelDelta) {
+        delta = event.wheelDelta / 120
+        if (window.opera) delta = -delta
+      } else if (event.detail) delta = -event.detail / 3
 
-          let moveTop = window.scrollY;
-          let elmSelector = elm[index];
+      let moveTop = window.scrollY
+      let elmSelector = elm[index]
 
-          // wheel down : move to next section
-          if (delta < 0){
-            if (elmSelector !== elmCount-1){
-              try{
-                moveTop = window.pageYOffset + elmSelector.nextElementSibling.getBoundingClientRect().top;
-              }catch(e){
-                console.log("aa")
-              }
-            }
+      // wheel down : move to next section
+      if (delta < 0) {
+        if (elmSelector !== elmCount - 1) {
+          try {
+            moveTop =
+              window.pageYOffset +
+              elmSelector.nextElementSibling.getBoundingClientRect().top
+          } catch (e) {
+            console.log("aa")
           }
-          // wheel up : move to previous section
-          else{
-            if (elmSelector !== 0){
-              try{
-                moveTop = window.pageYOffset + elmSelector.previousElementSibling.getBoundingClientRect().top;
-              }catch(e){
-                console.log("aa")
-              }
-            }
+        }
+      }
+      // wheel up : move to previous section
+      else {
+        if (elmSelector !== 0) {
+          try {
+            moveTop =
+              window.pageYOffset +
+              elmSelector.previousElementSibling.getBoundingClientRect().top
+          } catch (e) {
+            console.log("aa")
           }
+        }
+      }
 
-          // const body = document.querySelector('html');
-          window.scrollTo({top:moveTop, left:0, behavior:'smooth'});
-        });
-      });
-    }
+      // const body = document.querySelector('html');
+      window.scrollTo({ top: moveTop, left: 0, behavior: "smooth" })
+    })
+  })
+  setTimeout(function () {
+    scrollTo(0, 0)
+  }, 100)
+}
 
-    
 // window.on("wheel", function(e) {
 //     if(mHtml.is(":animated")) return;
 //     if(e.originalEvent.deltaY > 0) {
@@ -195,7 +233,9 @@ export default {
     // Slide,
     // Pagination,
     // Navigation,
-    RankingCard,
+    // RankingCard,
+    NFTCard,
+    animMain,
   },
   data() {
     return {
@@ -240,8 +280,8 @@ export default {
 </script>
 
 <style>
-html {
-  overflow: hidden;
+html ::-webkit-scrollbar {
+  display: none;
 }
 
 html,
@@ -313,7 +353,9 @@ body {
 .content {
   width: 100% !important;
   height: 100vh !important;
-  background-color: aliceblue;
+  /* background-color: aliceblue; */
+  background-image: url(@/assets/maingif3.gif);
+  background-size: 100% 101vh;
   position: relative;
   z-index: 0;
   overflow: hidden;
@@ -326,7 +368,8 @@ body {
 }
 
 .main-ff {
-  padding-top: 44vh;
+  /* padding-top: 44vh; */
+  padding-top: 22vh;
   width: 880px;
 }
 
@@ -341,6 +384,4 @@ body {
 .main-font-2 {
   text-align: end;
 }
-
-
 </style>

@@ -1,7 +1,7 @@
 <template>
-  <div>
-    <LoginUserHeaders/>
-    <NotLoginUserHeaders v-if="i == 1"/>
+  <div class="mypage-entire">
+    <!-- <LoginUserHeaders/> -->
+    <!-- <NotLoginUserHeaders v-if="i == 1"/> -->
 
     <!-- 프로필 이미지 -->
     <div class="circle1">
@@ -77,8 +77,9 @@
 </template>
 
 <script>
-import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
-import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
+// import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
+// import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
+import Web3 from "web3"
 
 export default {
   name: 'MyPageView',
@@ -89,8 +90,8 @@ export default {
     }
   },
   components:{
-    LoginUserHeaders,
-    NotLoginUserHeaders,
+    // LoginUserHeaders,
+    // NotLoginUserHeaders,
   },
   async created() {
     await this.$store.dispatch('getAccount');
@@ -127,6 +128,10 @@ export default {
 </script>
 
 <style>
+.mypage-entire{
+  padding-top: 120px;
+}
+
 .circle1{
   width: 184px;
   height: 184px;
