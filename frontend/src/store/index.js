@@ -131,6 +131,7 @@ const store = createStore({
 
     async LOGIN() { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 404 에러
       await this.dispatch('changeNetWork');
+      await this.dispatch('addNetWork');
       await this.dispatch('getAccount');
       await axios({
         method: "post",
