@@ -79,7 +79,7 @@
 <script>
 // import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 // import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
-import Web3 from "web3"
+// import Web3 from "web3"
 
 export default {
   name: 'MyPageView',
