@@ -1,6 +1,7 @@
 package com.a306.fanftasy.domain.nft.service;
 
 
+import com.a306.fanftasy.domain.like.repository.NFTLikeRepository;
 import com.a306.fanftasy.domain.nft.dto.NFTListDTO;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
@@ -9,11 +10,14 @@ import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
+import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
 import com.a306.fanftasy.domain.user.entity.User;
+import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,7 +29,8 @@ public class NFTServiceImpl implements NFTService {
 
   private final NFTRepository nftRepository;
   private final NFTSourceRepository nftSourceRepository;
-
+  private final UserRepository userRepository;
+  private final NFTLikeRepository nftLikeRepository;
   //1. NFT 생성
   @Override
   public void addNFT(NFTCreateDTO nftCreateDTO) {
@@ -95,6 +100,19 @@ public class NFTServiceImpl implements NFTService {
     try {
       NFT nft = nftRepository.findById(nftId);
       NFTDetailDTO nftDetailDTO = NFTDetailDTO.fromEntity(nft);
+      //      //좋아요 찾기
+//      //securitycontext holder에서 user를 꺼내서
+      UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
+          .getAuthentication().getPrincipal();
+      long userId = userLoginDTO.getUserId();
+      User userEntity = userRepository.findByUserId(userId);
+      boolean userLike = false;
+      if (nftLikeRepository.findByNftAndUser(nft, userEntity) != null) {
+        userLike = true;
+      }
+      //로그인된 userid와 nftsourceid 를 통해서 nftsourcelike가 존재하는지 find
+      // 반환값이 null이 아니면 userLike = true;
+      nftDetailDTO.updateUserLike(userLike);
       return nftDetailDTO;
     } catch (Exception e) {
       throw e;

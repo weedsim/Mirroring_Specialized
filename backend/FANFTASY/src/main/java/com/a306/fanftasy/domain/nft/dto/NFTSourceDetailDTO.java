@@ -29,7 +29,6 @@ public class NFTSourceDetailDTO {
   private String fileType; //파일 종류
   private long likeNum;
   private boolean userLike;
-
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime regDate;
   public static NFTSourceDetailDTO fromEntity(NFTSource nftSource){
