@@ -27,9 +27,25 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
     generate-ddl: true
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
 jwt:
   secret: ssafya306secretkeyforfanftasy20230328
 # Serialize 오류 해결 (다른 방법 찾아볼 것)
   jackson:
     serialization:
       fail-on-empty-beans: false
+
+cloud:
+  aws:
+    s3:
+      bucket: fanftasy
+    credentials:
+      access-key: AKIAST5Q4TVWAJRQMPNY
+      secret-key: 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
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false

@@ -3,6 +3,9 @@ package com.a306.fanftasy.domain.board.controller;
 import com.a306.fanftasy.domain.board.dto.*;
 import com.a306.fanftasy.domain.board.entity.Board;
 import com.a306.fanftasy.domain.board.service.BoardService;
+import com.a306.fanftasy.domain.board.service.ImageService;
+import com.a306.fanftasy.domain.board.service.MyService;
+import com.a306.fanftasy.domain.board.service.BoardS3Service;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import com.a306.fanftasy.domain.user.entity.User;
@@ -13,8 +16,9 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.Optional;
+import java.io.IOException;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +27,9 @@ import java.util.Optional;
 public class BoardController {
 
     private final BoardService boardService;
+    private final ImageService imageService;
+    private final MyService myService;
+    private final BoardS3Service s3Service;
 
     // 구매글 등록
     @PostMapping("/purchase")
@@ -389,5 +396,29 @@ public class BoardController {
             return new ResponseEntity<>(responseDefault, HttpStatus.OK);
         }
     }
+
+    @PostMapping("/upload")
+    public ResponseEntity<?> uploadImage(@RequestPart("file") MultipartFile file) {
+        String imageUrl = null;
+        ResponseDefault responseDefault = null;
+        try {
+//            imageUrl = myService.uploadImage(file);
+            s3Service.saveUploadFile(file);
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("성공")
+                    .data(imageUrl)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+        } catch (IOException e) {
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("실패")
+                    .data(null)
+                    .build();
+            return new ResponseEntity<>(responseDefault, HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 }
