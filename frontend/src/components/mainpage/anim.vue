@@ -35,13 +35,13 @@ export default {
   display:flex; 
   justify-content: space-between; 
   align-items: center;
-  width: 1040px;
+  width: 1080px;
   height: 400px;
 }
 
 .anim-h1 {
   /* font-family: kern; */
-  max-width: 40ch;
+  width: 850px;
   text-align: center;
   transform: scale(0.94);
   animation: scale 3s forwards cubic-bezier(0.5, 1, 0.89, 1);
