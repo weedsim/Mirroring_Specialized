@@ -52,8 +52,8 @@
           />
           <p class="nick">{{ this.nickname }} 님</p>
         </router-link>
-        <p v-if="IsLOGIN" @click="logOut()">로그아웃</p>
-        <p v-else class="header-router" @click="this.isMember()" style="font-size: 17px;">로그인</p>
+        <p v-if="IsLOGIN" @click="logOut()" style="cursor: pointer;">로그아웃</p>
+        <p v-else class="header-router" @click="this.isMember()" style="font-size: 17px; cursor: pointer;">로그인</p>
         <!-- <p v-if="isLogin===True" class="header-router" @click="this.isMember()" style="font-size: 17px;">Login</p>
         <router-link v-else to="/mypage" class="icon-profile">
           <img
