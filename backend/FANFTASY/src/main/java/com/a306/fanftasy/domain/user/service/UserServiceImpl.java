@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
-import java.util.NoSuchElementException;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -75,7 +75,17 @@ public class UserServiceImpl implements UserService{
 
         userRepository.save(user);
     }
+    @Override
+    public UserUpdateDTO updateUser(String address) {
+        User user = userRepository.findByAddress(address);
 
+        return UserUpdateDTO.builder()
+                .address(user.getAddress())
+                .email(user.getEmail())
+                .nickname(user.getNickname())
+                .profileImg(user.getProfileImg())
+                .build();
+    }
     @Override
     public User findByUserId(Long userId) {
        User user=userRepository.findByUserId(userId);

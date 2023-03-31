@@ -15,6 +15,7 @@ public interface UserService {
  UserDetailDTO getUserDetail(String addresss);
 
  void updateUser(UserUpdateDTO userUpdateDTO);
+ UserUpdateDTO updateUser(String address);
 
  User findByUserId(Long userId);
 }

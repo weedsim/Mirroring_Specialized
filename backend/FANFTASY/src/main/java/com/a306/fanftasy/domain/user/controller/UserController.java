@@ -78,7 +78,7 @@ public class UserController {
         return new ResponseEntity<>(responseDefault, HttpStatus.OK);
     }
 
-    @PutMapping("/modi")
+    @PutMapping("/modify")
     public ResponseEntity<?> updateUser(@RequestBody UserUpdateDTO userUpdateDTO ){
        userService.updateUser(userUpdateDTO);
         ResponseDefault responseDefault = null;
@@ -86,6 +86,17 @@ public class UserController {
                 .success(true)
                 .messege("SUCCESS")
                 .data(null)
+                .build();
+        return new ResponseEntity<>(responseDefault, HttpStatus.OK);
+    }
+    @GetMapping("/modify")
+    public ResponseEntity<?> updateUser(@Param("address") String address){
+       UserUpdateDTO userUpdateDTO= userService.updateUser(address);
+        ResponseDefault responseDefault = null;
+        responseDefault = ResponseDefault.builder()
+                .success(true)
+                .messege("SUCCESS")
+                .data(userUpdateDTO)
                 .build();
         return new ResponseEntity<>(responseDefault, HttpStatus.OK);
     }
