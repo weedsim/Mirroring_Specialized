@@ -21,34 +21,30 @@ import java.util.NoSuchElementException;
 public class UserServiceImpl implements UserService{
     private final UserRepository userRepository;
     private final JwtTokenUtil jwtTokenUtil;
+    private final S3Service s3Service;
+
     public UserLoginDTO login(String address){
         log.info(address);
-        System.out.println("설마설마 설마사카 "+address);
         User user = userRepository.findByAddress(address);
         if(user!=null){
             Long userId=user.getUserId();
             String nickname=user.getNickname();
             String profileImg=user.getProfileImg();
-       //   String accessToken = jwtTokenUtil.generateAccessToken(address,userId)
-       //   String refreshToken = jwtTokenUtil.generateRefreshToken(nickname);
-            return UserLoginDTO.of(userId,nickname,address,profileImg);
+            String role = user.getRole();
+            return UserLoginDTO.of(userId,nickname,address,role,profileImg);
         }
         else{
             return null;
         }
-
-
-
-        }
+    }
 
     @Override
     public void join(UserJoinDTO userJoinDTO) {
-           userRepository.save(User.ofUser(userJoinDTO));
+        userRepository.save(User.ofUser(userJoinDTO));
     }
 
     @Override
     public UserDetailDTO getUserDetail(String addresss){
-        log.info("hihihi"+addresss);
         User user = userRepository.findByAddress(addresss);
         return UserDetailDTO.builder()
                 .name(user.getName())
@@ -67,20 +63,23 @@ public class UserServiceImpl implements UserService{
     public void updateUser(UserUpdateDTO userUpdateDTO) {
         User user = userRepository.findByAddress(userUpdateDTO.getAddress());
         log.info(userUpdateDTO.getNickname());
-        if (StringUtils.hasText(userUpdateDTO.getNickname())) {
-            log.info("AAAAAAAAA");
-            user.setNickname(userUpdateDTO.getNickname());
-        }
-        if (StringUtils.hasText(userUpdateDTO.getProfileImg())) {
-            user.setProfileImg(userUpdateDTO.getProfileImg());
-        }
+        user.setAddress(userUpdateDTO.getAddress());
+        user.setEmail(userUpdateDTO.getEmail());
+        user.setNickname(userUpdateDTO.getNickname());
+
+//        if (StringUtils.hasText(userUpdateDTO.getNickname())) {
+//            user.setNickname(userUpdateDTO.getNickname());
+//        }
+//        if (StringUtils.hasText(userUpdateDTO.getProfileImg())) {
+//            user.setProfileImg(userUpdateDTO.getProfileImg());
+//        }
 
         userRepository.save(user);
     }
 
     @Override
     public User findByUserId(Long userId) {
-       User user=userRepository.findByUserId(userId);
+       User user = userRepository.findByUserId(userId);
        return user;
     }
 
