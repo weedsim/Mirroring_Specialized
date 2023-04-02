@@ -23,7 +23,7 @@
       NFN 충전
     </button>
     <div>
-      보유 NFT | 거래 내역 | 관심 아이템
+      보유 NFT | 거래 내역 | 관심 아이템s
     </div>
 
     <hr>
