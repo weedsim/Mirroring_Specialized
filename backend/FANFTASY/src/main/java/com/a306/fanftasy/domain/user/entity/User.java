@@ -45,8 +45,16 @@ public class User {
                 .nickname(joinDto.getNickname())
                 .name(joinDto.getName())
                 .phone(joinDto.getPhone())
+                .role(joinDto.getRole())
+                .company(joinDto.getCompany())
                 .build();
         return user;
     }
 
+    public void plusTotalSales(int num){
+        this.totalSales += num;
+    }
+    public void plusTotalPrice(double price){
+        this.totalPrice += price;
+    }
 }

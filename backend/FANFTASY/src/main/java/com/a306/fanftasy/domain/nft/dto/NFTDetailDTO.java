@@ -26,6 +26,9 @@ public class NFTDetailDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime transactionTime;
     private NFTSourceDetailDTO nftSource;
+    private long editionNum;
+    private long nftLikeNum;
+    private boolean userLike;
     public static NFTDetailDTO fromEntity(NFT nft){
         return NFTDetailDTO.builder()
             .nftId(nft.getNftId())
@@ -35,6 +38,11 @@ public class NFTDetailDTO {
             .nftSource(NFTSourceDetailDTO.fromEntity(nft.getNftSource()))
             .isOnSale(nft.getIsOnSale())
             .transactionTime(nft.getTransactionTime())
+            .nftLikeNum(nft.getNftLikeNum())
+            .editionNum(nft.getEditionNum())
             .build();
+    }
+    public void updateUserLike(boolean userLike){
+        this.userLike = userLike;
     }
 }

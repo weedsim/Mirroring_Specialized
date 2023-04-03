@@ -3,31 +3,40 @@ package com.a306.fanftasy.domain.nft.controller;
 import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceTradeDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
-import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.service.NFTService;
 import com.a306.fanftasy.domain.nft.service.NFTSourceService;
+import com.a306.fanftasy.domain.nft.service.PinataService;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/nft")
 @Slf4j
 public class NFTController {
-
     private final NFTService nftService;
     private final NFTSourceService nftSourceService;
+    private final PinataService pinataService;
 
     //1. NFT 생성
     @PostMapping
-    public ResponseEntity<?> NFTAdd(@RequestBody NFTCreateDTO nftCreateDto){
-        log.info("NFT 생성 요청 : " + nftCreateDto.toString());
+    public ResponseEntity<?> NFTAdd(@RequestParam("file") MultipartFile file, @RequestParam("info") String info){
+        log.info("NFT 생성 요청 : " + info);
         ResponseDefault responseDefault = null;
         try{
-            nftService.addNFT(nftCreateDto);
+            //받아온 file과 info를 통해서 IPFS에 저장하고 CID를 반환함.
+            //해당 정보를 DB에 저장
+            log.info("파일 pinata 저장 시작");
+            String fileCID = pinataService.fileToPinata(file);
+            log.info("fileCID : " + fileCID);
+            NFTCreateDTO nftCreateDTO = pinataService.jsonToPinata(info, fileCID); //메타데이터를 저장하고, source를 저장하기
+            log.info("NFTCreateDTO : " + nftCreateDTO.toString());
+            //CID를 통해서 스마트 컨트랙트 호출하고 발행량 만큼 NFT발급
+            nftService.addNFT(nftCreateDTO);
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
@@ -37,10 +46,10 @@ public class NFTController {
         }
     }
 
-    //2. 마켓에서 리스트 반환
-    @GetMapping("/market")
-    public ResponseEntity<?> NFTMarketList(@RequestParam int orderType, @RequestParam int page,@RequestParam String keyword){
-        log.info("NFT 마켓 페이지 리스트 요청");
+    //2. 드롭스에서 리스트 반환
+    @GetMapping("/drops")
+    public ResponseEntity<?> NFTDropsList(@RequestParam int orderType, @RequestParam int page,@RequestParam String keyword){
+        log.info("NFT 드롭스 페이지 리스트 요청");
         log.info("orderType : " + orderType + ", page : " + page + ", keyword : " + keyword);
         ResponseDefault responseDefault = null;
         try{
@@ -48,13 +57,35 @@ public class NFTController {
                 .messege("SUCCESS")
                 .data(nftSourceService.getNFTSourceList(orderType, page, keyword))
                 .success(true).build();
-            log.info("NFT 조회 성공");
+            log.info("NFT Source List 조회 성공");
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
-            log.error("NFT 조회 실패");
+            log.error("NFT Source List 조회 실패");
             responseDefault = ResponseDefault.builder()
                 .success(false)
                 .messege("FAIL").build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
+    // 마켓 플레이스에서 리스트 반환
+    @GetMapping("/market")
+    public ResponseEntity<?> NFTMarketList(@RequestParam int orderType, @RequestParam int saleType, @RequestParam String keyword) {
+        ResponseDefault responseDefault = null;
+        try {
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("SUCCESS")
+                    .data(nftService.getNFTList(orderType, saleType, keyword))
+                    .build();
+            return ResponseEntity.ok().body(responseDefault);
+        } catch (Exception e) {
+            log.error("NFT 조회 실패");
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("FAIL")
+                    .data(null)
+                    .build();
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }

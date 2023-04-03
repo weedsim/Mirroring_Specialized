@@ -10,14 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UserLoginDTO {
+    private  Long userId;
     private String address;
+    private String profileImg;
     private String nickname;
-    private String accessToken;
-    public static UserLoginDTO of(String accessToken, String nickname,String address){
+    private String role;
+    public static UserLoginDTO of(Long userId,String nickname,String address,String role,String profileImg){
         return UserLoginDTO.builder()
+                .userId(userId)
                 .nickname(nickname)
-                .accessToken(accessToken)
                 .address(address)
+                .role(role)
+                .profileImg(profileImg)
                 .build();
     }
 }

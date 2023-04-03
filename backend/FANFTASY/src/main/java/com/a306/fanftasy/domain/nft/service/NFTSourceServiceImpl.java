@@ -1,6 +1,7 @@
 package com.a306.fanftasy.domain.nft.service;
 
 
+import com.a306.fanftasy.domain.like.repository.NFTSourceLikeRepository;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceDetailDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceListDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceTradeDTO;
@@ -8,13 +9,18 @@ import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
+import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
 import com.a306.fanftasy.domain.user.entity.User;
+import com.a306.fanftasy.domain.user.repository.UserRepository;
+import java.time.LocalDateTime;
+import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -24,31 +30,30 @@ public class NFTSourceServiceImpl implements NFTSourceService {
 
   private final NFTSourceRepository nftSourceRepository;
   private final NFTRepository nftRepository;
+  private final UserRepository userRepository;
+  private final NFTSourceLikeRepository nftSourceLikeRepository;
 
   @Override
   public List<NFTSourceListDTO> getNFTSourceList(int orderType, int page, String keyword) {
     try {
-      List<NFTSource> entityList;
+      List<NFTSource> entityList = null;
       List<NFTSourceListDTO> result;
       //(page-1)*6+1부터 page*6까지의 결과를 가져와야함
       //OrderType은 1,2,3 최신순,판매량,판매금액 순
       //keyword가 null이면 무시
-      PageRequest pageRequest = null;
       switch (orderType) {
         case 1: //최신순
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("regDate").descending());
-
+          entityList = nftSourceRepository.findByConditionOrderByRegDate(keyword);
           break;
         case 2: //잔여량 적은순
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("remainNum").ascending());
+          entityList = nftSourceRepository.findByConditionOrderByRemainNumAsc(keyword);
           break;
-        case 3: //금액순
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("originPrice").ascending());
+        case 3: //금액높은순
+          entityList = nftSourceRepository.findByConditionOrderByOriginPriceAsc(keyword);
           break;
         case 4:
-          pageRequest = PageRequest.of(page - 1, 6, Sort.by("originPrice").descending());
+          entityList = nftSourceRepository.findByConditionOrderByOriginPriceDesc(keyword);
       }//switch
-      entityList = nftSourceRepository.findByCondition(keyword, pageRequest);
       //엔티티를 DTO로 변환
       result = entityList.stream().map(m -> NFTSourceListDTO.fromEntity(m)).collect(
           Collectors.toList());
@@ -64,6 +69,19 @@ public class NFTSourceServiceImpl implements NFTSourceService {
     try {
       NFTSource nftSource = nftSourceRepository.findById(nftSourceId);
       NFTSourceDetailDTO nftSourceDetailDTO = NFTSourceDetailDTO.fromEntity(nftSource);
+//      //좋아요 찾기
+//      //securitycontext holder에서 user를 꺼내서
+      UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
+          .getAuthentication().getPrincipal();
+      long userId = userLoginDTO.getUserId();
+      User userEntity = userRepository.findByUserId(userId);
+      boolean userLike = false;
+      if (nftSourceLikeRepository.findByNftSourceAndUser(nftSource, userEntity) != null) {
+        userLike = true;
+      }
+      //로그인된 userid와 nftsourceid 를 통해서 nftsourcelike가 존재하는지 find
+      // 반환값이 null이 아니면 userLike = true;
+      nftSourceDetailDTO.updateUserLike(userLike);
       return nftSourceDetailDTO;
     } catch (Exception e) {
       throw e;
@@ -95,22 +113,28 @@ public class NFTSourceServiceImpl implements NFTSourceService {
       //잔여량 확인
       long remainNum = nftSourceEntity.getRemainNum();
       log.info("잔여량 : " + remainNum);
-      if ( remainNum <= 0) {
+      if (remainNum <= 0) {
 //        throw new Exception();
       }
       //구매자
       User owner = User.builder().userId(nftSourceTradeDTO.getBuyerId()).build();
       //해당 컨텐츠에 해당되는 nft중에 하나만 반환
       NFT nftEntity = nftRepository.findFirstByNftSourceAndOwner(nftSourceEntity,nftSourceEntity.getRegArtist());
+      if(nftEntity == null) throw new NullPointerException();
       log.info("거래될 nft : " + nftEntity.toString());
       //대상 nft에 대해서 변경저장
       nftEntity.updateIsOnSale(false);
       nftEntity.updateOwner(owner);
-      nftEntity.updateTransactionTime(nftSourceTradeDTO.getTransactionTime());
+      nftEntity.updateTransactionTime(LocalDateTime.now());
       nftRepository.save(nftEntity);
       //해당 컨텐츠에 대해서 잔여량 수정
-      nftSourceEntity.updateRemainNum(remainNum-1);
+      nftSourceEntity.updateRemainNum(remainNum - 1);
       nftSourceRepository.save(nftSourceEntity);
+      //판매 아티스트 총 금액과 갯수 늘려주기
+      User artist = nftSourceEntity.getRegArtist();
+      artist.plusTotalSales(1);
+      artist.plusTotalPrice(nftSourceEntity.getOriginPrice());
+      userRepository.save(artist);
     }//try
     catch (Exception e) {
       throw e;

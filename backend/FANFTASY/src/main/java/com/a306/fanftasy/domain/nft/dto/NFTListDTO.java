@@ -18,6 +18,7 @@ public class NFTListDTO {
   private String tokenUri;
   private NFTSourceListDTO nftSource;
   private Boolean isOnSale;
+  private long editionNum;
   public static NFTListDTO fromEntity(NFT nft){
     return NFTListDTO.builder()
         .nftId(nft.getNftId())
@@ -25,6 +26,7 @@ public class NFTListDTO {
         .tokenUri(nft.getTokenUri())
         .nftSource(NFTSourceListDTO.fromEntity(nft.getNftSource()))
         .isOnSale(nft.getIsOnSale())
+        .editionNum(nft.getEditionNum())
         .build();
   }
 }
