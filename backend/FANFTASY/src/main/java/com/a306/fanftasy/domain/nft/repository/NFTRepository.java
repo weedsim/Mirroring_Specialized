@@ -30,13 +30,38 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
   /**
    * 판매중인 NFT 중 최신순 현재 판매 중인 가장 작은 값 찾기
    */
-  // 판매중인 NFTSourceId 찾기
-  @Query("select n.nftSource.nftSourceId from NFT n where n.isOnSale = true group by n.nftSource")
+  // 판매중인 NFTSourceId 찾기, 판매자가 올린 최신순
+  @Query("select n.nftSource.nftSourceId from NFT n where n.isOnSale = true group by n.nftSource order by max(n.transactionTime) DESC")
   List<Long> findNftSourceIdIsOnSale();
   // 판매중인 NFTSourceId 중 검색
-  @Query("SELECT n FROM NFTSource n WHERE n.nftSourceId IN :nftSourceIdIsOnSale AND (n.content like %:keyword% or n.title like %:keyword% or n.regArtist.nickname like %:keyword%) order by n.regDate DESC")
-  List<NFTSource> findNFTMarketListOrderByRegDate(@Param("nftSourceIdIsOnSale") List<Long> nftSourceIdIsOnSale, @Param("keyword") String keyword);
+//  @Query("SELECT n FROM NFTSource n WHERE n.nftSourceId IN :nftSourceIdIsOnSale AND (n.content like %:keyword% or n.title like %:keyword% or n.regArtist.nickname like %:keyword%)")
+//  List<NFTSource> findNFTMarketListOrderByRegDate(@Param("nftSourceIdIsOnSale") List<Long> nftSourceIdIsOnSale, @Param("keyword") String keyword);
+  @Query("SELECT n FROM NFTSource n WHERE n.nftSourceId = :nftSourceIdIsOnSale AND (:keyword IS NULL OR n.regArtist.nickname LIKE %:keyword% OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%)")
+  NFTSource findNFTMarketListOrderByRegDate(@Param("nftSourceIdIsOnSale") Long nftSourceIdIsOnSale, @Param("keyword") String keyword);
+
   // 판매 값 중 가장 낮은 값 찾기
   @Query("select min(n.currentPrice) from NFT n where n.isOnSale = true and n.nftSource.nftSourceId = :nftSourceId")
   Double findMinCurrentPrice(@Param("nftSourceId") Long nftSourceId);
+
+
+  // 판매 중인 NFTSourceId 찾기, 가격 높은 순
+  @Query("select n.nftSource.nftSourceId from NFT n where n.isOnSale = true group by n.nftSource order by min(n.currentPrice) DESC, max(n.transactionTime) DESC")
+  List<Long> findNftSourceIdIsOnSaleOrderByCurrentPriceDesc();
+
+  // 판매 중인 NFTSourceId 찾기, 가격 낮은 순
+  @Query("select n.nftSource.nftSourceId from NFT n where n.isOnSale = true group by n.nftSource order by min(n.currentPrice), max(n.transactionTime) DESC")
+  List<Long> findNftSourceIdIsOnSaleOrderByCurrentPrice();
+
+
+  // 미판매 NFTSourceId 찾기, 최신순
+  @Query("SELECT n.nftSource.nftSourceId " +
+          "FROM NFT n " +
+          "WHERE n.nftSource NOT IN (" +
+          "SELECT n1.nftSource " +
+          "FROM NFT n1 " +
+          "WHERE n1.isOnSale = true " +
+          "GROUP BY n1.nftSource" +
+          ") " +
+          "ORDER BY n.nftSource.regDate DESC")
+  List<Long> findNftSourceIdsNotOnSaleOrderByRegDateDesc();
 }

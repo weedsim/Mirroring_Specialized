@@ -13,6 +13,7 @@ import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.io.IOException;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -114,7 +115,7 @@ public class NFTServiceImpl implements NFTService {
   @Override
   public List<NFTMarketListDTO> getNFTList(int orderType, int saleType, String keyword) {
     List<NFTSource> entityList = null;
-    List<NFTMarketListDTO> result;
+    List<NFTMarketListDTO> result = new ArrayList<>();
     // orderType : 1, 2, 3
     // => 최신순, 가격 높은 순, 가격 낮은 순
     // saleType : 1, 2
@@ -123,23 +124,56 @@ public class NFTServiceImpl implements NFTService {
     // 판매중, 최신순
     if (saleType == 1) {
       if (orderType == 1) {
-        List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSale(); // 판매 중인 nftSourceId
-        List<NFTSource> nftSourceList = nftRepository.findNFTMarketListOrderByRegDate(nftSourceIdIsOnSale, keyword);
-        result = nftSourceList.stream().map(m -> NFTMarketListDTO.fromEntity(m)).collect(
-                Collectors.toList());
-        for (NFTMarketListDTO nftMarketListDTO : result) {
-          nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftMarketListDTO.getNftSourceId()));
+        List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSale(); // 판매 중인 nftSourceId 최신순
+        for (Long nftSourceId : nftSourceIdIsOnSale) {
+          NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+          if (nftSource != null) {
+            NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+            nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
+            result.add(nftMarketListDTO);
+          }
         }
         return result;
         // 판매중, 가격 높은 순
       } else if (orderType == 2) {
+        List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSaleOrderByCurrentPriceDesc(); // 판매 중인 nftSourceId 가격 낮은 순
+        for (Long nftSourceId : nftSourceIdIsOnSale) {
+          NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+          if (nftSource != null) {
+            NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+            nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
+            result.add(nftMarketListDTO);
+          }
+        }
+        return result;
 
+        // 판매중, 가격 낮은 순
       } else {
-
+        List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSaleOrderByCurrentPrice(); // 판매 중인 nftSourceId 가격 낮은 순
+        for (Long nftSourceId : nftSourceIdIsOnSale) {
+          NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+          if (nftSource != null) {
+            NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+            nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
+            result.add(nftMarketListDTO);
+          }
+        }
+        return result;
       }
-    } else {
-      if (orderType == 1) {
 
+      // 미판매
+    } else {
+      // 미판매 최신순
+      if (orderType == 1) {
+        List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdsNotOnSaleOrderByRegDateDesc(); // 판매 중인 nftSourceId 가격 낮은 순
+        for (Long nftSourceId : nftSourceIdIsOnSale) {
+          System.out.printf(">>" + keyword);
+          NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+          NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+          nftMarketListDTO.setCurrentPrice(0.0);
+          result.add(nftMarketListDTO);
+        }
+        return result;
       } else if (orderType == 2) {
 
       } else {
