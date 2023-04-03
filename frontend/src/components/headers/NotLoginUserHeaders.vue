@@ -11,8 +11,14 @@
         </a>
       </span>
       <span class="headerlist">
-        <router-link to="/market" class="header-router font-k header-tab" style="margin: 0px 30px;">DROPS</router-link>
-        <router-link to="/resell" class="header-router font-k header-tab" style="margin: 0px 30px;">MARKET</router-link>
+        <!-- {{ currentRouteName }} -->
+        
+
+        <router-link to="/drops" v-if="currentRouteName==='MarketListView'" class="header-router font-k header-tab-clicked" style="margin: 0px 30px;">DROPS</router-link>
+        <router-link to="/drops" v-else-if="currentRouteName==='MarketDetailView'" class="header-router font-k header-tab-clicked" style="margin: 0px 30px;">DROPS</router-link>
+        <router-link to="/drops" v-else class="header-router font-k header-tab" style="margin: 0px 30px;">DROPS</router-link>
+        <router-link to="/market" v-if="currentRouteName==='ResellListView'" class="header-router font-k header-tab-clicked" style="margin: 0px 30px;">MARKET</router-link>
+        <router-link to="/market" v-else class="header-router font-k header-tab" style="margin: 0px 30px;">MARKET</router-link>
         <!-- <router-link to="/community" class="header-router"
           >커뮤니티</router-link
         > -->
@@ -52,8 +58,8 @@
           />
           <p class="nick">{{ this.nickname }} 님</p>
         </router-link>
-        <p v-if="IsLOGIN" @click="logOut()">로그아웃</p>
-        <p v-else class="header-router" @click="this.isMember()" style="font-size: 17px;">로그인</p>
+        <p v-if="IsLOGIN" @click="logOut()" style="cursor: pointer;">로그아웃</p>
+        <p v-else class="header-router" @click="this.isMember()" style="font-size: 17px; cursor: pointer;">로그인</p>
         <!-- <p v-if="isLogin===True" class="header-router" @click="this.isMember()" style="font-size: 17px;">Login</p>
         <router-link v-else to="/mypage" class="icon-profile">
           <img
@@ -76,6 +82,8 @@ export default {
     return {
       nickname: VueCookies.get('nickname'),
       logIn: VueCookies.isKey('AccessToken'),
+
+      
     }
   },
   watch: {
@@ -90,6 +98,19 @@ export default {
     IsLOGIN() {
       console.log(this.logIn);
       return this.logIn === true;
+    },
+    currentRouteName(){
+      // console.log(this.$route.name)
+      return this.$route.name
+    },
+    marketClicked(){
+      const mc = this.$route.name;
+      console.log(mc, 'dfdf')
+      if (mc.indexOf('Market')>=0) {
+        console.log('네')
+        return '네';
+      }
+      return '아니오';
     },
   },
   methods: {
@@ -162,6 +183,23 @@ export default {
   color: black;
 }
 
+.header-tab-clicked{
+  background: linear-gradient(90deg,#6A3FC1,#5B9BD5);
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  background-size: 100% 100%;
+  position: relative;
+}
+.header-tab-clicked:after{
+  position: absolute;
+  content:  "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(90deg,#6A3FC1,#5B9BD5);
+  -webkit-text-fill-color: transparent;
+}
+
 .header-tab:hover{
   background: linear-gradient(90deg,#6A3FC1,#5B9BD5);
   -webkit-text-fill-color: transparent;
@@ -188,7 +226,6 @@ export default {
   background: linear-gradient(90deg,#6A3FC1,#5B9BD5);
   -webkit-text-fill-color: transparent;
   transition: width 0.3s ease 0s, left 0.3s ease 0s;
-  
 }
 
 .header-tab:hover:after{

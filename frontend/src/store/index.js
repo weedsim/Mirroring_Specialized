@@ -3,7 +3,9 @@ import VueCookies from "vue-cookies"
 import axios from "axios"
 import createPersistedState from "vuex-persistedstate"
 
-const API_URL = "https://fanftasy.kro.kr/api";
+const API_URL = "https://fanftasy.kro.kr/api"
+// const API_URL = "http://70.12.247.124:8080/api",
+// const API_URL = "http://localhost:8080/api",
 const store = createStore({
   plugins: [createPersistedState()],
   state: {
