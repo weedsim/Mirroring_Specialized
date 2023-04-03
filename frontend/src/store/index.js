@@ -3,8 +3,8 @@ import VueCookies from "vue-cookies"
 import axios from "axios"
 import createPersistedState from "vuex-persistedstate"
 
-// const API_URL = "https://fanftasy.kro.kr/api"
-const API_URL = "http://70.12.247.124:8080/api"
+const API_URL = "https://fanftasy.kro.kr/api"
+// const API_URL = "http://70.12.247.124:8080/api"
 // const API_URL = "http://localhost:8080/api",
 const store = createStore({
   plugins: [createPersistedState()],
@@ -34,7 +34,7 @@ const store = createStore({
     profileImg: null,
     orderType: 1,
     page: 0,
-    keyword: null,
+    keyword: "",
     success: false,
     haveNet: null,
     cards: [],
@@ -66,10 +66,11 @@ const store = createStore({
       this.state.CurrentAccount = null
       this.state.AccessToken = null
       // this.state.RefreshToken = null;
-      VueCookies.remove("CurrentAccount")
-      VueCookies.remove("AccessToken")
-      VueCookies.remove("nickname")
-      console.log("로그아웃")
+      VueCookies.remove("CurrentAccount");
+      VueCookies.remove("AccessToken");
+      VueCookies.remove("nickname");
+      VueCookies.remove("profileImage");
+      console.log("로그아웃");
       // VueCookies.remove("RefreshToken");
     },
   },
@@ -142,41 +143,47 @@ const store = createStore({
       this.state.address = this.state.CurrentAccount
     },
 
-    async LOGIN() {
-      // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 404 에러
-      await this.dispatch("changeNetWork")
-      await this.dispatch("addNetWork")
-      await this.dispatch("getAccount")
+    async LOGIN() { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 404 에러
+      await this.dispatch('changeNetWork');
+      await this.dispatch('addNetWork');
+      await this.dispatch('getAccount');
+      this.state.isMember = false;
+      // console.log(this.state.address);
       await axios({
         method: "post",
         url: `${API_URL}/user/login`,
         // url: `http://70.12.247.124:8080/api/user/login`,
+        headers: { "Content-Type": `application/json`},
         params: {
           address: this.state.address, //지갑 주소
         },
       })
-        .then((res) => {
-          console.log(res)
-          console.log(res.headers.accesstoken)
-          console.log(res.data.data)
-          VueCookies.set("Account", res.data.data.address, "3h")
-          VueCookies.set("nickname", res.data.data.nickname, "3h")
-          VueCookies.set("AccessToken", res.headers.accesstoken, "3h")
-          this.state.isMember = true
-          this.state.success = true
-        })
-        .catch((error) => {
-          console.log(error)
-          console.log(error.response.data.success)
-          if (!error.response.data.success) {
-            // 회원이 아닙니다.
-            this.state.success = false
-            this.state.isMember = false
-          } else {
-            this.state.success = false
-            this.state.isMember = null
-          }
-        })
+      .then((res) => {
+        console.log(res);
+        console.log(res.headers.accesstoken);
+        console.log(res.data.data);
+        
+        // console.log(this.state.profileImage);
+        VueCookies.set('Account', res.data.data.address, '3h');
+        VueCookies.set('nickname', res.data.data.nickname, '3h');
+        VueCookies.set('AccessToken', res.headers.accesstoken, '3h');
+        VueCookies.set('profileImage', res.data.data.profileImg, '3h');
+        this.state.isMember = !this.state.isMember;
+        this.state.success = true;
+      }) 
+      .catch((error) => {
+        
+        console.log(error);
+        // console.log(error.response.data.success);
+        if(!error.response.data.success){ // 회원이 아닙니다.
+          this.state.success = false;
+          this.state.isMember = false;
+        }
+        else {
+          this.state.success = false;
+          this.state.isMember = null;
+        }
+      })
     },
 
     async sameAccount() {
