@@ -40,7 +40,6 @@ public class NFTController {
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
-            log.error(e.getMessage());
             responseDefault = ResponseDefault.builder().success(false).messege("fail").build();
             return ResponseEntity.badRequest().body(responseDefault);
         }

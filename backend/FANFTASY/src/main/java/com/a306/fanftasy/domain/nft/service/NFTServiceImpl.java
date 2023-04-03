@@ -15,18 +15,27 @@ import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.io.IOException;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
+import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.Contract;
 
 @Service
 @Slf4j
@@ -37,9 +46,13 @@ public class NFTServiceImpl implements NFTService {
   private final NFTSourceRepository nftSourceRepository;
   private final UserRepository userRepository;
   private final NFTLikeRepository nftLikeRepository;
+
+  private final BasicService basicService;
+
   //1. NFT 생성
   @Override
-  public void addNFT(NFTCreateDTO nftCreateDTO) throws IOException {
+  public void addNFT(NFTCreateDTO nftCreateDTO)
+      throws IOException, ExecutionException, InterruptedException {
     try {
       log.info("---------------------------------");
       //3. NFT Source 데이터 + file CID ipfs + Metadata CID이 DTO에 담겨서 들어옴
@@ -71,15 +84,14 @@ public class NFTServiceImpl implements NFTService {
       log.info("nft 콘텐츠 등록 완료");
 
       //개별 nft 생성
-
       String artistAddress = artist.getAddress();
 
       log.info("개별 nft 생성 시작");
-      for (int i = 1; i<=totalNum; i++
+      for (int i = 1; i <= totalNum; i++
       ) {
         //스마트 컨트랙트로 tokenUri 받아오기
-        //smartContract(artistAddress, metaCID)
-        String tokenUri = "get tokenUri from BlockChain Network";
+        String tokenUri = basicService.minting(artistAddress, metaCID);
+        log.info("tokenId : "+tokenUri);
         NFT nft = NFT.builder()
             .owner(artist)
             .tokenUri(tokenUri)
@@ -99,15 +111,15 @@ public class NFTServiceImpl implements NFTService {
   //6. 회원 소유 NFT목록 반환
   @Override
   public List<NFTListDTO> getNFTListByOwnerId(long ownerId) {
-    try{
+    try {
       User owner = User.builder().userId(ownerId).build();
       List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
       //엔티티를 DTO로 변환
-      List<NFTListDTO> result = entityList.stream().map(m-> NFTListDTO.fromEntity(m)).collect(
+      List<NFTListDTO> result = entityList.stream().map(m -> NFTListDTO.fromEntity(m)).collect(
           Collectors.toList());
       return result;
     }//try
-    catch(Exception e){
+    catch (Exception e) {
       throw e;
     }//catch
   }//getNFTListByOwnerId
@@ -162,18 +174,45 @@ public class NFTServiceImpl implements NFTService {
     }//catch
   }
 
-  private String CONTRACT_ADDRESS = "컨트랙트 주소";
+
   //smartContract
-  public String createNFT(String artistAddress, String metaCID) throws IOException {
-    //NFT 발행 트랜잭션 호출하는 method
-    Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
-    Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
-    System.out.println(web3ClientVersion.getWeb3ClientVersion());
-    return null;
-  }
-  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price) throws IOException {
+//  public String createNFT(String artistAddress, String metaCID) throws IOException {
+//    Web3j web3j = Web3j.build(new HttpService(NETWORK_URL));
+//    EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+//        CONTRACT_ADDRESS, DefaultBlockParameterName.LATEST).sendAsync().get();
+//    BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+//    BigInteger gasPrice = Contract.GAS_PRICE;
+//    BigInteger gasLimit = Contract.GAS_LIMIT;
+//
+//    List<Type> inputParameters = new ArrayList<>();
+//    Type usersId = new Utf8String(_usersId);
+//    Type usersPassword = new Utf8String(_usersPassword);
+//    inputParameters.add(usersId);
+//    inputParameters.add(usersPassword);
+//    Function function = new Function("usersRegister",
+//        inputParameters,
+//        Collections.<TypeReference<?>>emptyList());
+//    String functionEncoder = FunctionEncoder.encode(function);
+//    Transaction transaction = Transaction.createFunctionCallTransaction(
+//        equipmentAddress, nonce, gasPrice,
+//        gasLimit, contractAddress, new BigInteger("0"),
+//        functionEncoder);
+//    EthSendTransaction transactionResponse =
+//        web3j.ethSendTransaction(transaction).sendAsync().get();
+//    try {
+//      //Nonce
+//
+//    }catch (Exception e) {
+//      e.printStackTrace();
+//    }
+
+//    String transactionHash = ethCall.getTransactionHash();
+//  }
+
+  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price)
+      throws IOException {
     //NFT 거래 트랜잭션을 발생시키는 method
-    Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
+    Web3j web3j = Web3j.build(new HttpService(""));
     Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
     System.out.println(web3ClientVersion.getWeb3ClientVersion());
   }

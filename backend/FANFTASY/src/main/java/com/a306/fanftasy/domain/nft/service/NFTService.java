@@ -8,11 +8,13 @@ import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import org.springframework.web.multipart.MultipartFile;
 
 public interface NFTService {
 
-  void addNFT(NFTCreateDTO nftCreateDTO) throws IOException;
+  void addNFT(NFTCreateDTO nftCreateDTO)
+      throws IOException, ExecutionException, InterruptedException;
 
 
   NFTDetailDTO getNFT(long nftId);
