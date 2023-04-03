@@ -70,7 +70,7 @@ public class NFTController {
 
     //3. 아티스트가 올린 NFT 컨텐츠 상세 페이지 반환
     @GetMapping("/market/{nftSourceId}")
-    public ResponseEntity<?> NFTMardetDetail(@PathVariable long nftSourceId){
+    public ResponseEntity<?> NFTMarketDetail(@PathVariable long nftSourceId){
         log.info("NFT 마켓 페이지 상세 요청 : " + nftSourceId);
         ResponseDefault responseDefault = null;
         try{

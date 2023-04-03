@@ -83,5 +83,10 @@ public class UserServiceImpl implements UserService{
        return user;
     }
 
+    @Override
+    public void logout(Long userId) {
+
+    }
+
 
 }

@@ -10,6 +10,7 @@ import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.service.S3Service;
 import com.a306.fanftasy.domain.user.service.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.http.HttpResponse;
 import org.aspectj.bridge.Message;
 import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpHeaders;
@@ -21,6 +22,7 @@ import lombok.RequiredArgsConstructor;
 import com.a306.fanftasy.util.JwtTokenUtil;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
@@ -149,4 +151,12 @@ public class UserController {
             return new ResponseEntity<>(responseDefault, HttpStatus.NOT_FOUND);
         }
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(@PathVariable("id") Long id) {
+            User user = userService.findByUserId(id);
+            userService.logout(user.getUserId());
+            return ResponseEntity.accepted().build();
+        }
+
 }

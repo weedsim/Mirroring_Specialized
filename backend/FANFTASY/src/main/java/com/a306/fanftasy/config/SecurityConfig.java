@@ -61,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         //filter 거치지않도록 설정
         web.ignoring()
-                .antMatchers("/api/user/login","/api/user/join","/api/**");
+                .antMatchers("/api/user/login","/api/user/join","/**");
     }
 
 
@@ -77,7 +77,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .and()
 //                .authorizeRequests()
         http.authorizeRequests()//권한 설정
-                .antMatchers("/api/user/login","/api/user/join","/api/**")
+                .antMatchers("/api/user/login","/api/user/join","/**")
                 .permitAll() //메인페이지는 모든 사용자에게 가능하게
                 .anyRequest().authenticated();
         //jwt 토큰 필터 추가

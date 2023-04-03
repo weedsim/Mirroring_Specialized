@@ -14,6 +14,8 @@ import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
+
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +39,7 @@ public class NFTSourceServiceImpl implements NFTSourceService {
   public List<NFTSourceListDTO> getNFTSourceList(int orderType, int page, String keyword) {
     try {
       List<NFTSource> entityList = null;
-      List<NFTSourceListDTO> result;
+      List<NFTSourceListDTO> result=null;
       //(page-1)*6+1부터 page*6까지의 결과를 가져와야함
       //OrderType은 1,2,3 최신순,판매량,판매금액 순
       //keyword가 null이면 무시
@@ -55,8 +57,10 @@ public class NFTSourceServiceImpl implements NFTSourceService {
           entityList = nftSourceRepository.findByConditionOrderByOriginPriceDesc(keyword);
       }//switch
       //엔티티를 DTO로 변환
+
       result = entityList.stream().map(m -> NFTSourceListDTO.fromEntity(m)).collect(
           Collectors.toList());
+      log.info(result.toString());
       return result;
     } catch (Exception e) {
       throw e;
@@ -71,10 +75,15 @@ public class NFTSourceServiceImpl implements NFTSourceService {
       NFTSourceDetailDTO nftSourceDetailDTO = NFTSourceDetailDTO.fromEntity(nftSource);
 //      //좋아요 찾기
 //      //securitycontext holder에서 user를 꺼내서
-      UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
-          .getAuthentication().getPrincipal();
-      long userId = userLoginDTO.getUserId();
-      User userEntity = userRepository.findByUserId(userId);
+
+
+      //원본 security 일단 막아둠
+//      UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
+//          .getAuthentication().getPrincipal();
+//      long userId = userLoginDTO.getUserId();
+
+      //테스트용 48L -> 그누그누
+      User userEntity = userRepository.findByUserId(48L);
       boolean userLike = false;
       if (nftSourceLikeRepository.findByNftSourceAndUser(nftSource, userEntity) != null) {
         userLike = true;

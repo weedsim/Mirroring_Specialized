@@ -20,4 +20,6 @@ public interface UserService {
  void updateUser(UserUpdateDTO userUpdateDTO);
 
  User findByUserId(Long userId);
+
+ void logout(Long userId);
 }
