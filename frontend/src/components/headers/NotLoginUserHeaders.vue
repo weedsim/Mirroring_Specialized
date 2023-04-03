@@ -80,17 +80,22 @@ export default {
   name: "NotLoginUserHeaders",
   data() {
     return {
-      nickname: VueCookies.get('nickname'),
+      userId_nickname: VueCookies.get('userId_nickname'),
+      nickname: null,
       logIn: VueCookies.isKey('AccessToken'),
       profileImage: VueCookies.get('profileImage'),
     }
   },
+  // created: {
+  //   nickname: this.cutIdName()
+  // },
   watch: {
-    nickname: function () {
+    // nickname: function () {
 
-      console.log(VueCookies.isKey('AccessToken'));
-      this.logIn = VueCookies.isKey('AccessToken');
-    },
+
+    //   console.log(VueCookies.isKey('AccessToken'));
+    //   this.logIn = VueCookies.isKey('AccessToken');
+    // },
     profileImage: function () {
       console.log(VueCookies.get('profileImage'));
     }
@@ -136,6 +141,9 @@ export default {
       if(Member === true){
         console.log("회원입니다.");
         // this.$router.go(this.$router.currentRoute);
+        console.log(this.userId_nickname);
+        this.cutIdName();
+        console.log(this.nickname);
       }
       else if(Member === false) {
         console.log("회원이 아닙니다.");
@@ -156,6 +164,12 @@ export default {
       else {
         console.log("무슨 에러인지 모르겠습니다.");
       }
+    },
+    cutIdName() {
+      const [, id, , nickname] = this.userId_nickname.split('_');
+      console.log(id);
+      console.log(nickname);
+      this.nickname = nickname;
     }
   }
 }

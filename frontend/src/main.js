@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import { loadFonts } from './plugins/webfontloader'
 import InfiniteScroll from 'infinite-loading-vue3'
 import VueCookies from "vue-cookies"
+// import cors from "cors"
 
 loadFonts()
 
@@ -16,3 +17,4 @@ createApp(App)
 .use(VueCookies)
 .use(InfiniteScroll)
 .mount('#app')
+// .use(cors({ origin: '*', }))

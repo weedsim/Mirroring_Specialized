@@ -113,8 +113,8 @@ const store = createStore({
               this.state.rpcUrl
             ],
             nativeCurrency: {
-              'name' : "NFN",
-              'symbol' : "NFN",
+              'name' : "FTS",
+              'symbol' : "FTS",
               'decimals' : 18
             }
           }]
@@ -141,6 +141,7 @@ const store = createStore({
         method: "post",
         url: `${API_URL}/user/login`,
         // url: `http://70.12.247.124:8080/api/user/login`,
+        headers: { "Content-Type": `application/json`},
         params: {
           address: this.state.address, //지갑 주소
         },
@@ -152,7 +153,7 @@ const store = createStore({
         
         // console.log(this.state.profileImage);
         VueCookies.set('Account', res.data.data.address, '3h');
-        VueCookies.set('nickname', res.data.data.nickname, '3h');
+        VueCookies.set('userId_nickname', "userId_" +  res.data.data.userId + "_nickname_" + res.data.data.nickname, '3h');
         VueCookies.set('AccessToken', res.headers.accesstoken, '3h');
         VueCookies.set('profileImage', res.data.data.profileImg, '3h');
         this.state.isMember = !this.state.isMember;

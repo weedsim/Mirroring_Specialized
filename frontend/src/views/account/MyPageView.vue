@@ -7,10 +7,14 @@
     <div class="circle1">
       <div class="circle2">
         <div class="circle3">
-          <img :src="require('@/assets/EthereumIcon.png')" alt="로고" class="profile-logo">
+          <img :src="this.profileImage" alt="로고" class="profile-logo">
         </div>
       </div>
     </div>
+    <!-- <div>
+      <input type="file" class="changeImage">
+      <button class="changeImageBtn" @click="changeImage()">프로필 사진 바꾸기</button>
+    </div> -->
 
     <!-- 메타마스크 주소 -->
     <div class="address-inline">
@@ -19,7 +23,7 @@
       <img :src="require('@/assets/copy.png')" alt="복사" style="width:28px; height: 20px; padding-left: 5px; padding-right: 5px; " @click="copyAddress">
     </div>
 
-    <button class="charge-button">
+    <button class="charge-button" @click="charge()">
       NFN 충전
     </button>
     <div>
@@ -79,7 +83,10 @@
 <script>
 // import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 // import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
-// import Web3 from "web3"
+import BankABI from "../../../path/to/BankABI.json";
+import contract from '@truffle/contract';
+import Web3 from "web3"
+import  VueCookies  from 'vue-cookies';
 
 export default {
   name: 'MyPageView',
@@ -87,6 +94,8 @@ export default {
     return {
       address: null,
       myNFTmenu : ['최신 순','거래량 많은 순','거래 횟수 많은 순', '이름 순 : A→Z','이름 순 : Z→A'],
+      profileImage: VueCookies.get('profileImage'),
+
     }
   },
   components:{
@@ -117,7 +126,52 @@ export default {
       });
     },
 
+    async charge() {
+      console.log("1111");
+      const web3 = new Web3(window.ethereum);
+      const Bank = contract(BankABI);
+      Bank.setProvider(web3.currentProvider);
+      const bankInstance = await Bank.at('0x328dAdbF4438E4D93e6b4E0B7c7aB0e189fE71bA');
 
+      // 컨트랙트에서 사용할 함수를 정의합니다.
+      // const deposit = async (amount) => {
+      //   const accounts = await web3.eth.getAccounts();
+      //   await bankInstance.deposit({
+      //     from: accounts[0],
+      //     value: amount,
+      //   });
+      // };
+      // console.log(deposit)
+
+      // export const withdraw = async (amount) => {
+      // async (amount) => {
+      async () => {
+        const accounts = await web3.eth.getAccounts();
+        await bankInstance.withdraw(1, {
+          from: accounts[0],
+        });
+      };
+
+      // export const getBalance = async () => {
+      //   const balance = await bankInstance.getBalance();
+      //   return web3.utils.fromWei(balance.toString(), 'ether');
+      // };
+
+      const getBalance = async () => {
+        const balance = await bankInstance.getBalance();
+        return web3.utils.fromWei(balance.toString(), 'ether');
+      };
+
+      console.log(getBalance.toString());
+
+    }
+
+    // changeImage(){
+      
+    //   axios({
+    //     method: "https://fanftasy.kro.kr/api/profile/" + 
+    //   })
+    // },
   },
   watch() {
 
@@ -228,6 +282,11 @@ export default {
   font-size: 10px;
   border-bottom-left-radius: 15px;
   margin-top: 118px;
+}
+
+.changeImageBtn{
+  border: solid 1px black;
+  border-radius: 5%;
 }
 
 </style>
