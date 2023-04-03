@@ -77,7 +77,7 @@ export default {
 </script>
 
 <style>
-*{cursor: none;}
+/* *{cursor: none;}
 .cursor{
   position: absolute;
   z-index: 1000;
@@ -86,7 +86,7 @@ export default {
   height: 2rem;
   pointer-events: none;
   transform: translate(-50%, -50%);
-}
+} */
 
 .page{
   white-space: nowrap;
