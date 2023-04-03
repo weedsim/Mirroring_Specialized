@@ -141,6 +141,7 @@ const store = createStore({
         method: "post",
         url: `${API_URL}/user/login`,
         // url: `http://70.12.247.124:8080/api/user/login`,
+        headers: { "Content-Type": `application/json`},
         params: {
           address: this.state.address, //지갑 주소
         },
