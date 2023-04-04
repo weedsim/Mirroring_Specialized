@@ -52,7 +52,6 @@ export default {
   },
   mounted() {
     this.getUserDetail();
-    this.getUserNFTs();
   },
   methods: {
     uploadFile() {
@@ -101,9 +100,7 @@ export default {
       console.log('안녕', a, b);
     },
 
-    getUserNFTs(){
-      this.$store.dispatch('userNFTs')
-    },
+    
     
   }
 }
@@ -121,7 +118,7 @@ export default {
 }
 
 #uploadImg{
-  display: none;
+  /* display: none; */
 }
 
 #nickname{

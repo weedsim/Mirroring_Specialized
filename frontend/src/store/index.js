@@ -39,6 +39,7 @@ const store = createStore({
     haveNet: null,
     cards: [],
     card: [],
+    userNFTs: [],
   },
   getters: {
     isLogin: function () {
@@ -269,13 +270,18 @@ const store = createStore({
     },
 
     async userNFTs(){
+      const uid = VueCookies.get("userId"); 
+      console.log('uid :',uid)
       await axios({
         method: "get",
-        url: `${API_URL}/nft/user`,
+        url: `${API_URL}/nft/user/${uid}`,
+        // data: {
+        //   ownerId: uid,
+        // }
       })
       .then((res)=>{
         console.log('userNFTs : ', res)
-        return res
+        this.userNFTs = res.data.data
       })
       .catch((err)=>{
         console.log(err)
@@ -284,6 +290,7 @@ const store = createStore({
     },
 
     async modiUserImg(){
+      const uid = VueCookies.get("userId");
       await axios({
         headers: {
           'Content-Type': 'multipart/form-data'
@@ -291,7 +298,7 @@ const store = createStore({
         method: "put",
         url: `${API_URL}/user/profile`,
         data: {
-          // id:,
+          id: uid,
           profileImg: this.state.profileImg
         }
       })
