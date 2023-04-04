@@ -12,7 +12,8 @@ pinata:
 #  AdminAddress: "0xB8Ad2Cf28E9aA717398Fb2b08f8328e916305D98"
 
 blockchain:
-  NetworkURL: "https://rpc.ssafy-blockchain.com"
+#  NetworkURL: "https://rpc.ssafy-blockchain.com"
+  NetworkURL: HTTP://127.0.0.1:7545
   AdminPrivateKey: "5d5cf483015770a1c5632c8728f958ac40a9967e6fc4ef19b1efffbb320f6b43"
   NFTContractAddress: "0x6643150E6E336a1130a8017ecd5931a9Fc6ff81f"
   FTContractAddress: "0x9B15e6809357DCEaD5EF73A79B4fAc3FAe9cDFBf"

@@ -29,4 +29,5 @@ public class UserDetailDTO {
 
     private String company;
 
+    private double balance;
 }

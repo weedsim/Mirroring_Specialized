@@ -15,7 +15,7 @@ public interface UserService {
  void join(UserJoinDTO userJoinDTO);
 
 
- UserDetailDTO getUserDetail(String addresss);
+ UserDetailDTO getUserDetail(String addresss) throws IOException;
 
  void updateUser(UserUpdateDTO userUpdateDTO);
 

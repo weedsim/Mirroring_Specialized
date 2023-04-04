@@ -1,5 +1,6 @@
 package com.a306.fanftasy.domain.nft.service;
 
+import com.amazonaws.services.ec2.model.CreateSubnetRequest;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.web3j.protocol.admin.methods.response.PersonalUnlockAccount;
 import org.web3j.protocol.core.DefaultBlockParameterName;
 import org.web3j.protocol.core.methods.request.Transaction;
 import org.web3j.protocol.core.methods.response.EthCall;
+import org.web3j.protocol.core.methods.response.EthGetBalance;
 import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.EthGetTransactionReceipt;
 import org.web3j.protocol.core.methods.response.EthSendTransaction;
@@ -50,6 +52,25 @@ public class EthereumService {
   private BigInteger GAS_PRICE = BigInteger.valueOf(0);
 
 
+  //잔액 조회
+  public double getBalance(String address) throws IOException {
+    log.info("getBalance : " + address);
+    try {
+      //1. CONNECT WEB3
+      Admin web3j = Admin.build(new HttpService(NETWORK_URL));
+      //2. SEND TRANSACTION
+      EthGetBalance balance = web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
+      log.info(String.valueOf(balance.getBalance().doubleValue()));
+      return balance.getBalance().doubleValue();
+    }catch(Exception e){
+      log.info("잔액 조회 에러 발생");
+      return 0;
+    }
+  }
+
+  //잔액 충전
+
+
   public Object ethCall(Function function)
       throws IOException, ExecutionException, InterruptedException {
     //1. CONNECT WEB3
@@ -63,9 +84,8 @@ public class EthereumService {
     //4. DECODE RESULT
     List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
         function.getOutputParameters());
-    log.info("nonce : " );
-
-    return (String)decode.get(0).getValue();
+    log.info("nonce : ");
+    return (String) decode.get(0).getValue();
     // transaction에 대한 transaction Hash값 얻기.
   }//ethCall
 

@@ -73,7 +73,7 @@ public class UserController {
     }
 
     @GetMapping("/detail")
-    public ResponseEntity<?> userDetail(@Param("address") String address){
+    public ResponseEntity<?> userDetail(@Param("address") String address) throws IOException {
         UserDetailDTO userDetailDTO=userService.getUserDetail(address);
         ResponseDefault responseDefault = null;
         responseDefault = ResponseDefault.builder()
