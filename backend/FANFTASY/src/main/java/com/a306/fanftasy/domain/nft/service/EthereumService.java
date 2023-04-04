@@ -55,37 +55,20 @@ public class EthereumService {
     //1. CONNECT WEB3
     Admin web3j = Admin.build(new HttpService(NETWORK_URL));
     //2. CREATE TRANSACTION
-    Transaction transaction = Transaction.createEthCallTransaction(ADMIN_ADDRESS, FT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
+    Transaction transaction = Transaction.createEthCallTransaction(ADMIN_ADDRESS,
+        FT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
     //3. CALL ETHEREUM
     EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
-    //4. 결과값 decode
-    List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(), function.getOutputParameters());
-    
-    EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
-          ADMIN_ADDRESS, DefaultBlockParameterName.LATEST).sendAsync().get();
+    log.info("call transaction 전송");
+    //4. DECODE RESULT
+    List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
+        function.getOutputParameters());
+    log.info("nonce : " );
 
-      BigInteger nonce = ethGetTransactionCount.getTransactionCount();
-      log.info("nonce : " + nonce);
-      log.info(FunctionEncoder.encode(function));
-      //5. Transaction값 제작
-      Transaction transaction = Transaction.createFunctionCallTransaction(ADMIN_ADDRESS, nonce,
-          Transaction.DEFAULT_GAS,
-          BigInteger.valueOf(27000), CONTRACT_ADDRESS,
-          FunctionEncoder.encode(function));
-      log.info("transaction 전송");
-      // 6. ethereum Call
-      EthSendTransaction ethSendTransaction = web3j.ethSendTransaction(transaction).send();
-      log.info("transaction 전송");
-      // transaction에 대한 transaction Hash값 얻기.
-      String transactionHash = ethSendTransaction.getTransactionHash();
-      log.info("transaction 해쉬 : " + transactionHash);
-      // ledger에 쓰여지기 까지 기다리기.
-      Thread.sleep(5000);
+    return (String)decode.get(0).getValue();
+    // transaction에 대한 transaction Hash값 얻기.
+  }//ethCall
 
-      return transactionHash;
-    } else {
-    }
-  }//ethcall
 
   public long transaction(Function function)
       throws IOException, InterruptedException, ExecutionException {
@@ -114,12 +97,15 @@ public class EthereumService {
     log.info("hash value : " + decode.get(0).getValue());
     Thread.sleep(5000);
     //6. GET TRANSACTION RECEIPT
-    EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-    if(transactionReceipt.getResult()==null){
-      for(int i = 0; i<5;i++){
+    EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash)
+        .send();
+    if (transactionReceipt.getResult() == null) {
+      for (int i = 0; i < 5; i++) {
         Thread.sleep(3000);
         transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-        if (transactionReceipt.getResult()!=null) break;
+        if (transactionReceipt.getResult() != null) {
+          break;
+        }
       }
     }
     log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
@@ -127,7 +113,6 @@ public class EthereumService {
     log.info("token생성 ID : " + tokenID);
     return tokenID;
   }//ethSendTransaction
-
 
 
   //GET CREDENTIALS
