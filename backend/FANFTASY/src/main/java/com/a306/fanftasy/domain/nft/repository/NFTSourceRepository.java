@@ -12,8 +12,7 @@ public interface NFTSourceRepository extends JpaRepository<NFTSource, Long> {
   NFTSource findById(long nftSourceId);
 
   //keyword로 찾기
-  @Query("SELECT n FROM NFTSource n WHERE (:keyword IS NULL OR n.regArtist.nickname LIKE %:keyword%-" +
-          ") And n.remainNum >0 ORDER BY n.regDate DESC")
+  @Query("SELECT n FROM NFTSource n WHERE (:keyword IS NULL OR n.regArtist.nickname LIKE %:keyword% OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) And n.remainNum >0 ORDER BY n.regDate DESC")
   List<NFTSource> findByConditionOrderByRegDate(@Param("keyword") String keyword);
 
   @Query("SELECT n FROM NFTSource n WHERE (:keyword IS NULL OR n.regArtist.nickname LIKE %:keyword% OR n.title LIKE %:keyword% OR n.content LIKE %:keyword%) And n.remainNum >0 ORDER BY n.remainNum ASC")
