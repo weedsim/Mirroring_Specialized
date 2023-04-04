@@ -3,8 +3,9 @@ import VueCookies from "vue-cookies"
 import axios from "axios"
 import createPersistedState from "vuex-persistedstate"
 
-const API_URL = "https://fanftasy.kro.kr/api"
+// const API_URL = "https://fanftasy.kro.kr/api"
 // const API_URL = "http://70.12.247.102:8080/api"
+const API_URL = "http://192.168.100.39:8080/api"
 // const API_URL = "http://70.12.247.124:8080/api"
 // const API_URL = "http://localhost:8080/api",
 const store = createStore({
@@ -19,6 +20,7 @@ const store = createStore({
     chainId: "0x538",
     rpcUrl: "https://fanftasy.kro.kr/network",
     currentChainId: null,
+    userId: VueCookies.get("userId"),
     isFan: true,
     isMember: false,
     isLogIn: VueCookies.isKey("AccessToken"),
@@ -363,7 +365,7 @@ const store = createStore({
     
     async getDropsDetail(context, NFTId) {
       await axios({
-        methos: "get",
+        method: "get",
         url: `${API_URL}/nft/drops/${NFTId}`,
       })
         .then((res) => {
@@ -381,7 +383,7 @@ const store = createStore({
       const keyword = payload.keyword
       console.log(payload)
       await axios({
-        methos: "get",
+        method: "get",
         url: `${API_URL}/nft/market`,
         params: {
           orderType: orderType,
@@ -401,7 +403,7 @@ const store = createStore({
     async getMarketDetail(context, nftSourceId) {
       // const currentPrice = payload.currentPrice
       await axios({
-        methos: "get",
+        method: "get",
         url: `${API_URL}/nft/market/${nftSourceId}`,
         params: {
           // nftSourceId:nftSourceId,
@@ -416,6 +418,38 @@ const store = createStore({
           console.log(err)
         })
       },
+
+    addNFT(context, payload) {
+      const formData = new FormData();
+      formData.append("file", payload.file);
+      const ppayload = {
+        title: payload.title,
+        content: payload.content,
+        totalNum: payload.totalNum,
+        originPrice : payload.originPrice,
+        regArtistId : payload.regArtistId,
+        fileType : payload.fileType
+      }
+      console.log("qwerwqerqwerwqerqwer")
+      console.log(ppayload)
+      console.log("asaaaaaaaaaaaaaa")
+      formData.append("info", JSON.stringify(ppayload));
+      
+      console.log(formData)
+      axios({
+        method: "post",
+        url: `${API_URL}/nft`,
+        headers:{'Content-Type':'Multipart/form-data'},
+        data: formData
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
+
     },
     modules: {},
   })
