@@ -54,7 +54,7 @@
           <img
           class="profile-image"
           :src="this.profileImage"
-          alt="기본 프로필 사진"
+          alt=""
           />
           <p class="nick">{{ this.nickname }} 님</p>
         </router-link>
@@ -85,6 +85,12 @@ export default {
       profileImage: VueCookies.get('profileImage'),
     }
   },
+  mounted() {
+    if (this.profileImage === null) {
+        this.profileImage = 'https://fanftasy.s3.ap-northeast-2.amazonaws.com/profileImg/8c64c983-1b80-40fb-bcc1-366f3322cbb2.png'
+        console.log(this.profileImage)
+      }
+  },
   watch: {
     nickname: function () {
 
@@ -93,7 +99,8 @@ export default {
     },
     profileImage: function () {
       console.log(VueCookies.get('profileImage'));
-    }
+      
+    },
   },
   computed: {
     // 반응형으로 계산된 속성
@@ -125,8 +132,8 @@ export default {
 
       const Member = this.$store.state.isMember;
       console.log(VueCookies.get('profileImage'));
-      if(VueCookies.get('profileImage') === undefined){
-        this.profileImage = '@/assets/Search.png';
+      if(VueCookies.get('profileImage') === null){
+        this.profileImage = 'https://fanftasy.s3.ap-northeast-2.amazonaws.com/profileImg/8c64c983-1b80-40fb-bcc1-366f3322cbb2.png';
       }
       else{
         this.profileImage = VueCookies.get('profileImage');
