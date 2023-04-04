@@ -105,7 +105,7 @@ public class UserController {
                 responseDefault = ResponseDefault.builder()
                         .success(true)
                         .messege("SUCCESS")
-                        .data(null)
+                        .data(user.getProfileImg())
                         .build();
                 return new ResponseEntity<>(responseDefault, HttpStatus.OK);
             } catch (IOException e) {

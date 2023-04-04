@@ -4,11 +4,13 @@ import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.user.entity.User;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.security.core.parameters.P;
 
 public interface NFTRepository extends JpaRepository<NFT, Long> {
   NFT findById(long nftId);
@@ -68,11 +70,14 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
   List<Long> findNftSourceIdsNotOnSaleOrderByRegDateDesc();
 
   @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId and n.currentPrice = :currentPrice order by n.transactionTime DESC")
-  List<NFT> findByIdAndByMaxResult(@Param("nftSourceId") Long nftSourceId, @Param("currentPrice") double currentPrice, Pageable pageable);
+  List<NFT> findByIdAndByCurrentPriceMaxResult(@Param("nftSourceId") Long nftSourceId, @Param("currentPrice") double currentPrice, Pageable pageable);
 
   @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId order by n.transactionTime DESC")
   List<NFT> findByIdAndByCurrentPrice(@Param("nftSourceId") Long nftSourceId, Pageable pageable);
 
   @Query("select min(n.currentPrice) from NFT n where n.nftSource.nftSourceId = :nftSourceId and n.isOnSale = true")
-  double findByNftSourceId(Long nftSourceId);
+  Optional<Double> findByNftSourceId(Long nftSourceId);
+
+  @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId order by n.editionNum")
+  List<NFT> findByIdMaxResult(@Param("nftSourceId") Long nftSourceId, Pageable pageable);
 }
