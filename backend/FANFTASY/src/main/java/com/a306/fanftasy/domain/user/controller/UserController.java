@@ -103,14 +103,14 @@ public class UserController {
                 s3Service.saveUploadFile(user, profileImg);
                 responseDefault = ResponseDefault.builder()
                         .success(true)
-                        .messege("성공")
+                        .messege("SUCCESS")
                         .data(null)
                         .build();
                 return new ResponseEntity<>(responseDefault, HttpStatus.OK);
             } catch (IOException e) {
                 responseDefault = ResponseDefault.builder()
                         .success(false)
-                        .messege("실패")
+                        .messege("FAIL")
                         .data(null)
                         .build();
                 return new ResponseEntity<>(responseDefault, HttpStatus.NOT_FOUND);
