@@ -4,6 +4,9 @@ package com.a306.fanftasy.domain.nft.service;
 import com.a306.fanftasy.domain.like.repository.NFTLikeRepository;
 import com.a306.fanftasy.domain.nft.dto.*;
 import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
+import com.a306.fanftasy.domain.nft.dto.NFTDetailDTO;
+import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
@@ -12,20 +15,29 @@ import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.io.IOException;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
+import java.lang.reflect.Type;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
+import org.web3j.abi.datatypes.generated.Uint8;
 import org.web3j.protocol.Web3j;
+import org.web3j.protocol.core.DefaultBlockParameterName;
+import org.web3j.protocol.core.methods.response.EthGetTransactionCount;
 import org.web3j.protocol.core.methods.response.Web3ClientVersion;
 import org.web3j.protocol.http.HttpService;
+import org.web3j.tx.Contract;
 
 @Service
 @Slf4j
@@ -36,9 +48,13 @@ public class NFTServiceImpl implements NFTService {
   private final NFTSourceRepository nftSourceRepository;
   private final UserRepository userRepository;
   private final NFTLikeRepository nftLikeRepository;
+
+  private final BasicService basicService;
+
   //1. NFT 생성
   @Override
-  public void addNFT(NFTCreateDTO nftCreateDTO) throws IOException {
+  public void addNFT(NFTCreateDTO nftCreateDTO)
+      throws IOException, ExecutionException, InterruptedException {
     try {
       log.info("---------------------------------");
       //3. NFT Source 데이터 + file CID ipfs + Metadata CID이 DTO에 담겨서 들어옴
@@ -70,24 +86,29 @@ public class NFTServiceImpl implements NFTService {
       log.info("nft 콘텐츠 등록 완료");
 
       //개별 nft 생성
-
       String artistAddress = artist.getAddress();
 
       log.info("개별 nft 생성 시작");
-      for (int i = 1; i<=totalNum; i++
+      for (int i = 1; i <= totalNum; i++
       ) {
-        //스마트 컨트랙트로 tokenUri 받아오기
-        //smartContract(artistAddress, metaCID)
-        String tokenUri = "get tokenUri from BlockChain Network";
+        long tokenID;
+        try{
+        //스마트 컨트랙트로 tokenID 받아오기
+          tokenID = basicService.create(artistAddress, metaCID);
+        }catch (Exception e){
+          log.info("토큰 발급 재실행");
+          tokenID = basicService.create(artistAddress, metaCID);
+        }
         NFT nft = NFT.builder()
+            .nftId(tokenID)
             .owner(artist)
-            .tokenUri(tokenUri)
             .isOnSale(true)
             .currentPrice(originPrice)
             .transactionTime(regDate)
             .nftSource(nftSource)
             .editionNum(i)
             .build();
+        log.info("nft generated : "+ nft.toString());
         nftRepository.save(nft);
       }//for-each
     } catch (Exception e) {
@@ -98,15 +119,15 @@ public class NFTServiceImpl implements NFTService {
   //6. 회원 소유 NFT목록 반환
   @Override
   public List<NFTListDTO> getNFTListByOwnerId(long ownerId) {
-    try{
+    try {
       User owner = User.builder().userId(ownerId).build();
       List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
       //엔티티를 DTO로 변환
-      List<NFTListDTO> result = entityList.stream().map(m-> NFTListDTO.fromEntity(m)).collect(
+      List<NFTListDTO> result = entityList.stream().map(m -> NFTListDTO.fromEntity(m)).collect(
           Collectors.toList());
       return result;
     }//try
-    catch(Exception e){
+    catch (Exception e) {
       throw e;
     }//catch
   }//getNFTListByOwnerId
