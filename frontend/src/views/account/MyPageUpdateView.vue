@@ -51,7 +51,7 @@ export default {
     }
   },
   mounted() {
-    this.getUserDetail();
+    // this.getUserDetail();
   },
   methods: {
     uploadFile() {
@@ -83,7 +83,7 @@ export default {
       // });
       console.log('엥?', formData);
       console.log(this.$store.state.profileImg)
-      // this.$store.dispatch('modiUserInfo')
+      this.$store.dispatch('modiUserImg')
       
     },
     
@@ -91,14 +91,14 @@ export default {
       this.$store.dispatch('modiUserInfo')
     },
 
-    getUserDetail(){
-      this.$store.dispatch('userDetail')
+    // getUserDetail(){
+    //   this.$store.dispatch('userDetail')
     //   const a = this.$store.state.nickname;
     //   const c = document.getElementById('nickname')
     //   c.placeholder= a
     //   const b= this.$store.state.profileImg;
     //   console.log('안녕', a, b);
-    }
+    // }
   }
 }
 </script>

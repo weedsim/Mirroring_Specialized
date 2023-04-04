@@ -259,14 +259,34 @@ const store = createStore({
         })
     },
 
+    async modiUserImg(){
+      await axios({
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        },
+        method: "put",
+        url: `${API_URL}/user/profile`,
+        data: {
+          // id:,
+          profileImg: this.state.profileImg
+        }
+      })
+      .then((res)=>{
+        console.log(res)
+        this.state.success = true
+      })
+      .catch((err)=>{
+        console.log(err)
+        this.state.success = false
+      })
+    },
+
+
     async modiUserInfo() {
       const address = (
         await window.ethereum.request({ method: "eth_requestAccounts" })
       )[0]
       await axios({
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
         method: "put",
         url: `${API_URL}/user/modi`,
         data: {
