@@ -10,6 +10,7 @@ import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
 import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
+
 import java.io.IOException;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
@@ -18,6 +19,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -177,6 +180,14 @@ public class NFTServiceImpl implements NFTService {
     } catch (Exception e) {
       throw e;
     }
+  }
+
+  @Override
+  public NFTDetailDTO getNFTDetail(Long nftSourceId) {
+    double currentPrice = nftRepository.findByNftSourceId(nftSourceId);
+    Pageable pageable = PageRequest.of(0, 1);
+    List<NFT> resultList = nftRepository.findByIdAndByMaxResult(nftSourceId, currentPrice, pageable);
+    return NFTDetailDTO.fromEntity(resultList.get(0));
   }
 
   //7. 개인이 보유한 NFT 상세

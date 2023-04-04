@@ -80,7 +80,29 @@ public class NFTController {
                     .build();
             return ResponseEntity.ok().body(responseDefault);
         } catch (Exception e) {
-            log.error("NFT 조회 실패");
+            log.error("NFT Market 조회 실패");
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("FAIL")
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
+    // 마켓 플레이스 NFT 상세 정보
+    @GetMapping("/market/{nftSourceId}")
+    public ResponseEntity<?> NFTMarketDetail(@PathVariable("nftSourceId") Long nftSourceId) {
+        ResponseDefault responseDefault = null;
+        try {
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("SUCCESS")
+                    .data(nftService.getNFTDetail(nftSourceId))
+                    .build();
+            return ResponseEntity.ok().body(responseDefault);
+        } catch (Exception e) {
+            log.error("NFT Market Detail 조회 실패");
             responseDefault = ResponseDefault.builder()
                     .success(false)
                     .messege("FAIL")

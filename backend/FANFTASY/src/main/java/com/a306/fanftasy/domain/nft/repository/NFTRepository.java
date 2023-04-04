@@ -4,6 +4,8 @@ import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.user.entity.User;
 import java.util.List;
+
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -30,7 +32,7 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
   /**
    * 판매중인 NFT 중 최신순 현재 판매 중인 가장 작은 값 찾기
    */
-  // 판매중인 NFTSourceId 찾기, 판매자가 올린 최신순
+  // 판매중인 NFTSourceId 찾기, 판매자가 올린 최신순 []
   @Query("select n.nftSource.nftSourceId from NFT n where n.isOnSale = true group by n.nftSource order by max(n.transactionTime) DESC")
   List<Long> findNftSourceIdIsOnSale();
   // 판매중인 NFTSourceId 중 검색
@@ -64,4 +66,13 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
           ") " +
           "ORDER BY n.nftSource.regDate DESC")
   List<Long> findNftSourceIdsNotOnSaleOrderByRegDateDesc();
+
+  @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId and n.currentPrice = :currentPrice order by n.transactionTime DESC")
+  List<NFT> findByIdAndByMaxResult(@Param("nftSourceId") Long nftSourceId, @Param("currentPrice") double currentPrice, Pageable pageable);
+
+  @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId order by n.transactionTime DESC")
+  List<NFT> findByIdAndByCurrentPrice(@Param("nftSourceId") Long nftSourceId, Pageable pageable);
+
+  @Query("select min(n.currentPrice) from NFT n where n.nftSource.nftSourceId = :nftSourceId and n.isOnSale = true")
+  double findByNftSourceId(Long nftSourceId);
 }
