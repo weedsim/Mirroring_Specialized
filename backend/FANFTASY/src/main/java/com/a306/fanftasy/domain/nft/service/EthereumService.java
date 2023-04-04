@@ -73,50 +73,53 @@ public class EthereumService {
       throws IOException, ExecutionException, InterruptedException {
     log.info("charge Request - requestUserId : " + id + ", amount : " + ether);
     try {
-      User requestUser = userRepository.findByUserId(id);
-      log.info("requestUser : " + requestUser.toString());
-      String address = requestUser.getAddress();
-      Double weiD = ether*Math.pow(10,18);
-      log.info("weiD");
-      long weiL = weiD.longValue();
-      log.info("weiL");
-      BigInteger wei = BigInteger.valueOf(weiL);
       //1. CONNECT WEB3
       Admin web3j = Admin.build(new HttpService(NETWORK_URL));
       log.info("web3j 연결 생성 완료");
-      //2.MAKE CREDENTIALS
-      Credentials credentials = getCredentialsFromPrivateKey();
-      //3.NONCE
-      EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
-          credentials.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
-      BigInteger nonce = ethGetTransactionCount.getTransactionCount();
-      log.info("nonce 생성 완료 : " + nonce);
-      //4.CREATE TRANSACTION
-      RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
-          nonce, GAS_PRICE, GAS_LIMIT, address, wei);
-      byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
-      String hexValue = Numeric.toHexString(signedMessage);
-      log.info("트랜잭션 생성 완료: " + hexValue);
-      //5. SEND TRANSACTION
-      EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
-      String transactionHash = ethSendTransaction.getTransactionHash();
+      User requestUser = userRepository.findByUserId(id);
+      log.info("requestUser : " + requestUser.toString());
+      String address = requestUser.getAddress();
+      if (ether <= 10) {
+        Double weiD = ether * Math.pow(10, 18);
+        log.info("weiD");
+        long weiL = weiD.longValue();
+        log.info("weiL");
+        BigInteger wei = BigInteger.valueOf(weiL);
+        //2.MAKE CREDENTIALS
+        Credentials credentials = getCredentialsFromPrivateKey();
+        //3.NONCE
+        EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
+            credentials.getAddress(), DefaultBlockParameterName.LATEST).sendAsync().get();
+        BigInteger nonce = ethGetTransactionCount.getTransactionCount();
+        log.info("nonce 생성 완료 : " + nonce);
+        //4.CREATE TRANSACTION
+        RawTransaction rawTransaction = RawTransaction.createEtherTransaction(
+            nonce, GAS_PRICE, GAS_LIMIT, address, wei);
+        byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
+        String hexValue = Numeric.toHexString(signedMessage);
+        log.info("트랜잭션 생성 완료: " + hexValue);
+        //5. SEND TRANSACTION
+        EthSendTransaction ethSendTransaction = web3j.ethSendRawTransaction(hexValue).send();
+        String transactionHash = ethSendTransaction.getTransactionHash();
 //      Thread.sleep(2000);
-      log.info("트랜잭션 전송 완료 : "+transactionHash);
-      //6. GET TRANSACTION RECEIPT
-      EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-      if (transactionReceipt.getResult() == null) {
-        for (int i = 0; i < 5; i++) {
-          Thread.sleep(3000);
-          transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-          if (transactionReceipt.getResult() != null) {
-            log.info("SUCCESS TRANSACTION");
-            break;
+        log.info("트랜잭션 전송 완료 : " + transactionHash);
+        //6. GET TRANSACTION RECEIPT
+        EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(
+            transactionHash).send();
+        if (transactionReceipt.getResult() == null) {
+          for (int i = 0; i < 5; i++) {
+            Thread.sleep(3000);
+            transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
+            if (transactionReceipt.getResult() != null) {
+              log.info("SUCCESS TRANSACTION");
+              break;
+            }
           }
+        } else {
+          log.info("SUCCESS TRANSACTION");
         }
-      }else{
-        log.info("SUCCESS TRANSACTION");
-      }
-      log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
+        log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
+      }//if금액 체크
       //업데이트된 잔액 보내주기
       EthGetBalance balance = web3j.ethGetBalance(address, DefaultBlockParameterName.LATEST).send();
       log.info(String.valueOf(balance.getBalance().doubleValue()));
