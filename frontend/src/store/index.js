@@ -259,6 +259,21 @@ const store = createStore({
         })
     },
 
+    async userNFTs(){
+      await axios({
+        method: "get",
+        url: `${API_URL}/nft/user`,
+      })
+      .then((res)=>{
+        console.log('userNFTs : ', res)
+        return res
+      })
+      .catch((err)=>{
+        console.log(err)
+        this.state.success = false
+      })
+    },
+
     async modiUserImg(){
       await axios({
         headers: {

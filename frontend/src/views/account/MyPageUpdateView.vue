@@ -51,7 +51,8 @@ export default {
     }
   },
   mounted() {
-    // this.getUserDetail();
+    this.getUserDetail();
+    this.getUserNFTs();
   },
   methods: {
     uploadFile() {
@@ -91,14 +92,19 @@ export default {
       this.$store.dispatch('modiUserInfo')
     },
 
-    // getUserDetail(){
-    //   this.$store.dispatch('userDetail')
-    //   const a = this.$store.state.nickname;
-    //   const c = document.getElementById('nickname')
-    //   c.placeholder= a
-    //   const b= this.$store.state.profileImg;
-    //   console.log('안녕', a, b);
-    // }
+    getUserDetail(){
+      this.$store.dispatch('userDetail')
+      const a = this.$store.state.nickname;
+      const c = document.getElementById('nickname')
+      c.placeholder= a
+      const b= this.$store.state.profileImg;
+      console.log('안녕', a, b);
+    },
+
+    getUserNFTs(){
+      this.$store.dispatch('userNFTs')
+    },
+    
   }
 }
 </script>
