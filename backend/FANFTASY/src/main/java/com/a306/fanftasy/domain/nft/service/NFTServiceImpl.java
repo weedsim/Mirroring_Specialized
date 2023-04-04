@@ -89,8 +89,14 @@ public class NFTServiceImpl implements NFTService {
       log.info("개별 nft 생성 시작");
       for (int i = 1; i <= totalNum; i++
       ) {
-        //스마트 컨트랙트로 tokenUri 받아오기
-        long tokenID = basicService.create(artistAddress, metaCID);
+        long tokenID;
+        try{
+        //스마트 컨트랙트로 tokenID 받아오기
+          tokenID = basicService.create(artistAddress, metaCID);
+        }catch (Exception e){
+          log.info("토큰 발급 재실행");
+          tokenID = basicService.create(artistAddress, metaCID);
+        }
         NFT nft = NFT.builder()
             .nftId(tokenID)
             .owner(artist)

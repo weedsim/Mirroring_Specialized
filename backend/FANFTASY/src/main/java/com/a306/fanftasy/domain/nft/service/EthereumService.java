@@ -109,7 +109,14 @@ public class EthereumService {
     log.info("hash value : " + decode.get(0).getValue());
     Thread.sleep(5000);
     EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
-    log.info("hash value : " + transactionReceipt.getResult());
+    if(transactionReceipt.getResult()==null){
+      for(int i = 0; i<5;i++){
+        Thread.sleep(3000);
+        transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
+        if (transactionReceipt.getResult()!=null) break;
+      }
+    }
+    log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
     long tokenID = Long.decode(transactionReceipt.getResult().getLogs().get(0).getTopics().get(3));
     log.info("token생성 ID : " + tokenID);
     return tokenID;
