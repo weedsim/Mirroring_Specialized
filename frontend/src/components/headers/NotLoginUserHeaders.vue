@@ -93,6 +93,7 @@ export default {
   },
   watch: {
     nickname: function () {
+      console.log(VueCookies.get('nickname'));
 
       console.log(VueCookies.isKey('AccessToken'));
       this.logIn = VueCookies.isKey('AccessToken');
@@ -142,7 +143,7 @@ export default {
       
       if(Member === true){
         console.log("회원입니다.");
-        // this.$router.go(this.$router.currentRoute);
+        this.$router.go(this.$router.currentRoute);
       }
       else if(Member === false) {
         console.log("회원이 아닙니다.");
@@ -163,7 +164,7 @@ export default {
       else {
         console.log("무슨 에러인지 모르겠습니다.");
       }
-    }
+    },
   }
 }
 </script>
