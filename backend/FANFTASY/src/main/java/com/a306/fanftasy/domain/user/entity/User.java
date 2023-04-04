@@ -51,6 +51,7 @@ public class User {
                 .role(joinDto.getRole())
                 .company(joinDto.getCompany())
                 .userKey(joinDto.getKey())
+                .profileImg(joinDto.getProfileImg())
                 .build();
         return user;
     }

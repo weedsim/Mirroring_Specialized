@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     private final UserSecurityService userSecurityService;
 
     public UserLoginDTO login(String address){
-        log.info(address);
         User user = userRepository.findByAddress(address);
         if(user!=null){
                   try {
@@ -55,7 +54,7 @@ public class UserServiceImpl implements UserService {
         UserJoinDTO userencrypt=new UserJoinDTO();
         try {
             byte[] key=userSecurityService.generateKey("AES",128);
-            userencrypt.setAddress(userSecurityService.aesEncrypt(userJoinDTO.getAddress(),key));
+            userencrypt.setAddress(userJoinDTO.getAddress());
             userencrypt.setName(userSecurityService.aesEncrypt(userJoinDTO.getName(),key));
             userencrypt.setNickname(userSecurityService.aesEncrypt(userJoinDTO.getNickname(),key));
             userencrypt.setEmail(userSecurityService.aesEncrypt(userJoinDTO.getEmail(),key));
@@ -64,7 +63,6 @@ public class UserServiceImpl implements UserService {
             userencrypt.setCompany(userSecurityService.aesEncrypt(userJoinDTO.getCompany(),key));
             userencrypt.setProfileImg(userSecurityService.aesEncrypt(userJoinDTO.getProfileImg(),key));
             userencrypt.setKey(userSecurityService  .byteArrayToHex(key));
-
             //userJoinDTO.setNickname(userencrypt.getNickname());
             // log.info("Nickname: "+userJoinDTO.getNickname());
         } catch (Exception e) {

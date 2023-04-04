@@ -64,6 +64,7 @@ public class UserController {
 
     @PostMapping("/join")
     public ResponseEntity<?> join(@RequestBody UserJoinDTO userJoinDTO) {
+        System.out.println("====================="+userJoinDTO.getProfileImg());
         userService.join(userJoinDTO);
         ResponseDefault responseDefault = null;
         responseDefault = ResponseDefault.builder()
