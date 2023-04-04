@@ -1,6 +1,7 @@
 package com.a306.fanftasy.domain.user.controller;
 
 
+import com.a306.fanftasy.domain.nft.service.EthereumService;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import com.a306.fanftasy.domain.user.dto.UserDetailDTO;
 import com.a306.fanftasy.domain.user.dto.UserJoinDTO;
@@ -34,6 +35,7 @@ public class UserController {
     private final JwtTokenUtil jwtTokenUtil;
     private final UserService userService;
     private final S3Service s3Service;
+    private final EthereumService ethereumService;
     @PostMapping("/login")
     public ResponseEntity<?> login(@Param("address") String address) {
         UserLoginDTO userLoginDTO = userService.login(address);
@@ -157,6 +159,22 @@ public class UserController {
             User user = userService.findByUserId(id);
             userService.logout(user.getUserId());
             return ResponseEntity.accepted().build();
-        }
+    }
 
+    @GetMapping("/charge")
+    public ResponseEntity<?> charge(@RequestParam Long id,@RequestParam double ether) {
+        ResponseDefault responseDefault = null;
+        try{
+            responseDefault = ResponseDefault.builder()
+                .messege("SUCCESS")
+                .data(ethereumService.charge(id, ether))
+                .success(true).build();
+            return ResponseEntity.ok().body(responseDefault);
+        }catch (Exception e){
+            responseDefault = ResponseDefault.builder()
+                .success(false)
+                .messege("FAIL").build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
 }
