@@ -90,17 +90,17 @@ public class NFTServiceImpl implements NFTService {
       for (int i = 1; i <= totalNum; i++
       ) {
         //스마트 컨트랙트로 tokenUri 받아오기
-        String tokenUri = basicService.minting(artistAddress, metaCID);
-        log.info("tokenId : "+tokenUri);
+        long tokenID = basicService.create(artistAddress, metaCID);
         NFT nft = NFT.builder()
+            .nftId(tokenID)
             .owner(artist)
-            .tokenUri(tokenUri)
             .isOnSale(true)
             .currentPrice(originPrice)
             .transactionTime(regDate)
             .nftSource(nftSource)
             .editionNum(i)
             .build();
+        log.info("nft generated : "+ nft.toString());
         nftRepository.save(nft);
       }//for-each
     } catch (Exception e) {
@@ -174,46 +174,4 @@ public class NFTServiceImpl implements NFTService {
     }//catch
   }
 
-
-  //smartContract
-//  public String createNFT(String artistAddress, String metaCID) throws IOException {
-//    Web3j web3j = Web3j.build(new HttpService(NETWORK_URL));
-//    EthGetTransactionCount ethGetTransactionCount = web3j.ethGetTransactionCount(
-//        CONTRACT_ADDRESS, DefaultBlockParameterName.LATEST).sendAsync().get();
-//    BigInteger nonce = ethGetTransactionCount.getTransactionCount();
-//    BigInteger gasPrice = Contract.GAS_PRICE;
-//    BigInteger gasLimit = Contract.GAS_LIMIT;
-//
-//    List<Type> inputParameters = new ArrayList<>();
-//    Type usersId = new Utf8String(_usersId);
-//    Type usersPassword = new Utf8String(_usersPassword);
-//    inputParameters.add(usersId);
-//    inputParameters.add(usersPassword);
-//    Function function = new Function("usersRegister",
-//        inputParameters,
-//        Collections.<TypeReference<?>>emptyList());
-//    String functionEncoder = FunctionEncoder.encode(function);
-//    Transaction transaction = Transaction.createFunctionCallTransaction(
-//        equipmentAddress, nonce, gasPrice,
-//        gasLimit, contractAddress, new BigInteger("0"),
-//        functionEncoder);
-//    EthSendTransaction transactionResponse =
-//        web3j.ethSendTransaction(transaction).sendAsync().get();
-//    try {
-//      //Nonce
-//
-//    }catch (Exception e) {
-//      e.printStackTrace();
-//    }
-
-//    String transactionHash = ethCall.getTransactionHash();
-//  }
-
-  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price)
-      throws IOException {
-    //NFT 거래 트랜잭션을 발생시키는 method
-    Web3j web3j = Web3j.build(new HttpService(""));
-    Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
-    System.out.println(web3ClientVersion.getWeb3ClientVersion());
-  }
 }

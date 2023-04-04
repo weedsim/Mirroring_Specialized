@@ -13,7 +13,7 @@ pinata:
 
 blockchain:
   NetworkURL: "https://rpc.ssafy-blockchain.com"
-  AdminPrivateKey: "0x854cd5e63ccba50b9d9aacb8785b8fa969a7e005d1cc19ef62848419b7e13f46"
-  ContractAddress: "0xd0B47fbc7500b0d4e7acC7bb2f84523A3F49AF14"
+  AdminPrivateKey: "5d5cf483015770a1c5632c8728f958ac40a9967e6fc4ef19b1efffbb320f6b43"
+  ContractAddress: "0xa7BDc12f8539732E8d2fe0b6fe57c60f23606929"
   NetworkID: 31221
   AdminAddress: "0x169996534c419dCcFf461A4a34505dA7E197054A"

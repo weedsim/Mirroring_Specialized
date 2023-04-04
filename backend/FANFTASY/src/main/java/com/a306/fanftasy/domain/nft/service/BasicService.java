@@ -29,21 +29,21 @@ public class BasicService{
     this.ethereumService = ethereumService;
   }
 
-  public String minting(String to, String tokenURI) throws IOException, ExecutionException, InterruptedException {
+  public long create(String to, String tokenURI) throws IOException, ExecutionException, InterruptedException {
+    try{
     log.info("create 메소드 호출");
-//    List<Type> inputParameters = new ArrayList<>();
-//    inputParameters.add(new Address(to));
-////    inputParameters.add(new Utf8String(tokenURI));
-//    log.info("input생성완료");
-//    List<TypeReference<?>> outputParameters = new ArrayList<>();
-//    outputParameters.add(new TypeReference<Uint256>() {});
-//    Arrays.asList(new TypeReference<Uint256>() {});
-    // 1. 호출하고자 하는 function 세팅[functionName, parameters]
-    Function function = new Function("minting",
-        Arrays.asList(new Address(to), new Utf8String(tokenURI)),
-        Arrays.asList(new TypeReference<Uint256>() {}));
+      Function function = new Function(
+          "create",
+          Arrays.asList(new Address(to),new Utf8String(tokenURI) ),
+          Arrays.asList(new TypeReference<Uint256>() {
+          })
+      );
+    return ethereumService.transaction(function);
+
+    }catch(Exception e){
+      throw e;
+    }
     // 2. ethereum을 function 변수로 통해 호출
-    return ethereumService.ethSendTransaction(function);
   }
 
   public void getNumber(int num)
@@ -55,20 +55,5 @@ public class BasicService{
   {
     // this method implement next posting
   }
-
-  public void setPot(int num) throws IOException, ExecutionException, InterruptedException {
-    // 1. 호출하고자 하는 function 세팅[functionName, parameters]
-    Function function = new Function("setPot",
-        Arrays.asList(new Uint256(num)),
-        Collections.emptyList());
-
-    // 2. sendTransaction
-    String txHash = ethereumService.ethSendTransaction(function);
-
-    // 3. getReceipt
-    TransactionReceipt receipt = ethereumService.getReceipt(txHash);
-    System.out.println("receipt = " + receipt);
-  }
-
 
 }
