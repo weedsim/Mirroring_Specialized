@@ -39,6 +39,8 @@ jwt:
   jackson:
     serialization:
       fail-on-empty-beans: false
+user:
+  secretKey: USERDATAFANFTASY
 
 cloud:
   aws:

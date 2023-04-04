@@ -16,7 +16,6 @@ import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
 import java.util.NoSuchElementException;
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -28,50 +27,89 @@ public class UserServiceImpl implements UserService {
   private final S3Service s3Service;
   private final EthereumService ethereumService;
 
-  public UserLoginDTO login(String address) {
-    log.info(address);
-    User user = userRepository.findByAddress(address);
-    if (user != null) {
-      Long userId = user.getUserId();
-      String nickname = user.getNickname();
-      String profileImg = user.getProfileImg();
-      String role = user.getRole();
-      return UserLoginDTO.of(userId, nickname, address, role, profileImg);
-    } else {
-      return null;
+    private final UserSecurityService userSecurityService;
+
+    public UserLoginDTO login(String address){
+        log.info(address);
+        User user = userRepository.findByAddress(address);
+        if(user!=null){
+                  try {
+                Long userId=user.getUserId();
+                String nickname=userSecurityService.aesDecrypt(user.getNickname(),userSecurityService.hexToByteArray(user.getUserKey()));
+                String profileImg=userSecurityService.aesDecrypt(user.getProfileImg(),userSecurityService.hexToByteArray(user.getUserKey()));
+                String role = userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey()));
+                return UserLoginDTO.of(userId,nickname,address,role,profileImg);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+
+
+        }
+        else{
+            return null;
+        }
     }
-  }
 
-  @Override
-  public void join(UserJoinDTO userJoinDTO) {
-    userRepository.save(User.ofUser(userJoinDTO));
-  }
+    @Override
+    public void join(UserJoinDTO userJoinDTO)   {
+        UserJoinDTO userencrypt=new UserJoinDTO();
+        try {
+            byte[] key=userSecurityService.generateKey("AES",128);
+            userencrypt.setAddress(userSecurityService.aesEncrypt(userJoinDTO.getAddress(),key));
+            userencrypt.setName(userSecurityService.aesEncrypt(userJoinDTO.getName(),key));
+            userencrypt.setNickname(userSecurityService.aesEncrypt(userJoinDTO.getNickname(),key));
+            userencrypt.setEmail(userSecurityService.aesEncrypt(userJoinDTO.getEmail(),key));
+            userencrypt.setPhone(userSecurityService.aesEncrypt(userJoinDTO.getPhone(),key));
+            userencrypt.setRole(userSecurityService.aesEncrypt(userJoinDTO.getRole(),key));
+            userencrypt.setCompany(userSecurityService.aesEncrypt(userJoinDTO.getCompany(),key));
+            userencrypt.setProfileImg(userSecurityService.aesEncrypt(userJoinDTO.getProfileImg(),key));
+            userencrypt.setKey(userSecurityService  .byteArrayToHex(key));
 
-  @Override
-  public UserDetailDTO getUserDetail(String addresss) throws IOException {
-    User user = userRepository.findByAddress(addresss);
-    double balance = ethereumService.getBalance(addresss);
-    return UserDetailDTO.builder()
-        .name(user.getName())
-        .address(user.getAddress())
-        .email(user.getEmail())
-        .nickname(user.getNickname())
-        .profileImg(user.getProfileImg())
-        .phone(user.getPhone())
-        .role(user.getRole())
-        .totalPrice(user.getTotalPrice())
-        .totalSales(user.getTotalSales())
-        .balance(balance)
-        .build();
-  }
+            //userJoinDTO.setNickname(userencrypt.getNickname());
+            // log.info("Nickname: "+userJoinDTO.getNickname());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-  @Override
-  public void updateUser(UserUpdateDTO userUpdateDTO) {
-    User user = userRepository.findByAddress(userUpdateDTO.getAddress());
-    log.info(userUpdateDTO.getNickname());
-    user.setAddress(userUpdateDTO.getAddress());
-    user.setEmail(userUpdateDTO.getEmail());
-    user.setNickname(userUpdateDTO.getNickname());
+
+        userRepository.save(User.ofUser(userencrypt));
+    }
+
+    @Override
+    public UserDetailDTO getUserDetail(String addresss) throws IOException {
+        User user = userRepository.findByAddress(addresss);
+        double balance = ethereumService.getBalance(addresss);
+        try {
+            return UserDetailDTO.builder()
+                    .name(userSecurityService.aesDecrypt(user.getName(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .address(userSecurityService.aesDecrypt(user.getAddress(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .email(userSecurityService.aesDecrypt(user.getEmail(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .nickname(userSecurityService.aesDecrypt(user.getNickname(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .profileImg(user.getProfileImg())
+                    .phone(userSecurityService.aesDecrypt(user.getPhone(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .role(userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .totalPrice(user.getTotalPrice())
+                    .totalSales(user.getTotalSales())
+                    .balance(balance)
+                    .build();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void updateUser(UserUpdateDTO userUpdateDTO) {
+        User user = userRepository.findByAddress(userUpdateDTO.getAddress());
+        byte[] key=userSecurityService.hexToByteArray(user.getUserKey());
+        log.info(userUpdateDTO.getNickname());
+        try {
+            user.setAddress(userSecurityService.aesEncrypt(userUpdateDTO.getAddress(),key));
+            user.setEmail(userSecurityService.aesEncrypt(userUpdateDTO.getEmail(),key));
+            user.setNickname(userSecurityService.aesEncrypt(userUpdateDTO.getNickname(),key));
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
 
 //        if (StringUtils.hasText(userUpdateDTO.getNickname())) {
 //            user.setNickname(userUpdateDTO.getNickname());

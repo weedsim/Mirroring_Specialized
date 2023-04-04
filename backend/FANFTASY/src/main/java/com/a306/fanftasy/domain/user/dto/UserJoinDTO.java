@@ -18,7 +18,9 @@ public class UserJoinDTO {
     private String phone;
     private String role;
 
+    private String profileImg;
     private String company;
+    private String key;
 
 
 
