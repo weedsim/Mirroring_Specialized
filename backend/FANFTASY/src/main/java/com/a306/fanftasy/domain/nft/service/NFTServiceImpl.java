@@ -2,11 +2,8 @@ package com.a306.fanftasy.domain.nft.service;
 
 
 import com.a306.fanftasy.domain.like.repository.NFTLikeRepository;
-import com.a306.fanftasy.domain.nft.dto.NFTListDTO;
+import com.a306.fanftasy.domain.nft.dto.*;
 import com.a306.fanftasy.domain.nft.entity.NFT;
-import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
-import com.a306.fanftasy.domain.nft.dto.NFTDetailDTO;
-import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
@@ -16,6 +13,8 @@ import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.io.IOException;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -111,6 +110,74 @@ public class NFTServiceImpl implements NFTService {
       throw e;
     }//catch
   }//getNFTListByOwnerId
+
+  // 마켓 플레이스 NFT목록 반환
+  @Override
+  public List<NFTMarketListDTO> getNFTList(int orderType, int saleType, String keyword) {
+    try {
+      List<NFTSource> entityList = null;
+      List<NFTMarketListDTO> result = new ArrayList<>();
+      // orderType : 1, 2, 3
+      // => 최신순, 가격 높은 순, 가격 낮은 순
+      // saleType : 1, 2
+      // => 판매중, 판매완료
+
+      // 판매중, 최신순
+      if (saleType == 1) {
+        if (orderType == 1) {
+          List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSale(); // 판매 중인 nftSourceId 최신순
+          for (Long nftSourceId : nftSourceIdIsOnSale) {
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            if (nftSource != null) {
+              NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+              nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
+              result.add(nftMarketListDTO);
+            }
+          }
+          // 판매중, 가격 높은 순
+        } else if (orderType == 2) {
+          List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSaleOrderByCurrentPriceDesc(); // 판매 중인 nftSourceId 가격 높은 순
+          for (Long nftSourceId : nftSourceIdIsOnSale) {
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            if (nftSource != null) {
+              NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+              nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
+              result.add(nftMarketListDTO);
+            }
+          }
+
+          // 판매중, 가격 낮은 순
+        } else {
+          List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSaleOrderByCurrentPrice(); // 판매 중인 nftSourceId 가격 낮은 순
+          for (Long nftSourceId : nftSourceIdIsOnSale) {
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            if (nftSource != null) {
+              NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+              nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
+              result.add(nftMarketListDTO);
+            }
+          }
+        }
+        // 미판매
+      } else {
+        // 미판매 최신순
+        if (orderType == 1) {
+          List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdsNotOnSaleOrderByRegDateDesc(); // 판매 중인 nftSourceId 가격 낮은 순
+          for (Long nftSourceId : nftSourceIdIsOnSale) {
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            if (nftSource != null) {
+              NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
+              nftMarketListDTO.setCurrentPrice(0.0);
+              result.add(nftMarketListDTO);
+            }
+          }
+        }
+      }
+      return result;
+    } catch (Exception e) {
+      throw e;
+    }
+  }
 
   //7. 개인이 보유한 NFT 상세
   @Override

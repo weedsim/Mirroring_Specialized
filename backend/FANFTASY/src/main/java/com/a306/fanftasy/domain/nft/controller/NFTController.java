@@ -46,10 +46,10 @@ public class NFTController {
         }
     }
 
-    //2. 마켓에서 리스트 반환
-    @GetMapping("/market")
-    public ResponseEntity<?> NFTMarketList(@RequestParam int orderType, @RequestParam int page,@RequestParam String keyword){
-        log.info("NFT 마켓 페이지 리스트 요청");
+    //2. 드롭스에서 리스트 반환
+    @GetMapping("/drops")
+    public ResponseEntity<?> NFTDropsList(@RequestParam int orderType, @RequestParam int page,@RequestParam String keyword){
+        log.info("NFT 드롭스 페이지 리스트 요청");
         log.info("orderType : " + orderType + ", page : " + page + ", keyword : " + keyword);
         ResponseDefault responseDefault = null;
         try{
@@ -57,10 +57,10 @@ public class NFTController {
                 .messege("SUCCESS")
                 .data(nftSourceService.getNFTSourceList(orderType, page, keyword))
                 .success(true).build();
-            log.info("NFT 조회 성공");
+            log.info("NFT Source List 조회 성공");
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
-            log.error("NFT 조회 실패");
+            log.error("NFT Source List 조회 실패");
             responseDefault = ResponseDefault.builder()
                 .success(false)
                 .messege("FAIL").build();
@@ -68,8 +68,30 @@ public class NFTController {
         }
     }
 
+    // 마켓 플레이스에서 리스트 반환
+    @GetMapping("/market")
+    public ResponseEntity<?> NFTMarketList(@RequestParam int orderType, @RequestParam int saleType, @RequestParam String keyword) {
+        ResponseDefault responseDefault = null;
+        try {
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("SUCCESS")
+                    .data(nftService.getNFTList(orderType, saleType, keyword))
+                    .build();
+            return ResponseEntity.ok().body(responseDefault);
+        } catch (Exception e) {
+            log.error("NFT 조회 실패");
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("FAIL")
+                    .data(null)
+                    .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
     //3. 아티스트가 올린 NFT 컨텐츠 상세 페이지 반환
-    @GetMapping("/market/{nftSourceId}")
+    @GetMapping("/drops/{nftSourceId}")
     public ResponseEntity<?> NFTMarketDetail(@PathVariable long nftSourceId){
         log.info("NFT 마켓 페이지 상세 요청 : " + nftSourceId);
         ResponseDefault responseDefault = null;
@@ -90,7 +112,7 @@ public class NFTController {
         }
     }
     //4. 아티스트가 올린 NFT 최초 거래
-    @PutMapping("/market")
+    @PutMapping("/drops")
     public ResponseEntity<?> NFTFirstTrade(@RequestBody NFTSourceTradeDTO nftSourceTradeDTO){
         log.info("NFT 거래 발생 : " + nftSourceTradeDTO.toString());
         ResponseDefault responseDefault = null;

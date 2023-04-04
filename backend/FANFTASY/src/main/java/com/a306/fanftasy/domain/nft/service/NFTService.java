@@ -1,10 +1,7 @@
 package com.a306.fanftasy.domain.nft.service;
 
 
-import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
-import com.a306.fanftasy.domain.nft.dto.NFTDetailDTO;
-import com.a306.fanftasy.domain.nft.dto.NFTListDTO;
-import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
+import com.a306.fanftasy.domain.nft.dto.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -22,4 +19,5 @@ public interface NFTService {
 
   List<NFTListDTO> getNFTListByOwnerId(long regArtistId);
 
+  List<NFTMarketListDTO> getNFTList(int orderType, int saleType, String keyword);
 }
