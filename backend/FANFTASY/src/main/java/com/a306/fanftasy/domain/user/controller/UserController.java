@@ -88,6 +88,7 @@ public class UserController {
 
     @PostMapping("/profile/{id}")
     public ResponseEntity<?> uploadImage(@PathVariable("id") Long id, @RequestPart("profileImg") MultipartFile profileImg) {
+        log.info("이미지 변경 요청");
     String imgUrl = null;
     ResponseDefault responseDefault = null;
     User user = userService.findByUserId(id);

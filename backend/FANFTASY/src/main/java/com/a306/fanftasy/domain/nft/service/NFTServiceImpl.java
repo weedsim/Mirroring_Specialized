@@ -82,11 +82,11 @@ public class NFTServiceImpl implements NFTService {
           .remainNum(totalNum)
           .likeNum(0)
           .build();
-      nftSourceRepository.save(nftSource);
-      log.info("nft 콘텐츠 등록 완료");
 
       //개별 nft 생성
       String artistAddress = artist.getAddress();
+      nftSourceRepository.save(nftSource);
+      log.info("nft 콘텐츠 등록 완료");
 
       log.info("개별 nft 생성 시작");
       for (int i = 1; i <= totalNum; i++
