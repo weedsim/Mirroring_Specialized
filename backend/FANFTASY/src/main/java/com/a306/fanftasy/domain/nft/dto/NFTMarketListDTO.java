@@ -16,6 +16,7 @@ public class NFTMarketListDTO {
     private String title; // 제목
     private String nickname; // 발행한 아티스트 이름
     private Double currentPrice; // 현재 판매 가격
+    private String fileType;
     private Long like; // 좋아요 수
 
     public static NFTMarketListDTO fromEntity(NFTSource nftSource) {
@@ -24,6 +25,7 @@ public class NFTMarketListDTO {
                 .fileCID(nftSource.getFileCID())
                 .title(nftSource.getTitle())
                 .nickname(nftSource.getRegArtist().getNickname())
+                .fileType(nftSource.getFileType())
                 .like(nftSource.getLikeNum())
                 .build();
     }
