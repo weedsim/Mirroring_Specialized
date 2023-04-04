@@ -38,6 +38,9 @@ public class User {
     @Column(name = "refresh_token")
     private String refreshToken;
 
+    @Column(name="user_key")
+    private String userKey;
+
     public static User ofUser(UserJoinDTO joinDto){
         User user = User.builder()
                 .address(joinDto.getAddress())
@@ -47,6 +50,8 @@ public class User {
                 .phone(joinDto.getPhone())
                 .role(joinDto.getRole())
                 .company(joinDto.getCompany())
+                .userKey(joinDto.getKey())
+                .profileImg(joinDto.getProfileImg())
                 .build();
         return user;
     }

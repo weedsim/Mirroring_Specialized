@@ -202,10 +202,20 @@ public class NFTServiceImpl implements NFTService {
 
   @Override
   public NFTDetailDTO getNFTDetail(Long nftSourceId) {
-    double currentPrice = nftRepository.findByNftSourceId(nftSourceId);
+    List<NFT> resultList;
+    NFTDetailDTO nftDetailDTO;
+    Optional<Double> currentPriceOpt = nftRepository.findByNftSourceId(nftSourceId);
+    Double currentPrice = currentPriceOpt.orElse(0.0);
     Pageable pageable = PageRequest.of(0, 1);
-    List<NFT> resultList = nftRepository.findByIdAndByMaxResult(nftSourceId, currentPrice, pageable);
-    return NFTDetailDTO.fromEntity(resultList.get(0));
+    if (currentPrice == 0.0) {
+      resultList = nftRepository.findByIdMaxResult(nftSourceId, pageable);
+      nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
+      nftDetailDTO.setCurrentPrice(0);
+    } else {
+      resultList = nftRepository.findByIdAndByCurrentPriceMaxResult(nftSourceId, currentPrice, pageable);
+      nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
+    }
+    return nftDetailDTO;
   }
 
   //7. 개인이 보유한 NFT 상세
