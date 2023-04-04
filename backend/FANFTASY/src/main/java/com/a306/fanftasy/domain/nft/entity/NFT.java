@@ -20,7 +20,6 @@ import java.time.LocalDateTime;
 public class NFT {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
   @Column(name = "nft_id")
   private Long nftId;
 
