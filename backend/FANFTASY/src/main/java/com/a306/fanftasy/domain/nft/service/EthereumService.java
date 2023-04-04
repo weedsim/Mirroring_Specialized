@@ -38,8 +38,8 @@ public class EthereumService {
 
   @Value("${blockchain.NFTContractAddress}")
   private String NFT_CONTRACT_ADDRESS;
-  @Value("${blockchain.FTContractAddress}")
-  private String FT_CONTRACT_ADDRESS;
+//  @Value("${blockchain.FTContractAddress}")
+//  private String FT_CONTRACT_ADDRESS;
   @Value("${blockchain.AdminPrivateKey}")
   private String ADMIN_PRIVATE_KEY;
   @Value("${blockchain.AdminAddress}")
@@ -48,8 +48,8 @@ public class EthereumService {
   private String NETWORK_URL;
   @Value("${blockchain.NetworkID}")
   private int NETWORK_ID;
-  private BigInteger GAS_LIMIT = BigInteger.valueOf(6721975);
-  private BigInteger GAS_PRICE = BigInteger.valueOf(20000000000L);
+  private BigInteger GAS_LIMIT = BigInteger.valueOf(3000000);
+  private BigInteger GAS_PRICE = BigInteger.valueOf(0);
   private final UserRepository userRepository;
 
   //잔액 조회
@@ -130,23 +130,23 @@ public class EthereumService {
     }
   }
 
-  public Object ethCall(Function function)
-      throws IOException, ExecutionException, InterruptedException {
-    //1. CONNECT WEB3
-    Admin web3j = Admin.build(new HttpService(NETWORK_URL));
-    //2. CREATE TRANSACTION
-    Transaction transaction = Transaction.createEthCallTransaction(ADMIN_ADDRESS,
-        FT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
-    //3. CALL ETHEREUM
-    EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
-    log.info("call transaction 전송");
-    //4. DECODE RESULT
-    List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
-        function.getOutputParameters());
-    log.info("nonce : ");
-    return (String) decode.get(0).getValue();
-    // transaction에 대한 transaction Hash값 얻기.
-  }//ethCall
+//  public Object ethCall(Function function)
+//      throws IOException, ExecutionException, InterruptedException {
+//    //1. CONNECT WEB3
+//    Admin web3j = Admin.build(new HttpService(NETWORK_URL));
+//    //2. CREATE TRANSACTION
+//    Transaction transaction = Transaction.createEthCallTransaction(ADMIN_ADDRESS,
+//        FT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
+//    //3. CALL ETHEREUM
+//    EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
+//    log.info("call transaction 전송");
+//    //4. DECODE RESULT
+//    List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
+//        function.getOutputParameters());
+//    log.info("nonce : ");
+//    return (String) decode.get(0).getValue();
+//    // transaction에 대한 transaction Hash값 얻기.
+//  }//ethCall
 
 
   public long transaction(Function function)

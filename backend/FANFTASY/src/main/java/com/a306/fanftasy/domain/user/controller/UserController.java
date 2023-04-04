@@ -86,7 +86,7 @@ public class UserController {
         return new ResponseEntity<>(responseDefault, HttpStatus.OK);
     }
 
-    @PutMapping("/profile/{id}")
+    @PostMapping("/profile/{id}")
     public ResponseEntity<?> uploadImage(@PathVariable("id") Long id, @RequestPart("profileImg") MultipartFile profileImg) {
     String imgUrl = null;
     ResponseDefault responseDefault = null;
