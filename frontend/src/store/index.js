@@ -3,9 +3,9 @@ import VueCookies from "vue-cookies"
 import axios from "axios"
 import createPersistedState from "vuex-persistedstate"
 
-const API_URL = "https://fanftasy.kro.kr/api"
-// const API_URL = "http://70.12.247.124:8080/api",
-// const API_URL = "http://localhost:8080/api",
+// const API_URL = "https://fanftasy.kro.kr/api"
+const API_URL = "http://70.12.247.124:8080/api"
+// const API_URL = "http://localhost:8080/api"
 const store = createStore({
   plugins: [createPersistedState()],
   state: {
@@ -63,8 +63,10 @@ const store = createStore({
       VueCookies.remove("AccessToken");
       VueCookies.remove("nickname");
       VueCookies.remove("profileImage");
-      console.log("로그아웃");
+      VueCookies.remove("userId");
       // VueCookies.remove("RefreshToken");
+
+      console.log("로그아웃");
     },
 
   },
@@ -132,6 +134,7 @@ const store = createStore({
     },
 
     async LOGIN() { // 우리 회원인지 확인하고, 회원이면 토큰을 받고, 비회원이면 404 에러
+      this.commit('installedMetamask');
       await this.dispatch('changeNetWork');
       await this.dispatch('addNetWork');
       await this.dispatch('getAccount');
@@ -140,8 +143,6 @@ const store = createStore({
       await axios({
         method: "post",
         url: `${API_URL}/user/login`,
-        // url: `http://70.12.247.124:8080/api/user/login`,
-        headers: { "Content-Type": `application/json`},
         params: {
           address: this.state.address, //지갑 주소
         },
@@ -153,9 +154,15 @@ const store = createStore({
         
         // console.log(this.state.profileImage);
         VueCookies.set('Account', res.data.data.address, '3h');
-        VueCookies.set('userId_nickname', "userId_" +  res.data.data.userId + "_nickname_" + res.data.data.nickname, '3h');
+        VueCookies.set('userId', res.data.data.userId, '3h');
+        VueCookies.set('nickname', res.data.data.nickname, '3h');
         VueCookies.set('AccessToken', res.headers.accesstoken, '3h');
-        VueCookies.set('profileImage', res.data.data.profileImg, '3h');
+        if(res.data.data.profileImg === null || res.data.data.profileImg === undefined) {
+          VueCookies.set('profileImage', 'https://fanftasy.s3.ap-northeast-2.amazonaws.com/profileImg/8c64c983-1b80-40fb-bcc1-366f3322cbb2.png', '3h');
+        }
+        else {
+          VueCookies.set('profileImage', res.data.data.profileImg, '3h');
+        }
         this.state.isMember = !this.state.isMember;
         this.state.success = true;
       }) 
@@ -171,6 +178,7 @@ const store = createStore({
           this.state.success = false;
           this.state.isMember = null;
         }
+        console.log(this.state.isMember);
       })
     },
 
@@ -204,6 +212,7 @@ const store = createStore({
         url: `${API_URL}/user/join`,
         data: {
           address: this.state.CurrentAccount, //지갑 주소
+          name: this.state.name,
           email : this.state.email, //이메일
           nickname: this.state.nickname, //닉네임
           phone: this.state.phone, //전화번호

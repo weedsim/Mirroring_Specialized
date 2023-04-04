@@ -80,8 +80,7 @@ export default {
   name: "NotLoginUserHeaders",
   data() {
     return {
-      userId_nickname: VueCookies.get('userId_nickname'),
-      nickname: null,
+      nickname: VueCookies.get('nickname'),
       logIn: VueCookies.isKey('AccessToken'),
       profileImage: VueCookies.get('profileImage'),
     }
@@ -90,12 +89,12 @@ export default {
   //   nickname: this.cutIdName()
   // },
   watch: {
-    // nickname: function () {
+    nickname: function () {
+      console.log(VueCookies.get('nickname'));
 
-
-    //   console.log(VueCookies.isKey('AccessToken'));
-    //   this.logIn = VueCookies.isKey('AccessToken');
-    // },
+      console.log(VueCookies.isKey('AccessToken'));
+      this.logIn = VueCookies.isKey('AccessToken');
+    },
     profileImage: function () {
       console.log(VueCookies.get('profileImage'));
     }
@@ -130,20 +129,12 @@ export default {
 
       const Member = this.$store.state.isMember;
       console.log(VueCookies.get('profileImage'));
-      if(VueCookies.get('profileImage') === undefined){
-        this.profileImage = '@/assets/Search.png';
-      }
-      else{
-        this.profileImage = VueCookies.get('profileImage');
-        console.log(this.profileImage);
-      }
+      this.profileImage = VueCookies.get('profileImage');
+      console.log(this.profileImage);
       
       if(Member === true){
         console.log("회원입니다.");
-        // this.$router.go(this.$router.currentRoute);
-        console.log(this.userId_nickname);
-        this.cutIdName();
-        console.log(this.nickname);
+        this.$router.go(this.$router.currentRoute);
       }
       else if(Member === false) {
         console.log("회원이 아닙니다.");
@@ -165,12 +156,6 @@ export default {
         console.log("무슨 에러인지 모르겠습니다.");
       }
     },
-    cutIdName() {
-      const [, id, , nickname] = this.userId_nickname.split('_');
-      console.log(id);
-      console.log(nickname);
-      this.nickname = nickname;
-    }
   }
 }
 </script>

@@ -84,7 +84,6 @@
 // import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 // import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
 import BankABI from "../../../path/to/BankABI.json";
-import contract from '@truffle/contract';
 import Web3 from "web3"
 import  VueCookies  from 'vue-cookies';
 
@@ -128,10 +127,56 @@ export default {
 
     async charge() {
       console.log("1111");
-      const web3 = new Web3(window.ethereum);
-      const Bank = contract(BankABI);
-      Bank.setProvider(web3.currentProvider);
-      const bankInstance = await Bank.at('0x328dAdbF4438E4D93e6b4E0B7c7aB0e189fE71bA');
+      const web3 = new Web3('https://fanftasy.kro.kr/network');
+
+      const account = VueCookies.get('Account');
+
+      const contractAddress = '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180';
+      const bankContract = new web3.eth.Contract(BankABI, contractAddress);
+      
+      const amount = web3.utils.toWei("1", "ether");
+      console.log(account);
+      
+      await bankContract.methods.withdraw(amount).send({ from: account });
+
+      const depositEvent = bankContract.events.Deposit();
+      console.log(depositEvent);
+      
+      // bankContract.methods.getBalance().call((err, result) => {
+      //   if (err) {
+      //     console.error(err);
+      //   } else {
+      //     console.log('Contract balance:', result);
+      //   }
+      // });
+
+      // const depositAmount = web3.utils.toWei("1", "ether"); // 1 ETH를 wei 단위로 변환
+      // bankContract.methods.deposit().send({
+      //   from: account,
+      //   value: depositAmount
+      // })
+      // .call((err, result) => {
+      //   if(err) {
+      //     console.log(err);
+      //   }
+      //   else{
+      //     console.log(result);
+      //   }
+      // })
+      // ;
+
+        
+      // console.log(account);
+      // const value = web3.utils.toWei("1", "ether");
+      // const txHash = await web3.eth.sendTransaction({
+      //   from: account,
+      //   to: '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180',
+      //   value: value
+      // });
+      // console.log(txHash);
+      // const Bank = contract(BankABI);
+      // Bank.setProvider(web3.currentProvider);
+      // const bankInstance = await Bank.at('0x328dAdbF4438E4D93e6b4E0B7c7aB0e189fE71bA');
 
       // 컨트랙트에서 사용할 함수를 정의합니다.
       // const deposit = async (amount) => {
@@ -145,24 +190,24 @@ export default {
 
       // export const withdraw = async (amount) => {
       // async (amount) => {
-      async () => {
-        const accounts = await web3.eth.getAccounts();
-        await bankInstance.withdraw(1, {
-          from: accounts[0],
-        });
-      };
+      // async () => {
+      //   const accounts = await web3.eth.getAccounts();
+      //   await bankInstance.withdraw(1, {
+      //     from: accounts[0],
+      //   });
+      // };
 
       // export const getBalance = async () => {
       //   const balance = await bankInstance.getBalance();
       //   return web3.utils.fromWei(balance.toString(), 'ether');
       // };
 
-      const getBalance = async () => {
-        const balance = await bankInstance.getBalance();
-        return web3.utils.fromWei(balance.toString(), 'ether');
-      };
+      // const getBalance = async () => {
+      //   const balance = await bankInstance.getBalance();
+      //   return web3.utils.fromWei(balance.toString(), 'ether');
+      // };
 
-      console.log(getBalance.toString());
+      // console.log(getBalance.toString());
 
     }
 
