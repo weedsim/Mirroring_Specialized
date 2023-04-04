@@ -85,6 +85,7 @@ public class NFTController {
             responseDefault = ResponseDefault.builder()
                 .success(false)
                 .messege("FAIL").build();
+
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }
