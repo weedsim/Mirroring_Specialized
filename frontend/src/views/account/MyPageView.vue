@@ -1,31 +1,5 @@
 <template>
   <div class="mypage-entire">
-    <!-- <LoginUserHeaders/> -->
-    <!-- <NotLoginUserHeaders v-if="i == 1"/> -->
-
-    <!-- 프로필 이미지 -->
-    <div class="circle1">
-      <div class="circle2">
-        <div class="circle3">
-          <img :src="this.profileImage" alt="로고" class="profile-logo">
-        </div>
-      </div>
-    </div>
-    <!-- <div>
-      <input type="file" class="changeImage">
-      <button class="changeImageBtn" @click="changeImage()">프로필 사진 바꾸기</button>
-    </div> -->
-
-    <!-- 메타마스크 주소 -->
-    <div class="address-inline">
-      <img :src="require('@/assets/metamask_logo.png')" alt="여우" style="width:35px; height: 25px; padding-left: 5px; padding-right: 5px;">
-      <div id="metamask-address">{{address}}</div>
-      <img :src="require('@/assets/copy.png')" alt="복사" style="width:28px; height: 20px; padding-left: 5px; padding-right: 5px; " @click="copyAddress">
-    </div>
-
-    <button class="charge-button" @click="charge()">
-      NFN 충전
-    </button>
     <div>
       <!-- 프로필 이미지, 메타마스크 주소, NFT 충전 버튼 -->
       <div style="display: flex; justify-content: space-between;">
@@ -34,7 +8,7 @@
           <div class="circle1">
             <div class="circle2">
               <div class="circle3">
-                <img :src="require('@/assets/EthereumIcon.png')" alt="로고" class="profile-logo">
+                <img :src="this.profileImage" alt="로고" class="profile-logo">
               </div>
             </div>
           </div>
@@ -53,14 +27,14 @@
             <img :src="require('@/assets/copy.png')" alt="복사" style="width:28px; height: 20px; padding-left: 5px; padding-right: 5px; " @click="copyAddress">
           </div>
         </div>
-        
-        <div style="margin-top: auto">
-          <button class="charge-button">
-            FAN 충전
+
+        <div style="margin-top: auto;">
+          <button class="charge-button" @click="charge()">
+            NFN 충전
           </button>
         </div>
+        
       </div>
-  
       
       <div class="mypage-filter-tab" >
         <button @click="clickOwnedNFT" class="mypage-filter-tab-part" tabindex="-1" @keydown.prevent="handleBtnDown" >
@@ -134,6 +108,7 @@
 import BankABI from "../../../path/to/BankABI.json";
 import Web3 from "web3"
 import  VueCookies  from 'vue-cookies';
+import { Buffer } from 'buffer';
 
 export default {
   name: 'MyPageView',
@@ -212,6 +187,19 @@ export default {
       const web3 = new Web3('https://fanftasy.kro.kr/network');
       
       const account = VueCookies.get('Account');
+      const accounts = await web3.eth.getAccounts();
+      console.log(accounts);
+
+      const tempMessage = "testSigning";
+      const msg = `0x${Buffer.from(tempMessage, 'utf8').toString('hex')}`;
+      console.log(msg);
+      // await web3.eth.request({
+      //   method: 'personal_sign',
+      //   params: [msg, account, 'example sign'],
+      // }).then((res) => {
+      //   console.log(res);
+      // });
+      // web3.eth.personal.sign("msg", account, "example sign");
       
       const contractAddress = '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180';
       // const contractAddress = '0xcC3E0342D6E62E84bA6028220fEe64a94875b398';
@@ -221,7 +209,19 @@ export default {
         fromBlock: 0,
         toBlock: 'latest',
       }, function(err, events){
-        if(err){
+        if(err){ 
+          console.log(err);
+        }
+        else{
+          console.log(events);
+        }
+      });
+
+      bankContract.getPastEvents('Deposit', {
+        fromBlock: 0,
+        toBlock: 'latest',
+      }, function(err, events){
+        if(err){ 
           console.log(err);
         }
         else{
@@ -274,7 +274,7 @@ export default {
         //   });
         // });
         
-
+        web3.eth.accounts.wallet.add(account);
 
         // bankContract.methods.deposit().send({
         //   from: account,
