@@ -103,7 +103,7 @@ public class NFTServiceImpl implements NFTService {
         NFT nft = NFT.builder()
             .nftId(tokenID)
             .owner(artist)
-            .isOnSale(true)
+            .isOnSale(false)
             .currentPrice(originPrice)
             .transactionTime(regDate)
             .nftSource(nftSource)
