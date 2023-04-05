@@ -69,17 +69,18 @@ public class NFTServiceImpl implements NFTService {
       String metaCID = nftCreateDTO.getMetaCID();
       log.info("NFT Source 저장 시작");
       //NFT Source생성
+      long createdNum = 0;
       NFTSource nftSource = NFTSource.builder()
           .title(nftCreateDTO.getTitle())
           .content(nftCreateDTO.getContent())
-          .totalNum(totalNum)
+          .totalNum(0)
           .originPrice(originPrice)
           .regArtist(artist)
           .fileType(nftCreateDTO.getFileType())
           .fileCID(nftCreateDTO.getFileCID())
           .metaCID(metaCID)
           .regDate(regDate)
-          .remainNum(totalNum)
+          .remainNum(0)
           .likeNum(0)
           .build();
 
@@ -110,7 +111,12 @@ public class NFTServiceImpl implements NFTService {
             .build();
         log.info("nft generated : "+ nft.toString());
         nftRepository.save(nft);
+        createdNum++;
       }//for-each
+      nftSource.updateTotalNum(createdNum);
+      nftSource.updateRemainNum(createdNum);
+      nftSourceRepository.save(nftSource);
+      log.info("CreatedNum : " + createdNum);
     } catch (Exception e) {
       throw e;
     }//catch
