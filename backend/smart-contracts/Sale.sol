@@ -8,7 +8,7 @@ import "contracts/NFT.sol";
 
 contract Sale is Ownable{
     address public admin; //관리자 계정
-    address private _nftContractAddress; //nft스마트 컨트랙트
+    address public nftContractAddress; //nft스마트 컨트랙트 주소
 
     // 생성자에 의해 정해지는 값
     address payable public seller; //판매자
@@ -16,7 +16,7 @@ contract Sale is Ownable{
     uint256 public tokenId; //판매NFT ID
     bool public isEnded; //완료여부
     bool public isCanceled; //취소여부
-    MyToken private _NFTContract;
+    MyToken public NFTContract;
     uint256 public endedAt; //판매시간
     address private _buyer;//구매자 지갑주소
 
@@ -26,27 +26,31 @@ contract Sale is Ownable{
         address payable _seller,
         uint256 _tokenId,
         uint256 _price,
-        address _nftContractAddress
+        address _nftContractAddress,
+        address _admin
     ) {
-        require(_price  >= 0, "Price must be higher than 0.");
+        require(_price >= 0, "Price must be higher than 0.");
         require(MyToken(_nftContractAddress).ownerOf(_tokenId) == _seller, "Seller is not owner.");
         tokenId = _tokenId;
         price = _price;
         seller = _seller;
         isEnded = false;
         isCanceled = false;
-        _NFTContract = MyToken(_nftContractAddress);
-        _NFTContract.approve(admin,_tokenId);
+        nftContractAddress = _nftContractAddress;
+        NFTContract = MyToken(_nftContractAddress);
+        // _NFTContract.approve(admin,_tokenId);
+        admin = _admin;
     }
 
     function purchase() payable public returns(bool) {
         require(!isEnded, "This sale is already ended.");
-        require(_NFTContract.ownerOf(tokenId) == seller);
+        require(NFTContract.ownerOf(tokenId) == seller);
         require(msg.value == price, "Buyer's balance is exhausted.");
         //판매자에게서 구매자의 Money전송
         seller.transfer(msg.value);
         _buyer = msg.sender;
         // end();
+        emit SaleEnded(msg.sender, price);
         return true;
     }
 
@@ -74,5 +78,4 @@ contract Sale is Ownable{
         require(isEnded, "This sale is not ended yet.");
         return endedAt;
     }
-
 }
