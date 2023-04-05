@@ -27,8 +27,8 @@ public class NFT {
   @JoinColumn(name = "owner_id")
   private User owner;
 
-  @Column(name = "token_uri")
-  private String tokenUri;
+  @Column(name = "sale_contract")
+  private String saleContract;
 
   @Column(name = "is_on_sale")
   private Boolean isOnSale;

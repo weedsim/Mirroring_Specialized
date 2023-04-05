@@ -50,8 +50,11 @@ public class NFTServiceImpl implements NFTService {
   private final NFTSourceRepository nftSourceRepository;
   private final UserRepository userRepository;
   private final NFTLikeRepository nftLikeRepository;
-
+  @Value("${blockchain.AdminAddress}")
+  private String ADMIN_ADDRESS;
   private final BasicService basicService;
+
+
 
   //1. NFT 생성
   @Override
@@ -90,26 +93,35 @@ public class NFTServiceImpl implements NFTService {
       String artistAddress = artist.getAddress();
       nftSourceRepository.save(nftSource);
       log.info("nft 콘텐츠 등록 완료");
-
+      User owner = userRepository.findFirstByRole("ADMIN");
       log.info("개별 nft 생성 시작");
       for (int i = 1; i <= totalNum; i++
       ) {
         long tokenID;
+        String saleContract;
         try {
           //스마트 컨트랙트로 tokenID 받아오기
-          tokenID = basicService.create(artistAddress, metaCID);
+          tokenID = basicService.create(ADMIN_ADDRESS, metaCID);
         } catch (Exception e) {
           log.info("토큰 발급 재실행");
-          tokenID = basicService.create(artistAddress, metaCID);
+          tokenID = basicService.create(ADMIN_ADDRESS, metaCID);
+        }
+        //SaleContract생성
+        try {
+          saleContract = basicService.createSale(tokenID, originPrice);
+        } catch (Exception e) {
+          log.info("Sale 생성 재실행");
+          saleContract = basicService.createSale(tokenID, originPrice);
         }
         NFT nft = NFT.builder()
             .nftId(tokenID)
-            .owner(artist)
+            .owner(owner)
             .isOnSale(false)
             .currentPrice(originPrice)
             .transactionTime(regDate)
             .nftSource(nftSource)
             .editionNum(i)
+            .saleContract(saleContract)
             .build();
         log.info("nft generated : " + nft.toString());
         nftRepository.save(nft);
@@ -284,7 +296,7 @@ public class NFTServiceImpl implements NFTService {
       User newOwner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
       String newOwnerAddress = newOwner.getAddress();
       double price = nftTradeDTO.getTransactionPrice();
-      String tokenUri = nftEntity.getTokenUri();
+      String saleContract = nftEntity.getSaleContract();
       //스마트 컨트랙트 호출해서
       //1. tokenUri에 해당되는 nft 소유자 newOwner로 변경해주고
       //2. newOwner의 잔액을 nowOwner의 잔액으로 변경시키는 트랜잭션 필요
@@ -299,22 +311,4 @@ public class NFTServiceImpl implements NFTService {
     }//catch
   }
 
-  private String CONTRACT_ADDRESS = "컨트랙트 주소";
-
-  //smartContract
-  public String createNFT(String artistAddress, String metaCID) throws IOException {
-    //NFT 발행 트랜잭션 호출하는 method
-    Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
-    Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
-    System.out.println(web3ClientVersion.getWeb3ClientVersion());
-    return null;
-  }
-
-  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price)
-      throws IOException {
-    //NFT 거래 트랜잭션을 발생시키는 method
-    Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
-    Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
-    System.out.println(web3ClientVersion.getWeb3ClientVersion());
-  }
 }

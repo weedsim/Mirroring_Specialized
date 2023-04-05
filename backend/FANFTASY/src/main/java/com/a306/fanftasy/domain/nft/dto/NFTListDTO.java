@@ -15,7 +15,6 @@ import lombok.NoArgsConstructor;
 public class NFTListDTO {
   private Long nftId;
   private UserPublicDTO owner;
-  private String tokenUri;
   private NFTSourceListDTO nftSource;
   private Boolean isOnSale;
   private long editionNum;
@@ -23,7 +22,6 @@ public class NFTListDTO {
     return NFTListDTO.builder()
         .nftId(nft.getNftId())
         .owner(UserPublicDTO.fromEntity(nft.getOwner()))
-        .tokenUri(nft.getTokenUri())
         .nftSource(NFTSourceListDTO.fromEntity(nft.getNftSource()))
         .isOnSale(nft.getIsOnSale())
         .editionNum(nft.getEditionNum())

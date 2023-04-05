@@ -20,7 +20,7 @@ import lombok.NoArgsConstructor;
 public class NFTDetailDTO {
     private Long nftId;
     private UserPublicDTO owner;
-    private String tokenUri;
+    private String saleContract;
     private double currentPrice;
     private Boolean isOnSale;
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
@@ -33,7 +33,7 @@ public class NFTDetailDTO {
         return NFTDetailDTO.builder()
             .nftId(nft.getNftId())
             .owner(UserPublicDTO.fromEntity(nft.getOwner()))
-            .tokenUri(nft.getTokenUri())
+            .saleContract(nft.getSaleContract())
             .currentPrice(nft.getCurrentPrice())
             .nftSource(NFTSourceDetailDTO.fromEntity(nft.getNftSource()))
             .isOnSale(nft.getIsOnSale())

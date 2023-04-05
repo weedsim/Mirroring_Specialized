@@ -149,7 +149,26 @@ public class EthereumService {
 //  }//ethCall
 
 
-  public long transaction(Function function)
+  public long createNFT(Function function, String contractAddress)
+      throws IOException, InterruptedException, ExecutionException {
+    EthGetTransactionReceipt transactionReceipt = getTransactionReceipt(function, contractAddress);
+    log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
+    long tokenID = Long.decode(transactionReceipt.getResult().getLogs().get(0).getTopics().get(3));
+    log.info("token생성 ID : " + tokenID);
+    return tokenID;
+  }//ethSendTransaction
+
+  public String createSale(Function function,  String contractAddress)
+      throws IOException, InterruptedException, ExecutionException {
+    EthGetTransactionReceipt transactionReceipt = getTransactionReceipt(function, contractAddress);
+    log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
+    String saleAddress = transactionReceipt.getResult().getLogs().get(0).getAddress();
+    log.info("Sale생성 contractAddress : " + saleAddress);
+    return saleAddress;
+  }//ethSendTransaction
+
+
+  public EthGetTransactionReceipt getTransactionReceipt(Function function, String contractAddress)
       throws IOException, InterruptedException, ExecutionException {
     //1. CONNECT WEB3
     log.info("ethSendTransaction 호출 : " + function.getInputParameters().toString());
@@ -164,7 +183,7 @@ public class EthereumService {
     BigInteger nonce = ethGetTransactionCount.getTransactionCount();
     //4.CREATE TRANSACTION
     RawTransaction rawTransaction = RawTransaction.createTransaction(
-        nonce, GAS_PRICE, GAS_LIMIT, NFT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
+        nonce, GAS_PRICE, GAS_LIMIT, contractAddress, FunctionEncoder.encode(function));
     byte[] signedMessage = TransactionEncoder.signMessage(rawTransaction, credentials);
     String hexValue = Numeric.toHexString(signedMessage);
     //5. SEND TRANSACTION
@@ -178,6 +197,7 @@ public class EthereumService {
     //6. GET TRANSACTION RECEIPT
     EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash)
         .send();
+
     if (transactionReceipt.getResult() == null) {
       for (int i = 0; i < 20; i++) {
         Thread.sleep(1000);
@@ -187,12 +207,8 @@ public class EthereumService {
         }
       }
     }
-    log.info("TransactionReceipt Result : " + transactionReceipt.getResult());
-    long tokenID = Long.decode(transactionReceipt.getResult().getLogs().get(0).getTopics().get(3));
-    log.info("token생성 ID : " + tokenID);
-    return tokenID;
+    return transactionReceipt;
   }//ethSendTransaction
-
 
   //GET CREDENTIALS
   private Credentials getCredentialsFromPrivateKey() {

@@ -1,6 +1,7 @@
 package com.a306.fanftasy.domain.nft.service;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -8,6 +9,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.web3j.abi.TypeReference;
 import org.web3j.abi.datatypes.Address;
@@ -23,6 +25,10 @@ import org.web3j.protocol.core.methods.response.TransactionReceipt;
 public class BasicService{
 
   private EthereumService ethereumService;
+  @Value("${blockchain.NFTContractAddress}")
+  private String NFT_CONTRACT_ADDRESS;
+  @Value("${blockchain.SaleFactoryAddress}")
+  private String SALE_FACTORY_ADDRESS;
 
   public BasicService(EthereumService ethereumService)
   {
@@ -38,12 +44,29 @@ public class BasicService{
           Arrays.asList(new TypeReference<Uint256>() {
           })
       );
-    return ethereumService.transaction(function);
-
+    return ethereumService.createNFT(function, NFT_CONTRACT_ADDRESS);
     }catch(Exception e){
       throw e;
     }
     // 2. ethereum을 function 변수로 통해 호출
+  }//create
+  public String createSale(long tokenId, double originPrice)
+      throws IOException, ExecutionException, InterruptedException {
+    try{
+      log.info("sale 메소드 호출");
+      Double weiD = originPrice * Math.pow(10, 18);
+      long weiL = weiD.longValue();
+      BigInteger wei = BigInteger.valueOf(weiL);
+      Function function = new Function(
+          "createSale",
+          Arrays.asList(new Uint256(tokenId),new Uint256(wei) ),
+          Arrays.asList(new TypeReference<Address>() {
+          })
+      );
+      return ethereumService.createSale(function, SALE_FACTORY_ADDRESS);
+    }catch(Exception e){
+      throw e;
+    }
   }
 
   public void getNumber(int num)
