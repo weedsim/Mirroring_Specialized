@@ -31,13 +31,15 @@ public class UserServiceImpl implements UserService {
 
     public UserLoginDTO login(String address){
         User user = userRepository.findByAddress(address);
+        byte[] masterKey=userSecurityService.getMasterKey();
         if(user!=null){
                   try {
                 Long userId=user.getUserId();
-                String nickname=user.getNickname();
-                String profileImg=user.getProfileImg();
-                String role = userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey()));
-                return UserLoginDTO.of(userId,nickname,address,role,profileImg);
+//                String nickname=userSecurityService.aesDecrypt(user.getNickname(),masterKey);
+//                String profileImg=userSecurityService.aesDecrypt(user.getProfileImg(),masterKey);
+//                String role = userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey()));
+//                return UserLoginDTO.of(userId,nickname,address,role,profileImg);
+                      return UserLoginDTO.of(userId,user.getNickname(),address,user.getRole(),user.getProfileImg());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -56,16 +58,17 @@ public class UserServiceImpl implements UserService {
             userJoinDTO.setProfileImg("https://fanftasy.s3.ap-northeast-2.amazonaws.com/profileImg/8c64c983-1b80-40fb-bcc1-366f3322cbb2.png");//default 이미지
         }
         try {
-            byte[] key=userSecurityService.generateKey("AES",128);
-            userencrypt.setAddress(userJoinDTO.getAddress());
-            userencrypt.setName(userSecurityService.aesEncrypt(userJoinDTO.getName(),key));
-            userencrypt.setNickname(userJoinDTO.getNickname());
-            userencrypt.setEmail(userSecurityService.aesEncrypt(userJoinDTO.getEmail(),key));
-            userencrypt.setPhone(userSecurityService.aesEncrypt(userJoinDTO.getPhone(),key));
-            userencrypt.setRole(userSecurityService.aesEncrypt(userJoinDTO.getRole(),key));
-            userencrypt.setCompany(userSecurityService.aesEncrypt(userJoinDTO.getCompany(),key));
-            userencrypt.setProfileImg(userJoinDTO.getProfileImg());
-            userencrypt.setKey(userSecurityService  .byteArrayToHex(key));
+//            byte[] key=userSecurityService.generateKey("AES",128);
+//            byte[] masterKey=userSecurityService.getMasterKey();
+//            userencrypt.setAddress(userSecurityService.aesEncrypt(userJoinDTO.getAddress(),masterKey));
+//            userencrypt.setName(userSecurityService.aesEncrypt(userJoinDTO.getName(),key));
+//            userencrypt.setNickname(userSecurityService.aesEncrypt(userJoinDTO.getNickname(),masterKey));
+//            userencrypt.setEmail(userSecurityService.aesEncrypt(userJoinDTO.getEmail(),key));
+//            userencrypt.setPhone(userSecurityService.aesEncrypt(userJoinDTO.getPhone(),key));
+//            userencrypt.setRole(userSecurityService.aesEncrypt(userJoinDTO.getRole(),key));
+//            userencrypt.setCompany(userSecurityService.aesEncrypt(userJoinDTO.getCompany(),key));
+//            userencrypt.setProfileImg(userSecurityService.aesEncrypt(userJoinDTO.getProfileImg(),masterKey));
+//            userencrypt.setKey(userSecurityService  .byteArrayToHex(key));
             //userJoinDTO.setNickname(userencrypt.getNickname());
             // log.info("Nickname: "+userJoinDTO.getNickname());
         } catch (Exception e) {
@@ -73,26 +76,39 @@ public class UserServiceImpl implements UserService {
         }
 
 
-        userRepository.save(User.ofUser(userencrypt));
+//        userRepository.save(User.ofUser(userencrypt));
+          userRepository.save(User.ofUser(userJoinDTO));
     }
 
     @Override
     public UserDetailDTO getUserDetail(String address) throws IOException {
         User user = userRepository.findByAddress(address);
+        byte[] masterKey=userSecurityService.getMasterKey();
         double balance = ethereumService.getBalance(address);
         try {
             return UserDetailDTO.builder()
-                    .name(userSecurityService.aesDecrypt(user.getName(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .name(user.getName())
                     .address(user.getAddress())
-                    .email(userSecurityService.aesDecrypt(user.getEmail(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .email(user.getEmail())
                     .nickname(user.getNickname())
                     .profileImg(user.getProfileImg())
-                    .phone(userSecurityService.aesDecrypt(user.getPhone(),userSecurityService.hexToByteArray(user.getUserKey())))
-                    .role(userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey())))
+                    .phone(user.getPhone())
+                    .role(user.getRole())
                     .totalPrice(user.getTotalPrice())
                     .totalSales(user.getTotalSales())
                     .balance(balance)
                     .build();
+//                    .name(userSecurityService.aesDecrypt(user.getName(),userSecurityService.hexToByteArray(user.getUserKey())))
+//                    .address(userSecurityService.aesDecrypt(user.getAddress(),masterKey))
+//                    .email(userSecurityService.aesDecrypt(user.getEmail(),userSecurityService.hexToByteArray(user.getUserKey())))
+//                    .nickname(userSecurityService.aesDecrypt(user.getNickname(),masterKey))
+//                    .profileImg(userSecurityService.aesDecrypt(user.getProfileImg(),masterKey))
+//                    .phone(userSecurityService.aesDecrypt(user.getPhone(),userSecurityService.hexToByteArray(user.getUserKey())))
+//                    .role(userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey())))
+//                    .totalPrice(user.getTotalPrice())
+//                    .totalSales(user.getTotalSales())
+//                    .balance(balance)
+//                    .build();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -102,12 +118,14 @@ public class UserServiceImpl implements UserService {
     public void updateUser(UserUpdateDTO userUpdateDTO) {
         User user = userRepository.findByAddress(userUpdateDTO.getAddress());
         byte[] key=userSecurityService.hexToByteArray(user.getUserKey());
+        byte[] masterKey=userSecurityService.getMasterKey();
         log.info(userUpdateDTO.getNickname());
         try {
             user.setAddress(userUpdateDTO.getAddress());
             user.setNickname(userUpdateDTO.getNickname());
             if (userUpdateDTO.getProfileImg() != null) {
-               user.setProfileImg (userUpdateDTO.getProfileImg());
+//               user.setProfileImg (userSecurityService.aesEncrypt(userUpdateDTO.getProfileImg(),masterKey));
+                user.setProfileImg (userUpdateDTO.getProfileImg());
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
