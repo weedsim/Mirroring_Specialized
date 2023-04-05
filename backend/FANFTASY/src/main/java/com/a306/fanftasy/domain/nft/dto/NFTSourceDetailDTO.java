@@ -31,6 +31,8 @@ public class NFTSourceDetailDTO {
   private boolean userLike;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime regDate;
+  private long saleNftId;
+  private String saleContractAddress;
   public static NFTSourceDetailDTO fromEntity(NFTSource nftSource){
     return NFTSourceDetailDTO.builder()
         .nftSourceId(nftSource.getNftSourceId())
