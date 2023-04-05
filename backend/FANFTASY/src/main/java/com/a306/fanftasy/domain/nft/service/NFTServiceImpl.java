@@ -69,24 +69,25 @@ public class NFTServiceImpl implements NFTService {
       String metaCID = nftCreateDTO.getMetaCID();
       log.info("NFT Source 저장 시작");
       //NFT Source생성
+      long createdNum = 0;
       NFTSource nftSource = NFTSource.builder()
           .title(nftCreateDTO.getTitle())
           .content(nftCreateDTO.getContent())
-          .totalNum(totalNum)
+          .totalNum(0)
           .originPrice(originPrice)
           .regArtist(artist)
           .fileType(nftCreateDTO.getFileType())
           .fileCID(nftCreateDTO.getFileCID())
           .metaCID(metaCID)
           .regDate(regDate)
-          .remainNum(totalNum)
+          .remainNum(0)
           .likeNum(0)
           .build();
-      nftSourceRepository.save(nftSource);
-      log.info("nft 콘텐츠 등록 완료");
 
       //개별 nft 생성
       String artistAddress = artist.getAddress();
+      nftSourceRepository.save(nftSource);
+      log.info("nft 콘텐츠 등록 완료");
 
       log.info("개별 nft 생성 시작");
       for (int i = 1; i <= totalNum; i++
@@ -102,7 +103,7 @@ public class NFTServiceImpl implements NFTService {
         NFT nft = NFT.builder()
             .nftId(tokenID)
             .owner(artist)
-            .isOnSale(true)
+            .isOnSale(false)
             .currentPrice(originPrice)
             .transactionTime(regDate)
             .nftSource(nftSource)
@@ -110,7 +111,12 @@ public class NFTServiceImpl implements NFTService {
             .build();
         log.info("nft generated : "+ nft.toString());
         nftRepository.save(nft);
+        createdNum++;
       }//for-each
+      nftSource.updateTotalNum(createdNum);
+      nftSource.updateRemainNum(createdNum);
+      nftSourceRepository.save(nftSource);
+      log.info("CreatedNum : " + createdNum);
     } catch (Exception e) {
       throw e;
     }//catch
@@ -202,10 +208,20 @@ public class NFTServiceImpl implements NFTService {
 
   @Override
   public NFTDetailDTO getNFTDetail(Long nftSourceId) {
-    double currentPrice = nftRepository.findByNftSourceId(nftSourceId);
+    List<NFT> resultList;
+    NFTDetailDTO nftDetailDTO;
+    Optional<Double> currentPriceOpt = nftRepository.findByNftSourceId(nftSourceId);
+    Double currentPrice = currentPriceOpt.orElse(0.0);
     Pageable pageable = PageRequest.of(0, 1);
-    List<NFT> resultList = nftRepository.findByIdAndByMaxResult(nftSourceId, currentPrice, pageable);
-    return NFTDetailDTO.fromEntity(resultList.get(0));
+    if (currentPrice == 0.0) {
+      resultList = nftRepository.findByIdMaxResult(nftSourceId, pageable);
+      nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
+      nftDetailDTO.setCurrentPrice(0);
+    } else {
+      resultList = nftRepository.findByIdAndByCurrentPriceMaxResult(nftSourceId, currentPrice, pageable);
+      nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
+    }
+    return nftDetailDTO;
   }
 
   //7. 개인이 보유한 NFT 상세

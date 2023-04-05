@@ -174,13 +174,13 @@ public class EthereumService {
     List<Type> decode = FunctionReturnDecoder.decode(ethSendTransaction.getResult(),
         function.getOutputParameters());
     log.info("hash value : " + decode.get(0).getValue());
-    Thread.sleep(5000);
+    Thread.sleep(1000);
     //6. GET TRANSACTION RECEIPT
     EthGetTransactionReceipt transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash)
         .send();
     if (transactionReceipt.getResult() == null) {
-      for (int i = 0; i < 5; i++) {
-        Thread.sleep(3000);
+      for (int i = 0; i < 20; i++) {
+        Thread.sleep(1000);
         transactionReceipt = web3j.ethGetTransactionReceipt(transactionHash).send();
         if (transactionReceipt.getResult() != null) {
           break;

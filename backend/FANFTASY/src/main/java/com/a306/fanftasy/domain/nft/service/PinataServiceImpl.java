@@ -39,6 +39,7 @@ public class PinataServiceImpl implements PinataService{
   @Override
   public String fileToPinata(MultipartFile file) throws PinataException, IOException {
     try{
+      log.info("fileToPinata : " + file.getOriginalFilename());
       Pinata pinata = new Pinata(API_KEY, API_Secret);
       File conFile = new File(file.getOriginalFilename());
       conFile.createNewFile();
@@ -59,7 +60,7 @@ public class PinataServiceImpl implements PinataService{
   @Override
   public NFTCreateDTO jsonToPinata(String info, String fileCID)
       throws IOException, PinataException {
-    log.info("metadata pinata 저장 시작");
+    log.info("metadata pinata 저장 시작, info : " + info);
     Pinata pinata = new Pinata(API_KEY, API_Secret);
     //String input을 json타입으로 변환
     ObjectMapper mapper = new ObjectMapper();
