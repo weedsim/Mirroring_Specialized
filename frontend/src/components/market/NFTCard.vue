@@ -6,7 +6,7 @@
         <v-card class="nft-card">      
           <v-card-title class="nft-card-title">
             <v-img v-if="card.fileType === 'image'" :src="card.fileCID" alt="" class="nft-img"></v-img>
-            <video v-if="card.fileType === 'video'" :src="card.fileCID" alt="" class="nft-img"></video>
+            <video v-if="card.fileType === 'video'" :src="card.fileCID" alt="" class="nft-img" ref="videoPlayer" @mouseover="playVideo" @mouseout="stopVideo" muted></video>
             <audio v-if="card.fileType === 'audio'" controls :src="card.fileCID" alt="오디오" class="nft-img"></audio>
           </v-card-title>
 
@@ -40,8 +40,30 @@
 <script>
 export default {
   name: "NFTCard",
+  data(){
+    return {
+      isPlaying: false,
+      videoElement: null
+    }
+  },
   props: {
     card: Object
+  },
+  methods: {
+    
+    playVideo() {
+      this.videoElement = this.$refs.videoPlayer;
+      this.videoElement.addEventListener('ended', () => {
+        this.videoElement.currentTime = 0;
+        this.videoElement.play();
+      });
+      this.videoElement.play();
+      this.isPlaying = true;
+    },
+    stopVideo() {
+      this.videoElement.pause();
+      this.isPlaying = false;
+    }
   }
 }
 </script>
@@ -121,4 +143,6 @@ export default {
   /* text-align: center; */
   /* text-align: start; */
 }
+
+
 </style>
