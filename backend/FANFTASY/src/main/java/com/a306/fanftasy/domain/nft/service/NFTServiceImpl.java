@@ -22,6 +22,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.a306.fanftasy.domain.user.service.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -44,7 +46,6 @@ import org.web3j.tx.Contract;
 @Slf4j
 @RequiredArgsConstructor
 public class NFTServiceImpl implements NFTService {
-
   private final NFTRepository nftRepository;
   private final NFTSourceRepository nftSourceRepository;
   private final UserRepository userRepository;
@@ -165,7 +166,7 @@ public class NFTServiceImpl implements NFTService {
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
-              result.add(nftMarketListDTO);
+               result.add(nftMarketListDTO);
             }
           }
           // 판매중, 가격 높은 순
@@ -217,7 +218,7 @@ public class NFTServiceImpl implements NFTService {
   }
 
   @Override
-  public NFTDetailDTO getNFTDetail(Long nftSourceId) {
+  public NFTDetailDTO getNFTDetail(long nftSourceId, Long userId) {
     List<NFT> resultList;
     NFTDetailDTO nftDetailDTO;
     Optional<Double> currentPriceOpt = nftRepository.findByNftSourceId(nftSourceId);
@@ -231,6 +232,19 @@ public class NFTServiceImpl implements NFTService {
       resultList = nftRepository.findByIdAndByCurrentPriceMaxResult(nftSourceId, currentPrice,
           pageable);
       nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
+    }
+
+    NFT nft = nftRepository.findById(nftDetailDTO.getNftId()).orElse(null);
+
+    if (userId == null) {
+      nftDetailDTO.updateUserLike(false);
+    } else {
+      User userEntity = userRepository.findByUserId(userId);
+      boolean userLike = false;
+      if (nftLikeRepository.findByNftAndUser(nft, userEntity) != null) {
+        userLike = true;
+      }
+      nftDetailDTO.updateUserLike(userLike);
     }
     return nftDetailDTO;
   }

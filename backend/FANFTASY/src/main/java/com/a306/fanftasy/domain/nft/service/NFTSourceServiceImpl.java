@@ -33,7 +33,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class NFTSourceServiceImpl implements NFTSourceService {
 
-  private final UserSecurityService userSecurityService;
   private final NFTSourceRepository nftSourceRepository;
   private final NFTRepository nftRepository;
   private final UserRepository userRepository;
@@ -73,7 +72,7 @@ public class NFTSourceServiceImpl implements NFTSourceService {
 
   //마켓에서 nft를 눌러서 상세페이지를 볼때
   @Override
-  public NFTSourceDetailDTO getNFTSourceDetail(long nftSourceId)   {
+  public NFTSourceDetailDTO getNFTSourceDetail(long nftSourceId, Long userId)   {
       NFTSource nftSource = nftSourceRepository.findById(nftSourceId);
       NFTSourceDetailDTO nftSourceDetailDTO = NFTSourceDetailDTO.fromEntity(nftSource);
 //      //좋아요 찾기
@@ -84,25 +83,21 @@ public class NFTSourceServiceImpl implements NFTSourceService {
 //      UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
 //          .getAuthentication().getPrincipal();
 //      long userId = userLoginDTO.getUserId();
-
       //테스트용 48L -> 그누그누
-      User userEntity = userRepository.findByUserId(69L);//좋아요 클릭 여부 확인
-    UserPublicDTO security=nftSourceDetailDTO.getRegArtist();
-    try {
-      security.setNickname(userSecurityService.aesDecrypt(userEntity.getNickname(),userSecurityService.hexToByteArray(userEntity.getUserKey())));
-      nftSourceDetailDTO.setRegArtist(security);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
-    boolean userLike = false;
+    if (userId == null) {
+      nftSourceDetailDTO.updateUserLike(false);
+      return nftSourceDetailDTO;
+    } else {
+      User userEntity = userRepository.findByUserId(userId);//좋아요 클릭 여부 확인
+      boolean userLike = false;
       if (nftSourceLikeRepository.findByNftSourceAndUser(nftSource, userEntity) != null) {
         userLike = true;
       }
-
       //로그인된 userid와 nftsourceid 를 통해서 nftsourcelike가 존재하는지 find
       // 반환값이 null이 아니면 userLike = true;
       nftSourceDetailDTO.updateUserLike(userLike);
       return nftSourceDetailDTO;
+    }
     //catch
   }
 

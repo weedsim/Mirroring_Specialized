@@ -13,14 +13,12 @@ import lombok.NoArgsConstructor;
 public class UserUpdateDTO {
 
     private String address;
-    private String email;
     private String nickname;
     private String profileImg;
 
     public UserUpdateDTO fromEntity(User user) {
         return UserUpdateDTO.builder()
                 .address(user.getAddress())
-                .email(user.getEmail())
                 .nickname(user.getNickname())
                 .profileImg(user.getProfileImg())
                 .build();
