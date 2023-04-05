@@ -5,6 +5,7 @@ import com.a306.fanftasy.domain.like.repository.NFTLikeRepository;
 import com.a306.fanftasy.domain.nft.dto.*;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
+import com.a306.fanftasy.domain.nft.exception.NFTCreateException;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
 import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
@@ -93,10 +94,10 @@ public class NFTServiceImpl implements NFTService {
       for (int i = 1; i <= totalNum; i++
       ) {
         long tokenID;
-        try{
-        //스마트 컨트랙트로 tokenID 받아오기
+        try {
+          //스마트 컨트랙트로 tokenID 받아오기
           tokenID = basicService.create(artistAddress, metaCID);
-        }catch (Exception e){
+        } catch (Exception e) {
           log.info("토큰 발급 재실행");
           tokenID = basicService.create(artistAddress, metaCID);
         }
@@ -109,14 +110,19 @@ public class NFTServiceImpl implements NFTService {
             .nftSource(nftSource)
             .editionNum(i)
             .build();
-        log.info("nft generated : "+ nft.toString());
+        log.info("nft generated : " + nft.toString());
         nftRepository.save(nft);
         createdNum++;
       }//for-each
       nftSource.updateTotalNum(createdNum);
       nftSource.updateRemainNum(createdNum);
-      nftSourceRepository.save(nftSource);
-      log.info("CreatedNum : " + createdNum);
+      if (createdNum == 0) {
+        nftSourceRepository.delete(nftSource);
+        throw new NFTCreateException("nft 생성 실패");
+      } else {
+        nftSourceRepository.save(nftSource);
+        log.info("CreatedNum : " + createdNum);
+      }
     } catch (Exception e) {
       throw e;
     }//catch
@@ -154,7 +160,8 @@ public class NFTServiceImpl implements NFTService {
         if (orderType == 1) {
           List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSale(); // 판매 중인 nftSourceId 최신순
           for (Long nftSourceId : nftSourceIdIsOnSale) {
-            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId,
+                keyword);
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
@@ -165,7 +172,8 @@ public class NFTServiceImpl implements NFTService {
         } else if (orderType == 2) {
           List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSaleOrderByCurrentPriceDesc(); // 판매 중인 nftSourceId 가격 높은 순
           for (Long nftSourceId : nftSourceIdIsOnSale) {
-            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId,
+                keyword);
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
@@ -177,7 +185,8 @@ public class NFTServiceImpl implements NFTService {
         } else {
           List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdIsOnSaleOrderByCurrentPrice(); // 판매 중인 nftSourceId 가격 낮은 순
           for (Long nftSourceId : nftSourceIdIsOnSale) {
-            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId,
+                keyword);
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
@@ -191,7 +200,8 @@ public class NFTServiceImpl implements NFTService {
         if (orderType == 1) {
           List<Long> nftSourceIdIsOnSale = nftRepository.findNftSourceIdsNotOnSaleOrderByRegDateDesc(); // 판매 중인 nftSourceId 가격 낮은 순
           for (Long nftSourceId : nftSourceIdIsOnSale) {
-            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId, keyword);
+            NFTSource nftSource = nftRepository.findNFTMarketListOrderByRegDate(nftSourceId,
+                keyword);
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(0.0);
@@ -218,7 +228,8 @@ public class NFTServiceImpl implements NFTService {
       nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
       nftDetailDTO.setCurrentPrice(0);
     } else {
-      resultList = nftRepository.findByIdAndByCurrentPriceMaxResult(nftSourceId, currentPrice, pageable);
+      resultList = nftRepository.findByIdAndByCurrentPriceMaxResult(nftSourceId, currentPrice,
+          pageable);
       nftDetailDTO = NFTDetailDTO.fromEntity(resultList.get(0));
     }
     return nftDetailDTO;
@@ -275,6 +286,7 @@ public class NFTServiceImpl implements NFTService {
   }
 
   private String CONTRACT_ADDRESS = "컨트랙트 주소";
+
   //smartContract
   public String createNFT(String artistAddress, String metaCID) throws IOException {
     //NFT 발행 트랜잭션 호출하는 method
@@ -283,7 +295,9 @@ public class NFTServiceImpl implements NFTService {
     System.out.println(web3ClientVersion.getWeb3ClientVersion());
     return null;
   }
-  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price) throws IOException {
+
+  public void trade(String nowOwnerAddress, String newOwnerAddress, String tokenUri, double price)
+      throws IOException {
     //NFT 거래 트랜잭션을 발생시키는 method
     Web3j web3j = Web3j.build(new HttpService("https://fanftasy.kro.kr/network"));
     Web3ClientVersion web3ClientVersion = web3j.web3ClientVersion().send();
