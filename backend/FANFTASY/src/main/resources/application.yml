@@ -41,7 +41,7 @@ jwt:
       fail-on-empty-beans: false
 user:
   secretKey: USERDATAFANFTASY
-
+  masterKey: f4fb667709954419408486fef2e45db2
 cloud:
   aws:
     s3:

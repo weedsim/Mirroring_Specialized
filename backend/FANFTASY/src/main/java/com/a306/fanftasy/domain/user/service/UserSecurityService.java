@@ -17,6 +17,8 @@ public class UserSecurityService {
     @Value("${user.secretKey}")
     private String SECRET_KEY;
 
+    @Value("${user.masterKey}")
+    private String MASTER_KEY;
 
     public  byte[] generateKey(String algorithm,int keySize) throws NoSuchAlgorithmException {
 
@@ -28,6 +30,13 @@ public class UserSecurityService {
     public  String aesEncrypt(String msg, byte[] key) throws Exception {
         SecretKeySpec skeySpec = new SecretKeySpec(key, "AES");
         Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+        if(hexToByteArray(MASTER_KEY).equals(key)){
+            cipher.init(Cipher.ENCRYPT_MODE,
+                    skeySpec,
+                    new IvParameterSpec(MASTER_KEY.getBytes()));
+            byte[] encrypted = cipher.doFinal(msg.getBytes());
+            return  byteArrayToHex(encrypted);
+        }
         cipher.init(Cipher.ENCRYPT_MODE,
                 skeySpec,
                 new IvParameterSpec(SECRET_KEY.getBytes()));
@@ -71,4 +80,7 @@ public class UserSecurityService {
         return sb.toString();
     }
 
+    public byte[] getMasterKey() {
+        return hexToByteArray(MASTER_KEY);
+    }
 }
