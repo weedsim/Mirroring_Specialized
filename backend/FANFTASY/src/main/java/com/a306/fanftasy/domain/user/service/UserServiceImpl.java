@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService {
         if(user!=null){
                   try {
                 Long userId=user.getUserId();
-                String nickname=userSecurityService.aesDecrypt(user.getNickname(),userSecurityService.hexToByteArray(user.getUserKey()));
+                String nickname=user.getNickname();
                 String profileImg=userSecurityService.aesDecrypt(user.getProfileImg(),userSecurityService.hexToByteArray(user.getUserKey()));
                 String role = userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey()));
                 return UserLoginDTO.of(userId,nickname,address,role,profileImg);
@@ -52,11 +52,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public void join(UserJoinDTO userJoinDTO)   {
         UserJoinDTO userencrypt=new UserJoinDTO();
+        if(userJoinDTO.getProfileImg()==null){
+            userJoinDTO.setProfileImg("https://fanftasy.s3.ap-northeast-2.amazonaws.com/profileImg/8c64c983-1b80-40fb-bcc1-366f3322cbb2.png");//default 이미지
+        }
         try {
             byte[] key=userSecurityService.generateKey("AES",128);
             userencrypt.setAddress(userJoinDTO.getAddress());
             userencrypt.setName(userSecurityService.aesEncrypt(userJoinDTO.getName(),key));
-            userencrypt.setNickname(userSecurityService.aesEncrypt(userJoinDTO.getNickname(),key));
+            userencrypt.setNickname(userJoinDTO.getNickname());
             userencrypt.setEmail(userSecurityService.aesEncrypt(userJoinDTO.getEmail(),key));
             userencrypt.setPhone(userSecurityService.aesEncrypt(userJoinDTO.getPhone(),key));
             userencrypt.setRole(userSecurityService.aesEncrypt(userJoinDTO.getRole(),key));
@@ -82,8 +85,8 @@ public class UserServiceImpl implements UserService {
                     .name(userSecurityService.aesDecrypt(user.getName(),userSecurityService.hexToByteArray(user.getUserKey())))
                     .address(userSecurityService.aesDecrypt(user.getAddress(),userSecurityService.hexToByteArray(user.getUserKey())))
                     .email(userSecurityService.aesDecrypt(user.getEmail(),userSecurityService.hexToByteArray(user.getUserKey())))
-                    .nickname(userSecurityService.aesDecrypt(user.getNickname(),userSecurityService.hexToByteArray(user.getUserKey())))
-                    .profileImg(user.getProfileImg())
+                    .nickname(user.getNickname())
+                    .profileImg(userSecurityService.aesDecrypt(user.getProfileImg(),userSecurityService.hexToByteArray(user.getUserKey())))
                     .phone(userSecurityService.aesDecrypt(user.getPhone(),userSecurityService.hexToByteArray(user.getUserKey())))
                     .role(userSecurityService.aesDecrypt(user.getRole(),userSecurityService.hexToByteArray(user.getUserKey())))
                     .totalPrice(user.getTotalPrice())
@@ -101,9 +104,11 @@ public class UserServiceImpl implements UserService {
         byte[] key=userSecurityService.hexToByteArray(user.getUserKey());
         log.info(userUpdateDTO.getNickname());
         try {
-            user.setAddress(userSecurityService.aesEncrypt(userUpdateDTO.getAddress(),key));
-            user.setEmail(userSecurityService.aesEncrypt(userUpdateDTO.getEmail(),key));
-            user.setNickname(userSecurityService.aesEncrypt(userUpdateDTO.getNickname(),key));
+            user.setAddress(userUpdateDTO.getAddress());
+            user.setNickname(userUpdateDTO.getNickname());
+            if (userUpdateDTO.getProfileImg() != null) {
+               user.setProfileImg (userSecurityService.aesEncrypt(userUpdateDTO.getProfileImg(),key));
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

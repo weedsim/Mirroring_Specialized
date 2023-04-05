@@ -21,6 +21,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.ArrayList;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import com.a306.fanftasy.domain.user.service.UserSecurityService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -43,7 +45,6 @@ import org.web3j.tx.Contract;
 @Slf4j
 @RequiredArgsConstructor
 public class NFTServiceImpl implements NFTService {
-
   private final NFTRepository nftRepository;
   private final NFTSourceRepository nftSourceRepository;
   private final UserRepository userRepository;
@@ -158,7 +159,7 @@ public class NFTServiceImpl implements NFTService {
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
-              result.add(nftMarketListDTO);
+               result.add(nftMarketListDTO);
             }
           }
           // 판매중, 가격 높은 순
