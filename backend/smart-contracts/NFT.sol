@@ -42,7 +42,7 @@ contract MyToken is Initializable, ERC721Upgradeable, OwnableUpgradeable, UUPSUp
     {
         _tokenIds++;
         uint256 newItemId = current();
-        _mint(to, newItemId);
+        _safeMint(to, newItemId);
         tokenURIs[newItemId] = tokenURI;
         _approve(msg.sender,newItemId);
         return newItemId;
