@@ -55,6 +55,9 @@ public class NFT {
   public void updateIsOnSale(boolean isOnSale) {
     this.isOnSale = isOnSale;
   }
+  public void updateSaleContract(String contractAddress) {
+    this.saleContract = contractAddress;
+  }
 
   public void updateCurrentPrice(double currentPrice) {
     this.currentPrice = currentPrice;

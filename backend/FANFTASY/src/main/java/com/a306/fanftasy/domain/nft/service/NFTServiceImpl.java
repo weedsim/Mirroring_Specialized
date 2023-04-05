@@ -288,6 +288,22 @@ public class NFTServiceImpl implements NFTService {
 
   //8.개인거래
   @Override
+  public void resell(SaleDTO saleDTO){
+    long nftId = saleDTO.getNftId();
+    String contractAddress = saleDTO.getContractAddress();
+    double price = saleDTO.getPrice();
+    NFT nftEntity = nftRepository.findById(nftId);
+    //1.isOnSale >>>> true
+    nftEntity.updateIsOnSale(true);
+    //2.contractAddress 수정
+    nftEntity.updateSaleContract(contractAddress);
+    //3.판매가격 수정
+    nftEntity.updateCurrentPrice(price);
+    //수정 내역 반영
+    nftRepository.save(nftEntity);
+  }
+
+  @Override
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
     try {
       NFT nftEntity = nftRepository.findById(nftTradeDTO.getNftId());

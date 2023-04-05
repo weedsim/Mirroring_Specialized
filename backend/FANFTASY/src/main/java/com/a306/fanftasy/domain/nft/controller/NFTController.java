@@ -3,6 +3,7 @@ package com.a306.fanftasy.domain.nft.controller;
 import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceTradeDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTTradeDTO;
+import com.a306.fanftasy.domain.nft.dto.SaleDTO;
 import com.a306.fanftasy.domain.nft.service.NFTService;
 import com.a306.fanftasy.domain.nft.service.NFTSourceService;
 import com.a306.fanftasy.domain.nft.service.PinataService;
@@ -224,7 +225,30 @@ public class NFTController {
     }
 
 
-    //8. NFT 개인 거래
+    //8. NFT 개인 거래 등록
+    @PutMapping("/resell")
+    public ResponseEntity<?> NFTResell(@RequestBody SaleDTO saleDTO){
+        log.info("NFT 리셀 등록 : " + saleDTO.toString());
+        ResponseDefault responseDefault = null;
+        try{
+            nftService.resell(saleDTO);
+            responseDefault = ResponseDefault.builder()
+                .success(true)
+                .messege("SUCCESS")
+                .build();
+            log.info("거래 반영 성공");
+            return ResponseEntity.ok().body(responseDefault);
+        }catch (Exception e){
+            log.error("거래 실패");
+            responseDefault = ResponseDefault.builder()
+                .success(false)
+                .messege("FAIL")
+                .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
+    //9. NFT 구매
     @PutMapping
     public ResponseEntity<?> NFTTrade(@RequestBody NFTTradeDTO nftTradeDTO){
         log.info("NFT 거래 발생 : " + nftTradeDTO.toString());
