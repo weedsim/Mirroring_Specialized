@@ -18,7 +18,17 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
 //  @Query("SELECT n FROM NFT n WHERE n.nftSource = :nftSource And n.nftSource.regArtist = n.owner")
   NFT findFirstByNftSourceAndOwner(NFTSource nftSource, User regArtist );
 
+  // 회원 소유 NFT목록 반환
   List<NFT> findByOwnerOrderByTransactionTimeDesc(User owenr);
+
+
+
+  // 회원 소유 NFT목록 반환 그룹화
+  @Query("select n.nftSource.nftSourceId, count(n.nftSource) from NFT n where n.owner =:owner group by n.nftSource.nftSourceId order by max(n.transactionTime) DESC")
+  List<Long> findNftSourceIdByOwnerOrderByTransactionTimeDesc(User owner);
+  @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId order by n.transactionTime")
+  List<NFT> findByNftSourceNftSourceId(long nftSourceId, Pageable pageable);
+
 
 //  @Query("SELECT n1 FROM NFT n1 WHERE n1.isOnSale = true "
 //          + "AND n1.nftSource.title like %:keyword% or n1.nftSource.content like %:keyword% or n1.nftSource.regArtist.nickname like %:keyword%"
@@ -77,8 +87,10 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
   List<NFT> findByIdAndByCurrentPrice(@Param("nftSourceId") Long nftSourceId, Pageable pageable);
 
   @Query("select min(n.currentPrice) from NFT n where n.nftSource.nftSourceId = :nftSourceId and n.isOnSale = true")
-  Optional<Double> findByNftSourceId(Long nftSourceId);
+  Optional<Double> findByNftSourceId(@Param("nftSourceId") Long nftSourceId);
 
   @Query("select n from NFT n where n.nftSource.nftSourceId = :nftSourceId order by n.editionNum")
   List<NFT> findByIdMaxResult(@Param("nftSourceId") Long nftSourceId, Pageable pageable);
+
+  List<NFT> findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(@Param("owner") User owner, @Param("admin") User admin);
 }

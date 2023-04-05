@@ -132,10 +132,19 @@ public class NFTServiceImpl implements NFTService {
   //6. 회원 소유 NFT목록 반환
   @Override
   public List<NFTListDTO> getNFTListByOwnerId(long ownerId) {
+//    List<NFT> entityList = new ArrayList<>();
+    Pageable pageable = PageRequest.of(0, 1);
     try {
       User owner = User.builder().userId(ownerId).build();
-      List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
+      User admin = User.builder().userId(ownerId).build(); // ownerId를 adminId로 변경
+//      List<Long> nftSourceIdList = nftRepository.findNftSourceIdByOwnerOrderByTransactionTimeDesc(owner);
+//      for (Long nftSourceId : nftSourceIdList) {
+//        entityList.add(nftRepository.findByNftSourceNftSourceId(nftSourceId, pageable).get(0));
+//      }
+
+//      List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
       //엔티티를 DTO로 변환
+      List<NFT> entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(owner, admin);
       List<NFTListDTO> result = entityList.stream().map(m -> NFTListDTO.fromEntity(m)).collect(
           Collectors.toList());
       return result;
