@@ -23,7 +23,7 @@ blockchain:
   NetworkURL: https://fanftasy.kro.kr/network
   AdminPrivateKey: "0x5c328e1656e37e1d40883b7e275d3d560d9a9086faa6967ee5203cbc640f44c8"
 #  NFTContractAddress: "0xaeb2DC75a63352947Bdbe6d9E6A37c0752481007"
-  NFTContractAddress: "0xe445cFb389e8d38497C97048C7A9E909c33B0553"
-  SaleFactoryAddress: "0xdad102442BDa8068C262Ed9d63cdFB999e64a27B"
+  NFTContractAddress: "0x07c2140ABeFa117D1ef94d39f2dA3f50263cd122"
+  SaleFactoryAddress: "0xE87bc7ff95fd6Ec401b4f11c57c3ce9F565aFab7"
   NetworkID: 1336
   AdminAddress: "0xdb2d8BAE9F41703285d99AB76d655a5E1c2646AB"

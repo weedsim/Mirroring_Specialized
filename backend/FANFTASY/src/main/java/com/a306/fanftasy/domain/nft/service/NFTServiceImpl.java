@@ -302,7 +302,7 @@ public class NFTServiceImpl implements NFTService {
     //수정 내역 반영
     nftRepository.save(nftEntity);
   }
-
+  //9. 개인의 NFT 구매
   @Override
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
     try {
