@@ -40,7 +40,7 @@ public class BasicService{
     log.info("create 메소드 호출");
       Function function = new Function(
           "create",
-          Arrays.asList(new Address(to),new Utf8String(tokenURI) ),
+          Arrays.asList(new Address(to),new Utf8String(tokenURI), new Address(SALE_FACTORY_ADDRESS) ),
           Arrays.asList(new TypeReference<Uint256>() {
           })
       );
