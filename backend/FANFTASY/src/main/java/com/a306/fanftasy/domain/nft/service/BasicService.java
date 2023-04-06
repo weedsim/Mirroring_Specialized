@@ -1,6 +1,7 @@
 package com.a306.fanftasy.domain.nft.service;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -55,8 +56,8 @@ public class BasicService{
     try{
       log.info("sale 메소드 호출");
       Double weiD = originPrice * Math.pow(10, 18);
-      long weiL = weiD.longValue();
-      BigInteger wei = BigInteger.valueOf(weiL);
+      log.info("weiD");
+      BigInteger wei = BigDecimal.valueOf(weiD).toBigInteger();
       Function function = new Function(
           "createSale",
           Arrays.asList(new Uint256(tokenId),new Uint256(wei) ),

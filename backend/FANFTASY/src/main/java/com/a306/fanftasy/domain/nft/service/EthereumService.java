@@ -3,6 +3,7 @@ package com.a306.fanftasy.domain.nft.service;
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -82,9 +83,8 @@ public class EthereumService {
       if (ether <= 10) {
         Double weiD = ether * Math.pow(10, 18);
         log.info("weiD");
-        long weiL = weiD.longValue();
+        BigInteger wei = BigDecimal.valueOf(weiD).toBigInteger();
         log.info("weiL");
-        BigInteger wei = BigInteger.valueOf(weiL);
         //2.MAKE CREDENTIALS
         Credentials credentials = getCredentialsFromPrivateKey();
         //3.NONCE
