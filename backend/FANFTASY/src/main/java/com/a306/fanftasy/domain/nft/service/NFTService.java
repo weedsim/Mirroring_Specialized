@@ -26,4 +26,6 @@ public interface NFTService {
   NFTDetailDTO getNFTDetail(long nftSourceId, Long userId);
 
   void resell(SaleDTO saleDTO);
+
+  SaleDTO getNFTfirstSale(long nftSourceId);
 }

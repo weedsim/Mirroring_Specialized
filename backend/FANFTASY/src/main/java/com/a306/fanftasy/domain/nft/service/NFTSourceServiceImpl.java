@@ -5,6 +5,7 @@ import com.a306.fanftasy.domain.like.repository.NFTSourceLikeRepository;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceDetailDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceListDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceTradeDTO;
+import com.a306.fanftasy.domain.nft.dto.SaleDTO;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
@@ -118,42 +119,44 @@ public class NFTSourceServiceImpl implements NFTSourceService {
     }//catch
   }//getNFTListByArtist
 
-  @Override
-  public void modifyNFTSource(NFTSourceTradeDTO nftSourceTradeDTO) {
-    try {
-      NFTSource nftSourceEntity = nftSourceRepository.findById(nftSourceTradeDTO.getNftSourceId());
-      //잔여량 확인
-      long remainNum = nftSourceEntity.getRemainNum();
-      log.info("잔여량 : " + remainNum);
-      if (remainNum <= 0) {
-//        throw new Exception();
-      }
-      //구매자
-      User owner = User.builder().userId(nftSourceTradeDTO.getBuyerId()).build();
-      //해당 컨텐츠에 해당되는 nft중에 하나만 반환
-      NFT nftEntity = nftRepository.findFirstByNftSourceAndOwner(nftSourceEntity,nftSourceEntity.getRegArtist());
-      if(nftEntity == null) throw new NullPointerException();
-      log.info("거래될 nft : " + nftEntity.toString());
-      //대상 nft에 대해서 변경저장
-      nftEntity.updateIsOnSale(false);
-      nftEntity.updateOwner(owner);
-      nftEntity.updateTransactionTime(LocalDateTime.now());
-      nftRepository.save(nftEntity);
-      //해당 컨텐츠에 대해서 잔여량 수정
-      nftSourceEntity.updateRemainNum(remainNum - 1);
-      nftSourceRepository.save(nftSourceEntity);
-      //판매 아티스트 총 금액과 갯수 늘려주기
-      User artist = nftSourceEntity.getRegArtist();
-      artist.plusTotalSales(1);
-      artist.plusTotalPrice(nftSourceEntity.getOriginPrice());
-      userRepository.save(artist);
-    }//try
-    catch (Exception e) {
-      throw e;
-    }//catch
+
+//  //9. NFT 구매 완료 반영
+//  @Override
+//  public void modifyNFTSource(NFTSourceTradeDTO nftSourceTradeDTO) {
+//    try {
+//      NFTSource nftSourceEntity = nftSourceRepository.findById(nftSourceTradeDTO.getNftSourceId());
+//      //잔여량 확인
+//      long remainNum = nftSourceEntity.getRemainNum();
+//      log.info("잔여량 : " + remainNum);
+//      if (remainNum <= 0) {
+////        throw new Exception();
+//      }
+//      //구매자
+//      User owner = User.builder().userId(nftSourceTradeDTO.getBuyerId()).build();
+//      //해당 컨텐츠에 해당되는 nft중에 하나만 반환
+//      NFT nftEntity = nftRepository.findFirstByNftSourceAndOwner(nftSourceEntity,nftSourceEntity.getRegArtist());
+//      if(nftEntity == null) throw new NullPointerException();
+//      log.info("거래될 nft : " + nftEntity.toString());
+//      //대상 nft에 대해서 변경저장
+//      nftEntity.updateIsOnSale(false);
+//      nftEntity.updateOwner(owner);
+//      nftEntity.updateTransactionTime(LocalDateTime.now());
+//      nftRepository.save(nftEntity);
+//      //해당 컨텐츠에 대해서 잔여량 수정
+//      nftSourceEntity.updateRemainNum(remainNum - 1);
+//      nftSourceRepository.save(nftSourceEntity);
+//      //판매 아티스트 총 금액과 갯수 늘려주기
+//      User artist = nftSourceEntity.getRegArtist();
+//      artist.plusTotalSales(1);
+//      artist.plusTotalPrice(nftSourceEntity.getOriginPrice());
+//      userRepository.save(artist);
+//    }//try
+//    catch (Exception e) {
+//      throw e;
+//    }//catch
+//  }//9.
 
 
-  }
 
 
 }

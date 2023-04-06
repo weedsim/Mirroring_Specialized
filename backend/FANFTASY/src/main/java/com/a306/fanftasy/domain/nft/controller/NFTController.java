@@ -138,28 +138,28 @@ public class NFTController {
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }
-    //4. 아티스트가 올린 NFT 최초 거래
-    @PutMapping("/drops")
-    public ResponseEntity<?> NFTFirstTrade(@RequestBody NFTSourceTradeDTO nftSourceTradeDTO){
-        log.info("NFT 거래 발생 : " + nftSourceTradeDTO.toString());
-        ResponseDefault responseDefault = null;
-        try{
-            nftSourceService.modifyNFTSource(nftSourceTradeDTO);
-            responseDefault = ResponseDefault.builder()
-                .success(true)
-                .messege("SUCCESS")
-                .build();
-            log.info("거래 반영 성공");
-            return ResponseEntity.ok().body(responseDefault);
-        }catch (Exception e){
-            log.error("거래 실패");
-            responseDefault = ResponseDefault.builder()
-                .success(false)
-                .messege("FAIL")
-                .build();
-            return ResponseEntity.badRequest().body(responseDefault);
-        }
-    }
+//    //4. 아티스트가 올린 NFT 최초 거래
+//    @PutMapping("/drops")
+//    public ResponseEntity<?> NFTFirstTrade(@RequestBody NFTSourceTradeDTO nftSourceTradeDTO){
+//        log.info("NFT 거래 발생 : " + nftSourceTradeDTO.toString());
+//        ResponseDefault responseDefault = null;
+//        try{
+//            nftSourceService.modifyNFTSource(nftSourceTradeDTO);
+//            responseDefault = ResponseDefault.builder()
+//                .success(true)
+//                .messege("SUCCESS")
+//                .build();
+//            log.info("거래 반영 성공");
+//            return ResponseEntity.ok().body(responseDefault);
+//        }catch (Exception e){
+//            log.error("거래 실패");
+//            responseDefault = ResponseDefault.builder()
+//                .success(false)
+//                .messege("FAIL")
+//                .build();
+//            return ResponseEntity.badRequest().body(responseDefault);
+//        }
+//    }
 
     //5. 아티스트 페이지에서 발매된 NFT목록 반환
     @GetMapping("/artist/{artistId}")
@@ -266,6 +266,27 @@ public class NFTController {
                 .success(false)
                 .messege("FAIL")
                 .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
+    //10. nft drop detail 페이지에서 "구매하기" 눌렀을때 판매될 nftId와 sale contract address 반환
+    @GetMapping("/buy/{nftSourceId}")
+    public ResponseEntity<?> NFTfirstSale(@PathVariable long nftSourceId){
+        log.info("NFT Source 구매 요청 : " + nftSourceId);
+        ResponseDefault responseDefault = null;
+        try{
+            responseDefault = ResponseDefault.builder()
+                .messege("SUCCESS")
+                .data(nftService.getNFTfirstSale(nftSourceId))
+                .success(true).build();
+            log.info("NFT 조회 성공");
+            return ResponseEntity.ok().body(responseDefault);
+        }catch (Exception e){
+            log.error("NFT 조회 실패");
+            responseDefault = ResponseDefault.builder()
+                .success(false)
+                .messege(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }

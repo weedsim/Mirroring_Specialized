@@ -4,6 +4,7 @@ package com.a306.fanftasy.domain.nft.service;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceDetailDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceListDTO;
 import com.a306.fanftasy.domain.nft.dto.NFTSourceTradeDTO;
+import com.a306.fanftasy.domain.nft.dto.SaleDTO;
 import java.util.List;
 
 public interface NFTSourceService {
@@ -15,5 +16,6 @@ public interface NFTSourceService {
 
   List<NFTSourceListDTO> getNFTSourceListByArtist(long artistId);
   //////////
-  void modifyNFTSource(NFTSourceTradeDTO nftSourceTradeDTO);
+//  void modifyNFTSource(NFTSourceTradeDTO nftSourceTradeDTO);
+
 }

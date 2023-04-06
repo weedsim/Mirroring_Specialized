@@ -18,6 +18,8 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
 //  @Query("SELECT n FROM NFT n WHERE n.nftSource = :nftSource And n.nftSource.regArtist = n.owner")
   NFT findFirstByNftSourceAndOwner(NFTSource nftSource, User regArtist );
 
+  NFT findFirstByNftSourceAndOwner_RoleOrderByEditionNum(NFTSource nftSource,String role);
+
   // 회원 소유 NFT목록 반환
   List<NFT> findByOwnerOrderByTransactionTimeDesc(User owenr);
 

@@ -6,6 +6,7 @@ import com.a306.fanftasy.domain.nft.dto.*;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.exception.NFTCreateException;
+import com.a306.fanftasy.domain.nft.exception.NFTsoldOutException;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
 import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
@@ -345,4 +346,28 @@ public class NFTServiceImpl implements NFTService {
     }//catch
   }
 
+  //10.
+  @Override
+  public SaleDTO getNFTfirstSale(long nftSourceId){
+    try{
+      //remainNum>0인지 먼저 체크하고
+      NFTSource nftSource = nftSourceRepository.findById(nftSourceId);
+      if(nftSource.getRemainNum()<=0){
+        throw new NFTsoldOutException("판매완료된NFTSource");
+      }
+      log.info("NFTSource : "+ nftSource.toString());
+      //요청받은 nftSourceId에 포함된 nft중에서
+      //아직 판매되지않은 nft(소유자가 관리자계정)
+      //editionNum이 가장 작은 nft 반환 orderby
+      NFT nft = nftRepository.findFirstByNftSourceAndOwner_RoleOrderByEditionNum(nftSource,"ADMIN");
+      SaleDTO saleDTO = SaleDTO.builder()
+          .nftId(nft.getNftId())
+          .contractAddress(nft.getSaleContract())
+          .price(nft.getCurrentPrice())
+          .build();
+      return saleDTO;
+    }catch (Exception e){
+      throw e;
+    }
+  }
 }
