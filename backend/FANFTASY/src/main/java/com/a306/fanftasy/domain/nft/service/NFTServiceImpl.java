@@ -106,30 +106,35 @@ public class NFTServiceImpl implements NFTService {
         try {
           //스마트 컨트랙트로 tokenID 받아오기
           tokenID = basicService.create(ADMIN_ADDRESS, metaCID);
-        } catch (Exception e) {
-          log.info("토큰 발급 재실행");
-          tokenID = basicService.create(ADMIN_ADDRESS, metaCID);
-        }
-        //SaleContract생성
-        try {
+          //SaleContract생성
           saleContract = basicService.createSale(tokenID, originPrice);
+          NFT nft = NFT.builder()
+              .nftId(tokenID)
+              .owner(owner)
+              .isOnSale(false)
+              .currentPrice(originPrice)
+              .transactionTime(regDate)
+              .nftSource(nftSource)
+              .editionNum(i)
+              .saleContract(saleContract)
+              .build();
+          log.info("nft generated : " + nft.toString());
+          nftRepository.save(nft);
+          createdNum++;
         } catch (Exception e) {
-          log.info("Sale 생성 재실행");
-          saleContract = basicService.createSale(tokenID, originPrice);
+          //여때까지 발행된 nft 정보 저장하기
+          nftSource.updateTotalNum(createdNum);
+          nftSource.updateRemainNum(createdNum);
+          if (createdNum == 0) {
+            nftSourceRepository.delete(nftSource);
+            throw new NFTCreateException("nft 생성 실패");
+          } else {
+            nftSourceRepository.save(nftSource);
+            log.info("CreatedNum : " + createdNum);
+            throw e;
+          }
         }
-        NFT nft = NFT.builder()
-            .nftId(tokenID)
-            .owner(owner)
-            .isOnSale(false)
-            .currentPrice(originPrice)
-            .transactionTime(regDate)
-            .nftSource(nftSource)
-            .editionNum(i)
-            .saleContract(saleContract)
-            .build();
-        log.info("nft generated : " + nft.toString());
-        nftRepository.save(nft);
-        createdNum++;
+
       }//for-each
       nftSource.updateTotalNum(createdNum);
       nftSource.updateRemainNum(createdNum);
@@ -342,7 +347,7 @@ public class NFTServiceImpl implements NFTService {
       long nftId = nftTradeDTO.getNftId();
       //1. 블록체인 네트워크에 조회
       User newOwner = userRepository.findByUserId(nftTradeDTO.getBuyerId());
-      if(newOwner.getAddress() != basicService.getOwner(nftId)) throw new TransactionException("블록체인 조회 결과 다름");
+      if(!newOwner.getAddress().equals(basicService.getOwner(nftId))) throw new TransactionException("블록체인 조회 결과 다름");
       NFT nftEntity = nftRepository.findById(nftId);
       User nowOwner = nftEntity.getOwner();
       double price = nftEntity.getCurrentPrice();
