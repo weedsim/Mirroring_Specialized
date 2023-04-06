@@ -59,7 +59,7 @@ public class NFTServiceImpl implements NFTService {
 
   //1. NFT 생성
   @Override
-  public void addNFT(NFTCreateDTO nftCreateDTO)
+  public void addNFT(NFTCreateDTO nftCreateDTO, LocalDateTime endDate)
       throws IOException, ExecutionException, InterruptedException {
     try {
       log.info("---------------------------------");
@@ -86,6 +86,7 @@ public class NFTServiceImpl implements NFTService {
           .fileCID(nftCreateDTO.getFileCID())
           .metaCID(metaCID)
           .regDate(regDate)
+          .endDate(endDate)
           .remainNum(0)
           .likeNum(0)
           .build();
@@ -144,8 +145,8 @@ public class NFTServiceImpl implements NFTService {
 
   //6. 회원 소유 NFT목록 반환
   @Override
-  public List<NFTListDTO> getNFTListByOwnerId(long ownerId) {
-//    List<NFT> entityList = new ArrayList<>();
+  public List<NFTListDTO> getNFTListByOwnerId(long ownerId, int type) {
+    List<NFT> entityList;
     Pageable pageable = PageRequest.of(0, 1);
     try {
       User owner = User.builder().userId(ownerId).build();
@@ -157,8 +158,13 @@ public class NFTServiceImpl implements NFTService {
 
 //      List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
       //엔티티를 DTO로 변환
-      List<NFT> entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(
-          owner, admin);
+      if (type == 1) {
+        entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(owner, admin);
+      } else if (type == 2) {
+        entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByNftSourceTitleAsc(owner, admin);
+      } else {
+        entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByNftSourceTitleDesc(owner, admin);
+      }
       List<NFTListDTO> result = entityList.stream().map(m -> NFTListDTO.fromEntity(m)).collect(
           Collectors.toList());
       return result;
@@ -270,6 +276,17 @@ public class NFTServiceImpl implements NFTService {
       nftDetailDTO.updateUserLike(userLike);
     }
     return nftDetailDTO;
+  }
+
+  @Override
+  public NFTResaleDTO nftReSell(Long nftId) {
+    try {
+      NFT nft = nftRepository.findById(nftId).orElse(null);
+      NFTSource nftSource = nftSourceRepository.findById(nft.getNftSource().getNftSourceId()).orElse(null);
+      return NFTResaleDTO.fromEntity(nft, nftSource);
+    } catch (Exception e) {
+      throw e;
+    }
   }
 
   //7. 개인이 보유한 NFT 상세

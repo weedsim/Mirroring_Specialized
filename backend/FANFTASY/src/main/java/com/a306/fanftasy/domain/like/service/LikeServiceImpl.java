@@ -4,6 +4,8 @@ import com.a306.fanftasy.domain.like.entity.NFTLike;
 import com.a306.fanftasy.domain.like.entity.NFTSourceLike;
 import com.a306.fanftasy.domain.like.repository.NFTLikeRepository;
 import com.a306.fanftasy.domain.like.repository.NFTSourceLikeRepository;
+import com.a306.fanftasy.domain.nft.dto.NFTListDTO;
+import com.a306.fanftasy.domain.nft.dto.NFTSourceListDTO;
 import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
@@ -16,11 +18,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
 @Transactional
-public class LikeServiceImpl implements  LikeService{
+public class LikeServiceImpl implements LikeService{
 
   private final NFTLikeRepository nftLikeRepository;
   private final NFTSourceLikeRepository nftSourceLikeRepository;
@@ -83,5 +88,27 @@ public class LikeServiceImpl implements  LikeService{
     long likenum = nft.getNftLikeNum();
     nft.updateNFTLikeNum(likenum-1);
     nftRepository.save(nft);
+  }
+
+  @Override
+  public List<NFTSourceListDTO> nftSourceLikeList(long userId) {
+    try {
+      List<NFTSource> NFTSourceList = nftSourceLikeRepository.findByNftSourceLikeUserOrderByRegDateDesc(userId);
+      return NFTSourceList.stream().map(m -> NFTSourceListDTO.fromEntity(m)).collect(
+              Collectors.toList());
+    } catch (Exception e) {
+      throw e;
+    }
+  }
+
+  @Override
+  public List<NFTListDTO> nftLikeList(long userId) {
+    try {
+      List<NFT> NFTList = nftLikeRepository.findByNftLikeUserOrderByRegDateDesc(userId);
+      return NFTList.stream().map(m -> NFTListDTO.fromEntity(m)).collect(
+              Collectors.toList());
+    } catch (Exception e) {
+      throw e;
+    }
   }
 }

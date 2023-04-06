@@ -95,4 +95,7 @@ public interface NFTRepository extends JpaRepository<NFT, Long> {
   List<NFT> findByIdMaxResult(@Param("nftSourceId") Long nftSourceId, Pageable pageable);
 
   List<NFT> findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(@Param("owner") User owner, @Param("admin") User admin);
+  List<NFT> findByOwnerAndNftSourceRegArtistNotOrderByNftSourceTitleAsc(@Param("owner") User owner, @Param("admin") User admin);
+  List<NFT> findByOwnerAndNftSourceRegArtistNotOrderByNftSourceTitleDesc(@Param("owner") User owner, @Param("admin") User admin);
+
 }

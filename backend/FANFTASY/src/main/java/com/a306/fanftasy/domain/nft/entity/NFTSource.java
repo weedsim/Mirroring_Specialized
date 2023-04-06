@@ -37,6 +37,8 @@ public class NFTSource {
   private String fileType; //파일 종류
   @Column(name = "reg_date")
   private LocalDateTime regDate; //등록시간
+  @Column(name = "end_date")
+  private LocalDateTime endDate; //마감시간
   @Column(name = "remain_num")
   private long remainNum; //잔여량
   @Column(name = "like_num")
