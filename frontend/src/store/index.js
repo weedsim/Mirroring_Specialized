@@ -11,9 +11,9 @@ import Web3 from "web3"
 const web3 = new Web3(window.ethereum);
 const saleFactoryContractAddress = '0x0509b43FF9CcAC684ef00bc82020208b6F86d156';
 const saleFactoryContract = new web3.eth.Contract(SaleFactoryABI, saleFactoryContractAddress);
-// const API_URL = "https://fanftasy.kro.kr/api"
+const API_URL = "https://fanftasy.kro.kr/api"
 // const API_URL = "http://70.12.247.102:8080/api"
-const API_URL = "http://192.168.91.150:8080/api"
+// const API_URL = "http://192.168.91.150:8080/api"
 // const API_URL = "http://70.12.247.124:8080/api"
 // const API_URL = "http://70.12.246.214:8080/api"
 // const API_URL = "http://localhost:8080/api",
@@ -221,9 +221,9 @@ const store = createStore({
     async sameAccount() {
       // 쿠키와 메타마스크의 현재 지갑 주소를 비교해서 같으면 true, 다르면 false
       await this.dispatch("getAccount")
-      if (VueCookies.isKey("CurrentAccount") === true) {
+      if (VueCookies.isKey("Account") === true) {
         // 이미 로그인을 했을 경우
-        if (VueCookies.get("CurrentAccount") === this.state.CurrentAccount) {
+        if (VueCookies.get("Account") === ( await window.ethereum.request({ method: "eth_requestAccounts" }) )[0]) {
           // 마지막으로 로그인 했을 때의 쿠키와 현재의 메타마스크에 연결되있는 계정 주소가 같을 경우
           this.state.isSame = true
           this.state.success = true
@@ -233,14 +233,16 @@ const store = createStore({
           this.commit("LogOut")
           this.dispatch("LOGIN")
           this.state.success = false
+          router.push('/');
         }
       } else {
         // 로그인이 안되어 있을 경우
         this.state.success = false
+        router.push('/');
       }
     },
 
-    async signup() {
+    async signup(context, payload) {
       console.log(this.state.address)
       console.log(this.state.CurrentAccount)
       await this.dispatch("changeNetWork")
@@ -647,12 +649,13 @@ const store = createStore({
       })
     },
 
-    async BuyToBlockChain(context, payload){
+    async BuyToBlockChain(context, payload) {
+      context.dispatch('sameAccount');
       const SaleContractAddress = payload.contractAddress;
       const SaleContract = new web3.eth.Contract(SaleABI, SaleContractAddress);
       const account  = VueCookies.get('Account');
       console.log(account);
-      const price = (payload.price) * (10 ** 18);
+      const price = web3.utils.toWei((payload.price), "ether");
       console.log(price);
       //  구매인데 판매 중인 nft의 가격을 value에 입력이 되어야한다.
       // const ans = SaleContract.methods.purchase().send({ from : account, value : price });
@@ -660,18 +663,7 @@ const store = createStore({
       .on("receipt", function(receipt) {
         console.log("Buy Receipt : ");
         console.log(receipt);
-      })
-      .on("error", function(err) {
-        console.log(err);
-        this.state.err = err;
-      })
-      // console.log(await ans);
-      // if(ans === null || ans === undefined) {
-      //   console.log("문제 발생")
-      // }
-      console.log(this.state.err);
 
-      if(this.state.err === null || this.state.err === undefined) {
         const accessToken = VueCookies.get('AccessToken');
         axios ({
           method: "put",
@@ -687,11 +679,16 @@ const store = createStore({
         .then((res) => {
           console.log(res.data.message);
         })
-      }
-      else{
-        alert("error");
-      }
+        .catch((err) => {
+          alert(err);
+        });
+      })
+      .on("error", function(err) {
+        console.error(err);
+        alert(err);
+      });
     },
+
     async resellDetailNFTs(context, NFTId) {
       try {
         const response = await axios({
@@ -705,6 +702,7 @@ const store = createStore({
     },
 
     async createSaleToBlockChain(context, payload) {
+      context.dispatch('sameAccount');
       const amount = web3.utils.toWei( payload.price, "ether");
       const account = VueCookies.get('Account');
       
@@ -732,7 +730,7 @@ const store = createStore({
           contractAddress: context.state.SaleContractAddress,
           price: payload.price,
         };
-        this.dispatch('resellRegistration', payload1);
+        context.dispatch('resellRegistration', payload1);
       })
       .on("error", function(err) {
         console.error(err);
