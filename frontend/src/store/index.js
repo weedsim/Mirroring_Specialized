@@ -11,9 +11,9 @@ import Web3 from "web3"
 const web3 = new Web3(window.ethereum);
 const saleFactoryContractAddress = '0x0509b43FF9CcAC684ef00bc82020208b6F86d156';
 const saleFactoryContract = new web3.eth.Contract(SaleFactoryABI, saleFactoryContractAddress);
-// const API_URL = "https://fanftasy.kro.kr/api"
+const API_URL = "https://fanftasy.kro.kr/api"
 // const API_URL = "http://70.12.247.102:8080/api"
-const API_URL = "http://192.168.91.150:8080/api"
+// const API_URL = "http://192.168.91.150:8080/api"
 // const API_URL = "http://70.12.247.124:8080/api"
 // const API_URL = "http://70.12.246.214:8080/api"
 // const API_URL = "http://localhost:8080/api",
