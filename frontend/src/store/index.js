@@ -677,7 +677,7 @@ const store = createStore({
       const SaleContract = new web3.eth.Contract(SaleABI, SaleContractAddress);
       const account  = VueCookies.get('Account');
       console.log(account);
-      const price = web3.utils.toWei((payload.price), "ether");
+      const price = web3.utils.toWei( String(payload.price), "ether");
       console.log(price);
       //  구매인데 판매 중인 nft의 가격을 value에 입력이 되어야한다.
       // const ans = SaleContract.methods.purchase().send({ from : account, value : price });
@@ -725,7 +725,7 @@ const store = createStore({
 
     async createSaleToBlockChain(context, payload) {
       context.dispatch('sameAccount');
-      const amount = web3.utils.toWei( payload.price, "ether");
+      const amount = web3.utils.toWei( String(payload.price), "ether");
       const account = VueCookies.get('Account');
       
       (await saleFactoryContract.methods.createSale(payload.tokenId, amount).send({ from: account })
