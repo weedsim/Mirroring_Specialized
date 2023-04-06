@@ -64,17 +64,17 @@ const store = createStore({
         //METAMASK 설치 페이지가 새 창에 뜸
         window.open(
           "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
-          "_blank",
-          "width=500, height=500"
+          "_blank"
         )
       }
     },
 
     LogOut() {
-      this.state.CurrentAccount = null
-      this.state.AccessToken = null
+      this.state.CurrentAccount = null;
+      this.state.AccessToken = null;
+      this.state.address = null;
       // this.state.RefreshToken = null;
-      VueCookies.remove("CurrentAccount");
+      VueCookies.remove("Account");
       VueCookies.remove("AccessToken");
       VueCookies.remove("nickname");
       VueCookies.remove("profileImage");
@@ -107,6 +107,7 @@ const store = createStore({
             this.state.haveNet = true
           })
           .catch((err) => {
+            console.log(err)
             console.log(err.code)
             if (err.code === 4902) {
               this.state.haveNet = false
@@ -132,8 +133,8 @@ const store = createStore({
                 chainName: "A306FANFTASY",
                 rpcUrls: [this.state.rpcUrl],
                 nativeCurrency: {
-                  name: "NFN",
-                  symbol: "NFN",
+                  name: "FTS",
+                  symbol: "FTS",
                   decimals: 18,
                 },
               },
