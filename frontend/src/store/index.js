@@ -4,8 +4,8 @@ import axios from "axios"
 import createPersistedState from "vuex-persistedstate"
 import router from "@/router"
 
-// const API_URL = "https://fanftasy.kro.kr/api"
-const API_URL = "http://70.12.247.102:8080/api"
+const API_URL = "https://fanftasy.kro.kr/api"
+// const API_URL = "http://70.12.247.102:8080/api"
 // const API_URL = "http://70.12.247.124:8080/api"
 // const API_URL = "http://70.12.246.214:8080/api"
 // const API_URL = "http://localhost:8080/api",
@@ -49,6 +49,7 @@ const store = createStore({
     mcards: [],
     mcard: [],
     otheruser:[],
+    resellDetailNFTs:[],
   },
   getters: {
     isLogin: function () {
@@ -585,6 +586,21 @@ const store = createStore({
         console.log(err)
       })
     },
+
+    resellDetailNFTs(context, NFTId) {
+      axios({
+        method: "get",
+        url: `${API_URL}/nft/resell/${NFTId}`,
+      })
+      .then((res) => {
+        console.log("123485678956")
+        console.log(res.data.data)
+        this.resellDetailNFTs = res.data.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    }
 
     },
     modules: {},

@@ -332,6 +332,7 @@ export default {
       videoId: "",
       seto: 1,
       sedm: 1,
+      nftInfo:[],
     }
   },
   async created() {
@@ -353,6 +354,8 @@ export default {
       this.$store.dispatch('getuserLikeMarketNFTs')
       this.userLikeMarketNFTs = this.$store.userLikeMarketNFTs
     },
+
+
     
     selectDrops() {
       this.sedm = 1
@@ -593,6 +596,11 @@ export default {
     },
 
     showModalImg(nft){
+      const NFTId = nft.nftId
+      console.log(NFTId)
+      this.$store.dispatch('resellDetailNFTs', NFTId)
+      this.nftInfo = this.$store.state.resellDetailNFTs
+
       console.log('nft: ',nft)
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       Swal.fire({
@@ -634,6 +642,10 @@ export default {
       })
     },
     showModalVideo(nft){
+      const NFTId = nft.nftId
+      console.log(NFTId)
+      this.$store.dispatch('resellDetailNFTs', NFTId)
+      this.nftInfo = this.$store.state.resellDetailNFTs
       console.log('비디오nft : ', nft)
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       Swal.fire({
@@ -676,6 +688,10 @@ export default {
       })
     },
     showModalAudio(nft){
+      const NFTId = nft.nftId
+      console.log(NFTId)
+      this.$store.dispatch('resellDetailNFTs', NFTId)
+      this.nftInfo = this.$store.state.resellDetailNFTs
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       Swal.fire({
         title: '소유 NFT 정보',
@@ -1049,7 +1065,7 @@ export default {
   text-decoration: none; 
   color:black; 
   display:flex; 
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: space-between;
 }
 
