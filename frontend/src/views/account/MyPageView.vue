@@ -750,7 +750,7 @@ export default {
                     <div id="edition-num">#. ${nft.editionNum}</div>
                   </div>
                   <div>
-                    <label for="edition-num" style="font-weight:bold;">에디션 번호</label>
+                    <label for="edition-num" style="font-weight:bold;">상세 정보</label>
                     <div id="edition-num">${this.nftInfo.content}</div>
                   </div>
                 </div>
