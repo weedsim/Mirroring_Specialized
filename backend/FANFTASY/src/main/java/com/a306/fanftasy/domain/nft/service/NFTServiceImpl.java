@@ -156,13 +156,12 @@ public class NFTServiceImpl implements NFTService {
     List<NFT> entityList;
     Pageable pageable = PageRequest.of(0, 1);
     try {
-      User owner = User.builder().userId(ownerId).build();
-      User admin = User.builder().userId(ownerId).build(); // ownerId를 adminId로 변경
+      User owner = userRepository.findByUserId(ownerId);
+      User admin = userRepository.findFirstByRole("ADMIN"); // ownerId를 adminId로 변경
 //      List<Long> nftSourceIdList = nftRepository.findNftSourceIdByOwnerOrderByTransactionTimeDesc(owner);
 //      for (Long nftSourceId : nftSourceIdList) {
 //        entityList.add(nftRepository.findByNftSourceNftSourceId(nftSourceId, pageable).get(0));
 //      }
-
 //      List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
       //엔티티를 DTO로 변환
       if (type == 1) {
