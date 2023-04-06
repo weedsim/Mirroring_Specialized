@@ -33,7 +33,7 @@ public class NFTController {
         log.info("NFT 생성 요청 : " + info);
         ResponseDefault responseDefault = null;
         try{
-            if(file==null || info==null ||endDate==null){
+            if(file==null || info==null ||endDate==null||endDate.isBefore(LocalDateTime.now())){
                 responseDefault = ResponseDefault.builder().success(false).messege("File or Info or EndDate is null").build();
                 return ResponseEntity.badRequest().body(responseDefault);
             }

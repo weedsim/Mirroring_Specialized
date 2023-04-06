@@ -78,7 +78,7 @@ public class PinataServiceImpl implements PinataService{
     mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
     mapper.registerModule(new JavaTimeModule());
     NFTCreateDTO nftCreateDTO = mapper.readValue(jsonObject.toString(), NFTCreateDTO.class);
-    if(nftCreateDTO.getTotalNum()<=0||nftCreateDTO.getOriginPrice()<0||nftCreateDTO.getRegDate().isBefore(LocalDateTime.now())){
+    if(nftCreateDTO.getTotalNum()<=0||nftCreateDTO.getOriginPrice()<0){
       throw new NFTCreateException("잘못된 입력값입니다.");
     }
     log.info("변환된 dto : "+ nftCreateDTO);
