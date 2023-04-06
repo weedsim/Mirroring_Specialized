@@ -10,10 +10,10 @@
         <div class="signup-title">
           회원가입
         </div>
-        <input type="text" class="name t" placeholder="실명" v-model="this.name"/>
-        <input type="text" class="nickname t" placeholder="닉네임" v-model="this.nickname"/>
-        <input type="text" class="email t" placeholder="이메일" v-model="this.email" />
-        <input type="text" class="phone t" placeholder="전화번호" v-model="this.phone" />
+        <input type="text" class="name t" placeholder="이름(실명)" v-model="this.name"/>
+        <input type="text" class="nickname t" placeholder="닉네임(2~8글자)" v-model="this.nickname"/>
+        <input type="text" class="email t" placeholder="이메일(example@google.com)" v-model="this.email" />
+        <input type="text" class="phone t" placeholder="전화번호(01012345678)" v-model="this.phone" />
         <input type="text" class="company t" v-if="!this.$store.state.isFan" placeholder="소속사" v-model="this.company" />
         <button class="connective" @click="connectWallet">
               <img :src="require('@/assets/metamask_fox.png')" alt="foxFace" style="width:40px; height: 40px;">
@@ -34,7 +34,9 @@
 </template>
 
 <script>
-// import VueCookies from 'vue-cookies';
+import VueCookies from 'vue-cookies';
+import Swal from 'sweetalert2'
+import router from "@/router"
 
 export default {
   name: "SignUpView",
@@ -51,9 +53,12 @@ export default {
       phone: null,
       role: null,
       company: null,
+      mem: false,
     }
   },
   created () {
+    this.isLogin()
+
     if(this.$store.state.isFan){
       this.role = 'fan';
     }
@@ -63,6 +68,20 @@ export default {
     
   },
   methods: {
+    isLogin(){
+      if (VueCookies.get("nickname") != null){
+        this.mem = true
+        Swal.fire({
+          title: "회원가입 실패",
+          text: "이미 등록된 회원입니다.",
+          icon: "warning" //"info,success,warning,error" 중 택1
+        })
+        router.go(-1)
+      } else {
+        this.mem = false
+      }
+    },
+
     async connectWallet(){ // 회원가입
       
       this.address = await this.$store.dispatch('getAccount');
@@ -95,7 +114,12 @@ export default {
 
       if(this.$store.state.success) {
         // await this.$store.dispatch('LOGIN');
-        alert("회원가입 되었습니다. 로그인하여주십시오.");
+        Swal.fire({
+          title: "회원가입 성공",
+          text: "회원가입 되었습니다. 로그인하여주십시오.",
+          icon: "success" //"info,success,warning,error" 중 택1
+        })
+        // alert("회원가입 되었습니다. 로그인하여주십시오.");
         this.$router.push('/');
       }
     }

@@ -69,13 +69,18 @@ const store = createStore({
     },
   },
   mutations: {
-    installedMetamask() {
+    async installedMetamask() {
       // metamask 확장자가 설치 되어있는지 확인하는 method
       // Check if Web3 has already been injected by MetaMask
       if (typeof window.ethereum !== "undefined") {
         console.log("설치되있음")
       } else {
-        alert("저희 사이트는 METAMASK가 필수입니다.")
+        await Swal.fire({
+          title: "METAMASK 필수",
+          text: "저희 사이트는 METAMASK가 필수입니다.",
+          icon: "info" //"info,success,warning,error" 중 택1
+        })
+        // alert("저희 사이트는 METAMASK가 필수입니다.")
         //METAMASK 설치 페이지가 새 창에 뜸
         window.open(
           "https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn",
@@ -95,6 +100,7 @@ const store = createStore({
       VueCookies.remove("profileImage");
       VueCookies.remove("userId");
       // VueCookies.remove("RefreshToken");
+      router.push('/')
 
       console.log("로그아웃");
     },
@@ -223,7 +229,7 @@ const store = createStore({
       await this.dispatch("getAccount")
       if (VueCookies.isKey("Account") === true) {
         // 이미 로그인을 했을 경우
-        if (VueCookies.get("Account") === ( await window.ethereum.request({ method: "eth_requestAccounts" }) )[0]) {
+        if (VueCookies.get("Account") === (await window.ethereum.request({ method: "eth_requestAccounts" }))[0]) {
           // 마지막으로 로그인 했을 때의 쿠키와 현재의 메타마스크에 연결되있는 계정 주소가 같을 경우
           this.state.isSame = true
           this.state.success = true
@@ -233,12 +239,12 @@ const store = createStore({
           this.commit("LogOut")
           this.dispatch("LOGIN")
           this.state.success = false
-          router.push('/');
+          router.push('/')
         }
       } else {
-        // 로그인이 안되어 있을 경우
+        // 로그인이 안되어 있을 경우x`
         this.state.success = false
-        router.push('/');
+        router.push('/')
       }
     },
 
@@ -268,6 +274,12 @@ const store = createStore({
         .catch((error) => {
           console.log(error)
           this.state.success = false
+          Swal.fire({
+            title: "회원가입 실패",
+            text: "회원가입에 실패하였습니다. 올바른 양식을 입력해주세요",
+            icon: "error" //"info,success,warning,error" 중 택1
+          })
+          router.go()
         })
     },
 
@@ -293,7 +305,11 @@ const store = createStore({
         })
         .catch((err) => {
           console.log(err)
-          alert("로그인 해주세요")
+          Swal.fire({
+            title: "실패",
+            text: "로그인 해주세요.",
+            icon: "error" //"info,success,warning,error" 중 택1
+          })
         })
     },
 
@@ -473,6 +489,13 @@ const store = createStore({
       },
 
     addNFT(context, payload) {
+      
+      Swal.fire({
+        title: "생성 중...",
+        text: "NFT를 생성중입니다. 잠시만 기다려주세요",
+        showConfirmButton: false,
+      })
+
       const formData = new FormData();
       formData.append("file", payload.file);
       const ppayload = {
@@ -498,7 +521,6 @@ const store = createStore({
         console.log(res)
       })
       .then(()=>{
-        // alert("NFT 생성이 완료되었습니다.")
         Swal.fire({
           title: "성공",
           text: "NFT 생성이 완료되었습니다!",
@@ -720,17 +742,27 @@ const store = createStore({
           toBlock: 'latest',
         }, async function(err, events){
           console.log(err);
-          console.log(events);
-          context.state.SaleContractAddress = events[events.length - 1].returnValues._saleContract;
-          console.log(context.state.SaleContractAddress);
-        });
+          console.log('event : ', events);
+          console.log('events[events.length - 1] : ', events[events.length - 1]);
+          console.log('events[events.length - 1].returnValues : ', events[events.length - 1].returnValues);
+          console.log('events[events.length - 1].returnValues._saleContract : ', events[events.length - 1].returnValues._saleContract);
 
-        const payload1 = {
-          nftId: payload.tokenId,
-          contractAddress: context.state.SaleContractAddress,
-          price: payload.price,
-        };
-        context.dispatch('resellRegistration', payload1);
+
+          context.state.SaleContractAddress = events[events.length - 1].returnValues._saleContract;
+          console.log('this.state,SaleContractAddress',context.state.SaleContractAddress);
+        })
+        .then((events) => {
+          context.state.SaleContractAddress = events[events.length - 1].returnValues._saleContract;
+          console.log('this.state,SaleContractAddress(events) :',context.state.SaleContractAddress);
+          const payload1 = {
+            nftId: payload.tokenId,
+            contractAddress: context.state.SaleContractAddress,
+            price: payload.price,
+          };
+          console.log('payload1 :', payload1)
+          context.dispatch('resellRegistration', payload1);
+
+        });
       })
       .on("error", function(err) {
         console.error(err);
@@ -738,7 +770,7 @@ const store = createStore({
       }));
     },
 
-    async resellRegistration(context, payload){
+    async resellRegistration(context, payload1){
       const accessToken = VueCookies.get('AccessToken');
       axios({
         method: "put",
@@ -747,9 +779,9 @@ const store = createStore({
           Authorization: 'Bearer ' + accessToken,
         },
         data: {
-          nftId: payload.nftId,
-          contractAddress: payload.contractAddress,
-          price: payload.price,
+          nftId: payload1.nftId,
+          contractAddress: payload1.contractAddress,
+          price: payload1.price,
         }
       })
       .then((res) => {

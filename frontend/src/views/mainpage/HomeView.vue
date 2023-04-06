@@ -12,7 +12,7 @@
           <!-- <v-img src="@/assets/maingif.gif" style="width:350px; height: 550px;"></v-img> -->
         </span>
       </div>
-      <div style="text-align: center; font-size: 30px; margin-top: 14vh;">스크롤</div>
+      <div style="text-align: center; font-size: 30px; margin-top: 22vh;">스크롤</div>
       <div style="text-align: center;">
         <v-img src="@/assets/chevron-double-down.png" alt="" style="width: 35px; margin: auto;"></v-img>
       </div>
@@ -151,7 +151,7 @@
           <NFTCardR v-for="(card, index) in mcards.slice(0, 4)" :key="index" :card="card" class="" />
         </div> -->
         
-        <div v-if="uid===null" style="margin: 33vh;">
+        <div v-if="uid===null || ocards.length === 0" style="margin: 33vh;">
         <span style="font-size: 30px">
           현재 보유하고 있는 NFT가 없습니다. NFT를 구매해보세요!
         </span>
