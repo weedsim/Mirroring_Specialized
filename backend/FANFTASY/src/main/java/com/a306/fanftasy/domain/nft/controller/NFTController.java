@@ -224,7 +224,6 @@ public class NFTController {
         }
     }
 
-
     //8. NFT 개인 거래 등록
     @PutMapping("/resell")
     public ResponseEntity<?> NFTResell(@RequestBody SaleDTO saleDTO){
@@ -249,7 +248,7 @@ public class NFTController {
     }
 
     //9. NFT 구매
-    @PutMapping
+    @PutMapping("/buy")
     public ResponseEntity<?> NFTTrade(@RequestBody NFTTradeDTO nftTradeDTO){
         log.info("NFT 거래 발생 : " + nftTradeDTO.toString());
         ResponseDefault responseDefault = null;

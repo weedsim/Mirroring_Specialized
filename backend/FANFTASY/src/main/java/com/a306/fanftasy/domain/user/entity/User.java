@@ -40,7 +40,6 @@ public class User {
 
     @Column(name="user_key")
     private String userKey;
-
     public static User ofUser(UserJoinDTO joinDto){
         User user = User.builder()
                 .address(joinDto.getAddress())

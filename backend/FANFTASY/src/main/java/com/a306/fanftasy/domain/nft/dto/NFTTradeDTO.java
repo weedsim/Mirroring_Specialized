@@ -21,6 +21,4 @@ import java.time.LocalDateTime;
 public class NFTTradeDTO {
     long nftId;
     long buyerId;
-
-    double transactionPrice;
 }

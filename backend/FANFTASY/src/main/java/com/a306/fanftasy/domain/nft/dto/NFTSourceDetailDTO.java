@@ -31,8 +31,6 @@ public class NFTSourceDetailDTO {
   private boolean userLike;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss")
   private LocalDateTime regDate;
-  private long saleNftId; //클릭시 판매될 NFTID
-  private String saleContractAddress; //클릭시 판매될 SaleContractAddress
   public static NFTSourceDetailDTO fromEntity(NFTSource nftSource){
     return NFTSourceDetailDTO.builder()
         .nftSourceId(nftSource.getNftSourceId())
@@ -46,8 +44,6 @@ public class NFTSourceDetailDTO {
         .regDate(nftSource.getRegDate())
         .fileCID(nftSource.getFileCID())
         .fileType(nftSource.getFileType())
-        .saleNftId(0) //기본값
-        .saleContractAddress("sold out") //기본값
         .build();
   }
   public void updateUserLike(boolean userLike){

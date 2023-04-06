@@ -46,6 +46,7 @@ import org.web3j.tx.Contract;
 @Slf4j
 @RequiredArgsConstructor
 public class NFTServiceImpl implements NFTService {
+
   private final NFTRepository nftRepository;
   private final NFTSourceRepository nftSourceRepository;
   private final UserRepository userRepository;
@@ -53,7 +54,6 @@ public class NFTServiceImpl implements NFTService {
   @Value("${blockchain.AdminAddress}")
   private String ADMIN_ADDRESS;
   private final BasicService basicService;
-
 
 
   //1. NFT 생성
@@ -156,7 +156,8 @@ public class NFTServiceImpl implements NFTService {
 
 //      List<NFT> entityList = nftRepository.findByOwnerOrderByTransactionTimeDesc(owner);
       //엔티티를 DTO로 변환
-      List<NFT> entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(owner, admin);
+      List<NFT> entityList = nftRepository.findByOwnerAndNftSourceRegArtistNotOrderByTransactionTimeDesc(
+          owner, admin);
       List<NFTListDTO> result = entityList.stream().map(m -> NFTListDTO.fromEntity(m)).collect(
           Collectors.toList());
       return result;
@@ -187,7 +188,7 @@ public class NFTServiceImpl implements NFTService {
             if (nftSource != null) {
               NFTMarketListDTO nftMarketListDTO = NFTMarketListDTO.fromEntity(nftSource);
               nftMarketListDTO.setCurrentPrice(nftRepository.findMinCurrentPrice(nftSourceId));
-               result.add(nftMarketListDTO);
+              result.add(nftMarketListDTO);
             }
           }
           // 판매중, 가격 높은 순
@@ -297,7 +298,7 @@ public class NFTServiceImpl implements NFTService {
 
   //8.개인거래
   @Override
-  public void resell(SaleDTO saleDTO){
+  public void resell(SaleDTO saleDTO) {
     long nftId = saleDTO.getNftId();
     String contractAddress = saleDTO.getContractAddress();
     double price = saleDTO.getPrice();
@@ -311,25 +312,33 @@ public class NFTServiceImpl implements NFTService {
     //수정 내역 반영
     nftRepository.save(nftEntity);
   }
+
   //9. 개인의 NFT 구매
   @Override
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
     try {
-      NFT nftEntity = nftRepository.findById(nftTradeDTO.getNftId());
+      long nftId = nftTradeDTO.getNftId();
+      NFT nftEntity = nftRepository.findById(nftId);
       User nowOwner = nftEntity.getOwner();
-      String nowOwnerAddress = nowOwner.getAddress();
       User newOwner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
-      String newOwnerAddress = newOwner.getAddress();
-      double price = nftTradeDTO.getTransactionPrice();
-      String saleContract = nftEntity.getSaleContract();
-      //스마트 컨트랙트 호출해서
-      //1. tokenUri에 해당되는 nft 소유자 newOwner로 변경해주고
-      //2. newOwner의 잔액을 nowOwner의 잔액으로 변경시키는 트랜잭션 필요
-      //trade(nowOwnerAddress, newOwnerAddress, tokenUri, price)
+      double price = nftEntity.getCurrentPrice();
+      //1. nftId에 해당되는 nft 소유자 newOwner로 변경해주고
       nftEntity.updateIsOnSale(false);
       nftEntity.updateOwner(newOwner);
       nftEntity.updateTransactionTime(LocalDateTime.now());
-      nftEntity.updateCurrentPrice(price);
+      //2. 만약 drops에서 구매한거면 drops 정보 수정해줘야함
+      NFTSource nftSource = nftEntity.getNftSource();
+      if (nowOwner.getRole() == "ADMIN") {
+        //source의 remain Num 감소시키고
+        long remainNum = nftSource.getRemainNum();
+        User artist = nftSource.getRegArtist();
+        if (remainNum > 0) {
+          nftSource.updateRemainNum(remainNum - 1);
+        }
+        //판매 아티스트의 판매량과 총 판매금 업데이트
+        artist.plusTotalSales(1);
+        artist.plusTotalPrice(nftSource.getOriginPrice());
+      }
       nftRepository.save(nftEntity);
     } catch (Exception e) {
       throw e;
