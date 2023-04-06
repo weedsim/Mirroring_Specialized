@@ -10,6 +10,7 @@ import com.a306.fanftasy.domain.user.dto.UserUpdateDTO;
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.service.S3Service;
 import com.a306.fanftasy.domain.user.service.UserService;
+import javax.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpResponse;
 import org.aspectj.bridge.Message;
@@ -63,7 +64,7 @@ public class UserController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<?> join(@RequestBody UserJoinDTO userJoinDTO) {
+    public ResponseEntity<?> join(@Valid @RequestBody UserJoinDTO userJoinDTO) {
         ResponseDefault responseDefault = null;
         try {
             userService.join(userJoinDTO);
@@ -77,7 +78,7 @@ public class UserController {
             log.error("회원 가입 실패");
             responseDefault = ResponseDefault.builder()
                     .success(false)
-                    .messege("FAIL")
+                    .messege(e.getMessage())
                     .build();
             return ResponseEntity.badRequest().body(responseDefault);
         }

@@ -295,8 +295,8 @@ public class NFTServiceImpl implements NFTService {
     try {
       NFT nft = nftRepository.findById(nftId);
       NFTDetailDTO nftDetailDTO = NFTDetailDTO.fromEntity(nft);
-      //      //좋아요 찾기
-//      //securitycontext holder에서 user를 꺼내서
+      //좋아요 찾기
+     //securitycontext holder에서 user를 꺼내서
       UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
           .getAuthentication().getPrincipal();
       long userId = userLoginDTO.getUserId();
@@ -335,6 +335,7 @@ public class NFTServiceImpl implements NFTService {
   @Override
   public void modifyNFT(NFTTradeDTO nftTradeDTO) {
     try {
+      log.info("NFT 구매 반영 시작");
       long nftId = nftTradeDTO.getNftId();
       NFT nftEntity = nftRepository.findById(nftId);
       User nowOwner = nftEntity.getOwner();
@@ -346,12 +347,14 @@ public class NFTServiceImpl implements NFTService {
       nftEntity.updateTransactionTime(LocalDateTime.now());
       //2. 만약 drops에서 구매한거면 drops 정보 수정해줘야함
       NFTSource nftSource = nftEntity.getNftSource();
-      if (nowOwner.getRole() == "ADMIN") {
+      if (nowOwner.getRole().equals("ADMIN")) {
+        log.info("최초구매");
         //source의 remain Num 감소시키고
         long remainNum = nftSource.getRemainNum();
         User artist = nftSource.getRegArtist();
         if (remainNum > 0) {
           nftSource.updateRemainNum(remainNum - 1);
+          nftSourceRepository.save(nftSource);
         }
         //판매 아티스트의 판매량과 총 판매금 업데이트
         artist.plusTotalSales(1);

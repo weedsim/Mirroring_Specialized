@@ -1,6 +1,7 @@
 package com.a306.fanftasy.domain.user.entity;
 
 import com.a306.fanftasy.domain.user.dto.UserJoinDTO;
+import javax.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
@@ -21,14 +22,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Long userId;
+    @NotNull
     private String address;
+    @NotNull
     private String email;
+    @NotNull
     private String nickname;
     @Column(name = "profile_img")
     private String profileImg;
+    @NotNull
     private String phone;
     private String role;
-
+    @NotNull
     private String name;
     @Column(name = "total_sales")
     private int totalSales;
