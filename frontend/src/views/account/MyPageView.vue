@@ -120,7 +120,7 @@
             <div class="own-nfts-card">
               <div v-if="nft.nftSource.fileType === 'image'" class="button-owned-nft">
                 <div class="two-button">
-                  <button class="sell-button" @click="showModalImg">판매</button>
+                  <button class="sell-button" @click="showModalToSell(nft)">판매</button>
                   <button class="info-button" @click="showModalImg(nft)">정보</button>
                 </div>
                 <v-img v-if="nft.nftSource.fileType === 'image'" :src="nft.nftSource.fileCID" alt="이미지" class="nft-img-owned"></v-img>
@@ -767,8 +767,6 @@ export default {
       }).then((result)=>{
         if (result.isConfirmed){
           console.log('confirm')
-          this.confirmResell()
-          // this.$router.push({name:'UserNFTView', params:{nftId:nft.nftId}})
         } else if (result.isDenied){
           console.log('Deny')
         }
@@ -873,10 +871,43 @@ export default {
 
     },
 
-    confirmResell(){
-      console.log('되팔이 극혐...')
+    async showModalToSell(nft){
+      const NFTId = nft.nftId;
+      const resellDetailNFTs = await this.$store.dispatch("resellDetailNFTs", NFTId);
+      console.log(resellDetailNFTs);
+      this.nftInfo = resellDetailNFTs;
+      console.log('포뇨포뇨',this.nftInfo)
+      const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       Swal.fire({
-        title:'되팔이 확인'
+        title: 'NFT 리셀',
+        showCancelButton: false,
+        confirmButtonText: '',
+        html:`
+          <input id="price" placeholder="가격" style="border-style:solid;"></input>
+          <img src="${fileCid}" style="height:50%; width:50%; border-radius: 15px;"/>
+          <div>
+            <div>
+              <label for="title" style="font-weight:bold;">NFT 이름</label>
+              <div id="title">${nft.nftSource.title}</div>
+            </div>
+            <div>
+              <label for="nickname" style="font-weight:bold;">아티스트</label>
+              <div id="artist-nickname">by. ${nft.nftSource.regArtist.nickname}</div>
+            </div>
+            <div>
+              <label for="edition-num" style="font-weight:bold;">에디션 번호</label>
+              <div id="edition-num">#. ${nft.editionNum}</div>
+            </div>
+          </div>
+        `,
+        preConfirm:()=>{
+          return [
+            document.getElementById('price').value,
+          ];
+        },
+      }).then((result) => {
+        console.log('result의 값이야 : ', result.value[0])
+        this.$store.dispatch("", result)
       })
     },
     
