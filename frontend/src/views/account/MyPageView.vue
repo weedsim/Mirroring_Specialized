@@ -1042,6 +1042,7 @@ export default {
   height: 154px;
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.4);
+}
 
 .button-owned-nft{
   min-width:164px; 
