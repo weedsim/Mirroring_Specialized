@@ -248,7 +248,7 @@ const store = createStore({
       }
     },
 
-    async signup(context, payload) {
+    async signup() {
       console.log(this.state.address)
       console.log(this.state.CurrentAccount)
       await this.dispatch("changeNetWork")
