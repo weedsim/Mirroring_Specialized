@@ -20,7 +20,7 @@ spring:
     username: root
 #    url: jdbc:mysql://${MYSQL_HOST:localhost}:3306/fanftasy
     url: jdbc:mysql://13.125.99.142:3306/FANFTASY
-    password: 12345678
+    password: ssafyA306!
   jpa:
     database: mysql
     hibernate:
