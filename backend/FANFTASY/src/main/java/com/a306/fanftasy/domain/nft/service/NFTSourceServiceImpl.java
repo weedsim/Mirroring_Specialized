@@ -78,7 +78,6 @@ public class NFTSourceServiceImpl implements NFTSourceService {
 //      //좋아요 찾기
 //      //securitycontext holder에서 user를 꺼내서
 
-
       //원본 security 일단 막아둠
 //      UserLoginDTO userLoginDTO = (UserLoginDTO) SecurityContextHolder.getContext()
 //          .getAuthentication().getPrincipal();
@@ -96,6 +95,8 @@ public class NFTSourceServiceImpl implements NFTSourceService {
       //로그인된 userid와 nftsourceid 를 통해서 nftsourcelike가 존재하는지 find
       // 반환값이 null이 아니면 userLike = true;
       nftSourceDetailDTO.updateUserLike(userLike);
+      //Drops에서 눌렀을때 판매될 nft를 반환
+//      NFT nftEntity = nftRepository.
       return nftSourceDetailDTO;
     }
     //catch
