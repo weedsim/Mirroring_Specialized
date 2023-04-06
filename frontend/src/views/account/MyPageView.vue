@@ -722,13 +722,13 @@ export default {
       // this.$router.go(-1)
     },
     
-    showModalImg(nft){
+    async showModalImg(nft){
       const NFTId = nft.nftId
-      console.log(NFTId)
-      this.$store.dispatch('resellDetailNFTs', NFTId)
+      console.log('NFTId : ', NFTId)
+      await this.$store.dispatch('resellDetailNFTs', NFTId)
       this.nftInfo = this.$store.state.resellDetailNFTs
-
-      console.log('nft: ',nft)
+      console.log('this.$store.state.resellDetailNFTs : ',this.$store.state.resellDetailNFTs)
+      console.log('nftInfo: ', this.nftInfo)
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       console.log(fileCid)
       Swal.fire({
@@ -754,6 +754,10 @@ export default {
                   <div>
                     <label for="edition-num" style="font-weight:bold;">에디션 번호</label>
                     <div id="edition-num">#. ${nft.editionNum}</div>
+                  </div>
+                  <div>
+                    <label for="edition-num" style="font-weight:bold;">에디션 번호</label>
+                    <div id="edition-num">${this.nftInfo.content}</div>
                   </div>
                 </div>
               </div>
