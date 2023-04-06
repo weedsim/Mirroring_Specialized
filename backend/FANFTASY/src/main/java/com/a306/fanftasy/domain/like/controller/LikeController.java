@@ -6,12 +6,10 @@ import com.a306.fanftasy.domain.response.ResponseDefault;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @Slf4j
@@ -73,6 +71,49 @@ public class LikeController {
     }catch (Exception e){
       log.error(e.getMessage());
       responseDefault = ResponseDefault.builder().success(false).messege("fail").build();
+      return ResponseEntity.badRequest().body(responseDefault);
+    }
+  }
+
+  @GetMapping("/source/{userId}")
+  public ResponseEntity<?> nftSourceLikeList(@PathVariable("userId") long userId) {
+    log.info("NFT Source Like List 조회 요청 : " + userId);
+    ResponseDefault responseDefault = null;
+    try {
+      responseDefault = ResponseDefault.builder()
+              .success(true)
+              .messege("success")
+              .data(likeService.nftSourceLikeList(userId))
+              .build();
+      return ResponseEntity.ok().body(responseDefault);
+    } catch (Exception e) {
+      log.error(e.getMessage());
+      responseDefault = ResponseDefault.builder()
+              .success(false)
+              .messege("fail")
+              .data(null)
+              .build();
+      return ResponseEntity.badRequest().body(responseDefault);
+    }
+  }
+
+  @GetMapping("/nft/{userId}")
+  public ResponseEntity<?> nftLikeList(@PathVariable("userId") long userId) {
+    log.info("NFT Like List 조회 요청 : " + userId);
+    ResponseDefault responseDefault = null;
+    try {
+      responseDefault = ResponseDefault.builder()
+              .success(true)
+              .messege("success")
+              .data(likeService.nftLikeList(userId))
+              .build();
+      return ResponseEntity.ok().body(responseDefault);
+    } catch (Exception e) {
+      log.error(e.getMessage());
+      responseDefault = ResponseDefault.builder()
+              .success(false)
+              .messege("fail")
+              .build();
       return ResponseEntity.badRequest().body(responseDefault);
     }
   }

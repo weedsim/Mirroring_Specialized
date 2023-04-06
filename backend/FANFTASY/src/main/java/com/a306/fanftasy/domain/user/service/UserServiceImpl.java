@@ -1,10 +1,10 @@
 package com.a306.fanftasy.domain.user.service;
 
+import com.a306.fanftasy.domain.nft.dto.NFTDetailDTO;
+import com.a306.fanftasy.domain.nft.entity.NFT;
+import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.service.EthereumService;
-import com.a306.fanftasy.domain.user.dto.UserDetailDTO;
-import com.a306.fanftasy.domain.user.dto.UserJoinDTO;
-import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
-import com.a306.fanftasy.domain.user.dto.UserUpdateDTO;
+import com.a306.fanftasy.domain.user.dto.*;
 import com.a306.fanftasy.domain.user.entity.User;
 import com.a306.fanftasy.domain.user.repository.UserRepository;
 import com.a306.fanftasy.util.JwtTokenUtil;
@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -26,6 +29,7 @@ public class UserServiceImpl implements UserService {
   private final JwtTokenUtil jwtTokenUtil;
   private final S3Service s3Service;
   private final EthereumService ethereumService;
+  private final NFTRepository nftRepository;
 
     private final UserSecurityService userSecurityService;
 
@@ -153,5 +157,20 @@ public class UserServiceImpl implements UserService {
 
   }
 
+    @Override
+    public UserOtherDetailDTO getOtherUserDetail(long userId) {
+        try {
+            User user = userRepository.findByUserId(userId);
+            UserOtherDetailDTO userOtherDetailDTO = new UserOtherDetailDTO();
+            userOtherDetailDTO.setProfileImg(user.getProfileImg());
+            userOtherDetailDTO.setNickname(user.getNickname());
+            List<NFT> nftList = nftRepository.findByOwnerOrderByTransactionTimeDesc(user);
+            List<NFTDetailDTO> nftDetailDTOList = nftList.stream().map(m -> NFTDetailDTO.fromEntity(m)).collect(Collectors.toList());
+            userOtherDetailDTO.setNftDetailDTOList(nftDetailDTOList);
+            return userOtherDetailDTO;
+        } catch (Exception e) {
+            throw e;
+        }
+    }
 
 }

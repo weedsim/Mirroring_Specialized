@@ -9,11 +9,13 @@ import com.a306.fanftasy.domain.nft.service.PinataService;
 import com.a306.fanftasy.domain.response.ResponseDefault;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.time.LocalDateTime;
 
 @RestController
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class NFTController {
 
     //1. NFT 생성
     @PostMapping
-    public ResponseEntity<?> NFTAdd(@RequestParam("file") MultipartFile file, @RequestParam("info") String info){
+    public ResponseEntity<?> NFTAdd(@RequestParam("file") MultipartFile file, @RequestParam("info") String info, @RequestParam("endDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") LocalDateTime endDate){
         log.info("NFT 생성 요청 : " + info);
         ResponseDefault responseDefault = null;
         try{
@@ -38,7 +40,7 @@ public class NFTController {
             NFTCreateDTO nftCreateDTO = pinataService.jsonToPinata(info, fileCID); //메타데이터를 저장하고, source를 저장하기
             log.info("NFTCreateDTO : " + nftCreateDTO.toString());
             //CID를 통해서 스마트 컨트랙트 호출하고 발행량 만큼 NFT발급
-            nftService.addNFT(nftCreateDTO);
+            nftService.addNFT(nftCreateDTO, endDate);
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
@@ -183,13 +185,13 @@ public class NFTController {
 
     //6. 회원 소유 NFT목록 반환
     @GetMapping("/user/{ownerId}")
-    public ResponseEntity<?> NFTUserList(@PathVariable long ownerId){
+    public ResponseEntity<?> NFTUserList(@PathVariable long ownerId, @RequestParam("type") int type){
         log.info("NFT 개인 페이지 목록 요청 : " + ownerId);
         ResponseDefault responseDefault = null;
         try{
             responseDefault = ResponseDefault.builder()
                 .messege("SUCCESS")
-                .data(nftService.getNFTListByOwnerId(ownerId))
+                .data(nftService.getNFTListByOwnerId(ownerId, type))
                 .success(true).build();
             log.info("NFT 조회 성공");
             return ResponseEntity.ok().body(responseDefault);
@@ -243,6 +245,28 @@ public class NFTController {
                 .success(false)
                 .messege("FAIL")
                 .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
+
+    // 리셀하기 위한 리셀 페이지 정보 요청
+    @GetMapping("/resell/{nftId}")
+    public ResponseEntity<?> NFTReSell(@PathVariable("nftId") Long nftId) {
+        ResponseDefault responseDefault = null;
+        try {
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("SUCCESS")
+                    .data(nftService.nftReSell(nftId))
+                    .build();
+            return ResponseEntity.ok().body(responseDefault);
+        } catch (Exception e) {
+            log.error("리셀 정보 불러오기 실패");
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("FAIL")
+                    .build();
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }

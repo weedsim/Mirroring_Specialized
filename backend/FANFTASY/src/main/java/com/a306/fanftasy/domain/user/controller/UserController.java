@@ -104,6 +104,26 @@ public class UserController {
         }
     }
 
+    @GetMapping("/other/{userId}")
+    public ResponseEntity<?> otherUserDetail(@PathVariable("userId") long userId) {
+        ResponseDefault responseDefault = null;
+        try {
+            responseDefault = ResponseDefault.builder()
+                    .success(true)
+                    .messege("SUCCESS")
+                    .data(userService.getOtherUserDetail(userId))
+                    .build();
+            return ResponseEntity.ok().body(responseDefault);
+        } catch (Exception e) {
+            log.error("다른 유저 상세 정보 조회 실패");
+            responseDefault = ResponseDefault.builder()
+                    .success(false)
+                    .messege("FAIL")
+                    .build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
+
     @PostMapping("/profile/{id}")
     public ResponseEntity<?> uploadImage(@PathVariable("id") Long id, @RequestPart("profileImg") MultipartFile profileImg) {
         log.info("이미지 변경 요청");
