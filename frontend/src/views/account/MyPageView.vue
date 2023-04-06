@@ -120,7 +120,7 @@
             <div class="own-nfts-card">
               <div v-if="nft.nftSource.fileType === 'image'" class="button-owned-nft">
                 <div class="two-button">
-                  <button class="sell-button">판매</button>
+                  <button class="sell-button" @click="showModalImg">판매</button>
                   <button class="info-button" @click="showModalImg(nft)">정보</button>
                 </div>
                 <v-img v-if="nft.nftSource.fileType === 'image'" :src="nft.nftSource.fileCID" alt="이미지" class="nft-img-owned"></v-img>
@@ -552,9 +552,6 @@ export default {
         //   
           
           
-          
-          
-          
         //   // ///////////////////////////////////////////////////////////////////////////////////
         //   //  판매 중인 nft 구매 하려면 필요한 컨트랙트
         //   let SaleContract = new web3.eth.Contract(SaleABI, this.SaleContractAddress);
@@ -576,7 +573,6 @@ export default {
         //   //  구매인데 판매 중인 nft의 가격을 value에 입력이 되어야한다.
         //   const ans = SaleContract.methods.purchase().send({ from : account, value : price });
         //   console.log(await ans);
-
 
 
 
@@ -628,7 +624,6 @@ export default {
         //     console.log(res);
         //   }
         // })
-
 
 
 
