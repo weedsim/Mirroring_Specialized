@@ -723,20 +723,20 @@ const store = createStore({
         }, async function(err, events){
           console.log(err);
           console.log(events);
-          this.state.SaleContractAddress = events[events.length - 1].returnValues._saleContract;
-          console.log(this.state.SaleContractAddress);
+          context.state.SaleContractAddress = events[events.length - 1].returnValues._saleContract;
+          console.log(context.state.SaleContractAddress);
         });
 
         const payload1 = {
           nftId: payload.tokenId,
-          contractAddress: this.state.SaleContractAddress,
+          contractAddress: context.state.SaleContractAddress,
           price: payload.price,
         };
         this.dispatch('resellRegistration', payload1);
       })
       .on("error", function(err) {
         console.error(err);
-        this.state.err = err;
+        context.state.err = err;
       }));
     },
 
@@ -756,9 +756,12 @@ const store = createStore({
       })
       .then((res) => {
         console.log(res);
-        console.log(res.data.message);
+        console.log(res.data.messege);
       })
-    }
+      .catch((err) => {
+        console.log(err);
+      })
+    },
 
   },
     modules: {},
