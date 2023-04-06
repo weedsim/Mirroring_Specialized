@@ -303,10 +303,13 @@
 <script>
 // import LoginUserHeaders from "@/components/headers/LoginUserHeaders.vue"
 // import NotLoginUserHeaders from "@/components/headers/NotLoginUserHeaders.vue"
+import SaleFactoryABI from "../../../path/to/SaleFactoryABI.json";
+import SaleABI from "../../../path/to/SaleABI.json";
+import NFTABI from "../../../path/to/NFTABI.json";
 import BankABI from "../../../path/to/BankABI.json";
 import Web3 from "web3"
-import  VueCookies  from 'vue-cookies';
-import { Buffer } from 'buffer';
+import VueCookies from 'vue-cookies';
+// import { Buffer } from 'buffer';
 import VideoModal from "@/components/mypage/modal.vue";
 // import NFTCard from "@/components/market/NFTCard.vue"
 import Swal from 'sweetalert2'
@@ -344,6 +347,7 @@ export default {
       videoId: "",
       seto: 1,
       sedm: 1,
+      nftInfo:[],
     }
   },
   async created() {
@@ -365,6 +369,8 @@ export default {
       this.$store.dispatch('getuserLikeMarketNFTs')
       this.userLikeMarketNFTs = this.$store.userLikeMarketNFTs
     },
+
+
     
     selectDrops() {
       this.sedm = 1
@@ -466,67 +472,215 @@ export default {
       // }
     },
 
+    async getUserNFTs(type){
+      await this.$store.dispatch('userNFTs', type)
+      this.userNFTs = this.$store.userNFTs
+    },
     async charge() {
       console.log("1111");
-      
-      const web3 = new Web3('https://fanftasy.kro.kr/network');
-      
+      // const web3 = new Web3(new Web3.providers.HttpProvider('https://fanftasy.kro.kr/network'));
+      // const web3 = new Web3('https://fanftasy.kro.kr/network');
       const account = VueCookies.get('Account');
-      const accounts = await web3.eth.getAccounts();
-      console.log(accounts);
-
-      const tempMessage = "testSigning";
-      const msg = `0x${Buffer.from(tempMessage, 'utf8').toString('hex')}`;
-      console.log(msg);
-      // await web3.eth.request({
-      //   method: 'personal_sign',
-      //   params: [msg, account, 'example sign'],
-      // }).then((res) => {
-      //   console.log(res);
-      // });
-      // web3.eth.personal.sign("msg", account, "example sign");
-      
-      const contractAddress = '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180';
-      // const contractAddress = '0xcC3E0342D6E62E84bA6028220fEe64a94875b398';
-      const bankContract = new web3.eth.Contract(BankABI, contractAddress);
-
-      bankContract.getPastEvents('Withdraw', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      }, function(err, events){
-        if(err){ 
-          console.log(err);
-        }
-        else{
-          console.log(events);
-        }
-      });
-
-      bankContract.getPastEvents('Deposit', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      }, function(err, events){
-        if(err){ 
-          console.log(err);
-        }
-        else{
-          console.log(events);
-        }
-      });
-      
-      // const amount = web3.utils.toWei("1", "ether");
+      // const accounts = await web3.eth.getAccounts();
+      // console.log(accounts);
       console.log(account);
-      
-        // amount 만큼 컨트랙트에서 가져오기
-        // bankContract.methods.withdraw(amount).send({ from: account });
+      // console.log(await web3.eth.sign('hello', account));
+
+      // console.log(web3.providers);
+      // console.log(web3.givenProvider);
+
+      // 메타마스크가 실행 되면서 서명 요청 
+      // const method = 'personal_sign';
+      // const params = ['test', account];
+      // // await Web3.providers.HttpProvider('https://fanftasy.kro.kr/network').send(
+      // await window.ethereum.request(
+      //   {
+      //     method,
+      //     params,
+      //     account,
+      //   }
+      // ).then((res) => {
+      //   console.log(res);
+      // })
+      // .catch((err) => {
+      //   console.log(err);
+      // })
+
+        console.log(window.ethereum)
         
-        // deposit 실행된 로그
-        // const depositEvent = bankContract.events.Deposit();
-        // depositEvent.on("data", event => {
-          //   console.log("Deposit event:", event.returnValues);
-          // }).on("error", console.error);
+        ////////////////
+        const web3 = new Web3(window.ethereum);
+        const bankContractAddress = '0xbC7eeBAbbAd2E7427C7E3cF7B3B073ed51a91390';
+        const bankContract = new web3.eth.Contract(BankABI, bankContractAddress);
+        const  amount = web3.utils.toWei("100", "ether"); // 1 ETH를 wei 단위로 변환
+        // console.log(bankContract);
+
+
+        /////////////////////////////////////////////
+        const saleFactoryContractAddress = '0x0509b43FF9CcAC684ef00bc82020208b6F86d156';
+        const saleFactoryContract = new web3.eth.Contract(SaleFactoryABI, saleFactoryContractAddress);
+        console.log(await saleFactoryContract.methods);
+
+        // 앞이 nft_id 이고 amount가 price -> 단위는 wei 이기에 단위 변환 만들기
+        // const ans = (await saleFactoryContract.methods.createSale(5, amount).send({ from: account }));
+        // (await saleFactoryContract.methods.createSale(5, amount).send({ from: account })
+        // .on("transactionHash", function(hash) {
+        //     console.log("Transaction hash: " + hash);
+        //   })
+        //   .on("receipt", function(receipt) { // .then과 비슷함
+        //     console.log("Create Sale Receipt : ");
+        //     console.log(receipt);
+        //   })
+        //   .on("error", function(error) {
+        //       console.error(error);
+        //   }));
+        //   console.log(ans);
+
+        // 판매 컨트랙트의 주소
+        // var SaleContractAddress = null;
         
-        // 컨트랙트에 얼마가 남아있는지 확인하는 기능
+        // // 판매 컨트랙트의 주소를 가져오기 위한 판매 올린 로그 불러오기
+        // saleFactoryContract.getPastEvents('NewSale', {
+        //   filter: { itemId : [11] },
+        //   fromBlock: 0,
+        //   toBlock: 'latest',
+        // },async function(err, events){
+        //   console.log(err);
+        //   console.log(events);
+        //   this.SaleContractAddress = events[events.length - 1].returnValues._saleContract;
+        //   console.log(this.SaleContractAddress);
+        //   
+          
+          
+          
+          
+          
+        //   // ///////////////////////////////////////////////////////////////////////////////////
+        //   //  판매 중인 nft 구매 하려면 필요한 컨트랙트
+        //   let SaleContract = new web3.eth.Contract(SaleABI, this.SaleContractAddress);
+        //   console.log(SaleContract.methods);
+        //   let price = null;
+
+        //   // 판매 가격 받아오기
+        //   SaleContract.methods.getFinalPrice().call((err, res) => {
+        //     if(err) {
+        //       console.log(err);
+        //     }
+        //     else {
+        //       console.log(res);
+        //       price = res;
+        //     }
+        //   })
+
+
+        //   //  구매인데 판매 중인 nft의 가격을 value에 입력이 되어야한다.
+        //   const ans = SaleContract.methods.purchase().send({ from : account, value : price });
+        //   console.log(await ans);
+
+
+
+
+        // });
+        // console.log(this.SaleContractAddress);
+
+
+        // // 모든 판매 정보가 배열로 나오는데, 판매 완료 되었어도 뜬다.
+        // saleFactoryContract.methods.allSales().call((err, res) => {
+        //   console.log(err);
+        //   console.log(res);
+        // });
+        
+        ////////////////////////////////////////////////////////////////////////////////////////////////
+        let SaleContract = new web3.eth.Contract(SaleABI, this.SaleContractAddress);
+        console.log(SaleContract.methods);
+        // const ans = SaleContract.methods.purchase().send({ from : account, value : 1 });
+        // console.log(await ans);
+
+
+        ////////////////////////////////////////////////////////////////////////////////////// 
+        const NFTContractAddress = '0xDcC5cdA0Ea01c12eA756601021c0029FC39efD38';
+        const NFTContract = new web3.eth.Contract(NFTABI, NFTContractAddress);
+        console.log(await NFTContract.methods);
+
+        //////// NFT 생성
+        // const ans = (NFTContract.methods.create(account , "1234", saleFactoryContractAddress).send({ from: account }));
+        // console.log(await ans);
+
+        /////// 생성한 NFT의 NFT_ID(token_id)를 불러오기
+        // NFTContract.methods.current().call((err, res) => {
+        //   if(err){
+        //     console.log(err);
+        //   }
+        //   else {
+        //     console.log(res);
+        //   }
+        // })
+
+        // 전체 거래 완료 로그 확인
+        // NFTContract.getPastEvents('tradeRecord', {
+        //   fromBlock: 0,
+        //   toBlock: 'latest',
+        // }, function(err, res) {
+        //   if(err){
+        //     console.log(err);
+        //   }
+        //   else{
+        //     console.log(res);
+        //   }
+        // })
+
+
+
+
+        // 은행으로부터 인출한 로그들 
+        // bankContract.getPastEvents('Withdraw', {
+        //   fromBlock: 0,
+        //   toBlock: 'latest',
+        // }, function(err, events){
+        //   if(err){ 
+        //     console.log(err);
+        //   }
+        //   else{
+        //     console.log(events);
+        //   }
+        // });
+        
+        // 은행에 돈 집어 넣은 로그들
+        // bankContract.getPastEvents('Deposit', {
+        //   fromBlock: 0,
+        //   toBlock: 'latest',
+        // }, function(err, events){
+        //   if(err){ 
+        //     console.log(err);
+        //   }
+        //   else{
+        //     console.log(events);
+        //     const line = events.length;
+        //     if(line <= 5) {
+        //       for(let i = line; i > 0; i--){
+        //         let date = new Date((events[i - 1].returnValues.time) * 1000);
+        //         console.log(date.toLocaleString());
+        //       }
+        //     }else{
+        //       for(let i = line; i > (line - 5); i--){
+        //         let date = new Date((events[i - 1].returnValues.time) * 1000);
+        //         console.log(date.toLocaleString());
+        //       }
+        //     }
+        //     // console.log(line);
+        //     // console.log(events[line - 1]);
+        //     // console.log(events[line - 1].returnValues);
+        //     // console.log(events[line - 1].returnValues.time);
+        //     // const date = new Date((events[line - 1].returnValues.time) * 1000);
+        //     // console.log(date.toLocaleString());
+        //   }
+        // });
+        
+        
+        // amount 만큼 은행에서 가져오기 amount 가 1 이더만큼인 걸 wei 단위로 변환 시켜둔 것
+        bankContract.methods.withdraw(amount).send({ from: account });
+        
+        // // 은행에 얼마가 남아있는지 확인하는 기능
         bankContract.methods.getBalance().call((err, result) => {
           if (err) {
             console.error(err);
@@ -536,64 +690,28 @@ export default {
           }
         });
         
-        // bank 컨트랙트에 1이더만큼 넣음 -> abi 메서드 사용
-        // const depositAmount = web3.utils.toWei("1", "ether"); // 1 ETH를 wei 단위로 변환
-        // await window.ethereum.request('eth_requestAccounts').then((accounts) => {
-        //   const accout = accounts[0];
-        //   console.log(accout);
-        //   bankContract.methods.deposit().send({
-        //     from: accout,
-        //     value: web3.utils.toWei("1", "ether")
-        //   })
-        //   .then((res) => {
-        //     console.log(res);
-        //   })
-        //   .on("transactionHash", (hash) => {
-        //     console.log(`Transaction hash: ${hash}`);
-        //   })
-        //   .on("receipt", (receipt) => {
-        //     console.log(`Transaction receipt: ${JSON.stringify(receipt, null, 2)}`);
-        //   })
-        //   .on("error", (error) => {
-        //     console.error(error);
-        //   });
-        // });
         
-
-        web3.eth.accounts.wallet.add(account);
-
-        // bankContract.methods.deposit().send({
-        //   from: account,
-        //   value: web3.utils.toWei("1", "ether")
-        // })
-        // .on("transactionHash", function(hash) {
-        //   console.log("Transaction hash: " + hash);
-        // })
-        // .on("receipt", function(receipt) {
-        //   console.log(receipt);
-        // })
-        // .on("error", function(error) {
-        //   console.error(error);
-        // });
-        
-        
-        // bank 컨트랙트에 1이더만큼 넣음
-        // console.log(account);
-        // const value = web3.utils.toWei("1", "ether");
-        // const txHash = await web3.eth.sendTransaction({
-        //   from: account,
-        //   to: '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180',
-        //   value: value
-        // });
-        // console.log(txHash);
-    },
-
-    async getUserNFTs(type){
-      await this.$store.dispatch('userNFTs', type)
-      this.userNFTs = this.$store.userNFTs
-    },
-
-    uploadFile() {
+          // bank 컨트랙트에 1이더만큼 넣음 -> abi 메서드 사용
+          
+          // bankContract.methods.deposit().send({
+          //   from: account,
+          //   value: amount
+          // })
+          // .on("transactionHash", function(hash) {
+          //   console.log("Bank Deposit Transaction hash: " + hash);
+          // })
+          // .on("receipt", function(receipt) { // .then과 비슷함
+          //   console.log("Bank Receipt");
+          //   console.log(receipt);
+          //   console.log(receipt.from);
+          // })
+          // .on("error", function(error) {
+          //     console.error(error);
+          // });
+          
+          },
+          
+          uploadFile() {
       console.log('이미지 바꿉니다')
       this.$store.profileImg = this.$refs.fileInput.files[0];
       this.$store.dispatch('modiUserImg')
@@ -603,8 +721,13 @@ export default {
       this.$store.dispatch('modiUserInfo')
       // this.$router.go(-1)
     },
-
+    
     showModalImg(nft){
+      const NFTId = nft.nftId
+      console.log(NFTId)
+      this.$store.dispatch('resellDetailNFTs', NFTId)
+      this.nftInfo = this.$store.state.resellDetailNFTs
+
       console.log('nft: ',nft)
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       console.log(fileCid)
@@ -652,6 +775,10 @@ export default {
       })
     },
     showModalVideo(nft){
+      const NFTId = nft.nftId
+      console.log(NFTId)
+      this.$store.dispatch('resellDetailNFTs', NFTId)
+      this.nftInfo = this.$store.state.resellDetailNFTs
       console.log('비디오nft : ', nft)
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       Swal.fire({
@@ -693,6 +820,10 @@ export default {
       })
     },
     showModalAudio(nft){
+      const NFTId = nft.nftId
+      console.log(NFTId)
+      this.$store.dispatch('resellDetailNFTs', NFTId)
+      this.nftInfo = this.$store.state.resellDetailNFTs
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
       Swal.fire({
         title: '소유 NFT 정보',
@@ -766,28 +897,28 @@ export default {
         <div v-if="${c}=='video'">
           비디오
           <video src="${b}" alt="비디오" autoplay muted style="height:400px"/>
-        </div>
-        <div v-else-if="${c}==='image'" >
-          이미지
+          </div>
+          <div v-else-if="${c}==='image'" >
+            이미지
           <img src="${b}" style="height:400px"/>
-        </div>
-        <div v-else-if="${c}==='audio'">
-          오디오
+          </div>
+          <div v-else-if="${c}==='audio'">
+            오디오
           <audio controls :src="${b}" alt="오디오"></audio>
-        </div>  
-        <div>
-          ${c}
-          시발 이게 왜 됨?
-        </div>
-        ${b}
-        이거임
+          </div>  
+          <div>
+            ${c}
+            시발 이게 왜 됨?
+            </div>
+            ${b}
+            이거임
         ${a}
         이미지 태그
         <div>
-        </div>
-        
+          </div>
+          
           `,
-        customClass: {
+          customClass: {
           confirmButton: 'btn-right',
           cancelButton: 'btn-left'
         },
@@ -800,9 +931,10 @@ export default {
         }
       })
     },
+  
   },
   watch() {
-
+    
   },
   mounted() {
     if (this.profileImage === null) {
@@ -847,6 +979,7 @@ export default {
 
 .circle1{
   width: 184px;
+
   height: 184px;
   border-radius: 50%;
   display: flex;
@@ -1083,7 +1216,7 @@ export default {
   text-decoration: none; 
   color:black; 
   display:flex; 
-  flex-direction: column; 
+  flex-direction: column;
   justify-content: space-between;
 }
 
