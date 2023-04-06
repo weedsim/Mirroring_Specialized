@@ -297,7 +297,7 @@ import NFTABI from "../../../path/to/NFTABI.json";
 import BankABI from "../../../path/to/BankABI.json";
 import Web3 from "web3"
 import VueCookies from 'vue-cookies';
-import { Buffer } from 'buffer';
+// import { Buffer } from 'buffer';
 import VideoModal from "@/components/mypage/modal.vue";
 // import NFTCard from "@/components/market/NFTCard.vue"
 import Swal from 'sweetalert2'
@@ -455,128 +455,6 @@ export default {
       // finally{
 
       // }
-    },
-
-    async charge() {
-      console.log("1111");
-      
-      const web3 = new Web3('https://fanftasy.kro.kr/network');
-      
-      const account = VueCookies.get('Account');
-      const accounts = await web3.eth.getAccounts();
-      console.log(accounts);
-
-      const tempMessage = "testSigning";
-      const msg = `0x${Buffer.from(tempMessage, 'utf8').toString('hex')}`;
-      console.log(msg);
-      // await web3.eth.request({
-      //   method: 'personal_sign',
-      //   params: [msg, account, 'example sign'],
-      // }).then((res) => {
-      //   console.log(res);
-      // });
-      // web3.eth.personal.sign("msg", account, "example sign");
-      
-      const contractAddress = '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180';
-      // const contractAddress = '0xcC3E0342D6E62E84bA6028220fEe64a94875b398';
-      const bankContract = new web3.eth.Contract(BankABI, contractAddress);
-
-      bankContract.getPastEvents('Withdraw', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      }, function(err, events){
-        if(err){ 
-          console.log(err);
-        }
-        else{
-          console.log(events);
-        }
-      });
-
-      bankContract.getPastEvents('Deposit', {
-        fromBlock: 0,
-        toBlock: 'latest',
-      }, function(err, events){
-        if(err){ 
-          console.log(err);
-        }
-        else{
-          console.log(events);
-        }
-      });
-      
-      // const amount = web3.utils.toWei("1", "ether");
-      console.log(account);
-      
-        // amount 만큼 컨트랙트에서 가져오기
-        // bankContract.methods.withdraw(amount).send({ from: account });
-        
-        // deposit 실행된 로그
-        // const depositEvent = bankContract.events.Deposit();
-        // depositEvent.on("data", event => {
-          //   console.log("Deposit event:", event.returnValues);
-          // }).on("error", console.error);
-        
-        // 컨트랙트에 얼마가 남아있는지 확인하는 기능
-        bankContract.methods.getBalance().call((err, result) => {
-          if (err) {
-            console.error(err);
-          } 
-          else {
-            console.log('Contract balance:', result);
-          }
-        });
-        
-        // bank 컨트랙트에 1이더만큼 넣음 -> abi 메서드 사용
-        // const depositAmount = web3.utils.toWei("1", "ether"); // 1 ETH를 wei 단위로 변환
-        // await window.ethereum.request('eth_requestAccounts').then((accounts) => {
-        //   const accout = accounts[0];
-        //   console.log(accout);
-        //   bankContract.methods.deposit().send({
-        //     from: accout,
-        //     value: web3.utils.toWei("1", "ether")
-        //   })
-        //   .then((res) => {
-        //     console.log(res);
-        //   })
-        //   .on("transactionHash", (hash) => {
-        //     console.log(`Transaction hash: ${hash}`);
-        //   })
-        //   .on("receipt", (receipt) => {
-        //     console.log(`Transaction receipt: ${JSON.stringify(receipt, null, 2)}`);
-        //   })
-        //   .on("error", (error) => {
-        //     console.error(error);
-        //   });
-        // });
-        
-
-        web3.eth.accounts.wallet.add(account);
-
-        // bankContract.methods.deposit().send({
-        //   from: account,
-        //   value: web3.utils.toWei("1", "ether")
-        // })
-        // .on("transactionHash", function(hash) {
-        //   console.log("Transaction hash: " + hash);
-        // })
-        // .on("receipt", function(receipt) {
-        //   console.log(receipt);
-        // })
-        // .on("error", function(error) {
-        //   console.error(error);
-        // });
-        
-        
-        // bank 컨트랙트에 1이더만큼 넣음
-        // console.log(account);
-        // const value = web3.utils.toWei("1", "ether");
-        // const txHash = await web3.eth.sendTransaction({
-        //   from: account,
-        //   to: '0xc8AD4DF30fc1a99a716B9Fc9F3752E79eda47180',
-        //   value: value
-        // });
-        // console.log(txHash);
     },
 
     async getUserNFTs(type){
@@ -817,9 +695,8 @@ export default {
           // });
           
           },
-        },
-
-    uploadFile() {
+          
+          uploadFile() {
       console.log('이미지 바꿉니다')
       this.$store.profileImg = this.$refs.fileInput.files[0];
       this.$store.dispatch('modiUserImg')
@@ -829,7 +706,7 @@ export default {
       this.$store.dispatch('modiUserInfo')
       // this.$router.go(-1)
     },
-
+    
     showModalImg(nft){
       console.log('nft: ',nft)
       const fileCid = JSON.stringify(nft.nftSource.fileCID).replace('"','').replace('"','')
@@ -850,8 +727,8 @@ export default {
               <div>
                 <label for="nickname" style="font-weight:bold;">아티스트</label>
                 <div id="artist-nickname">by. ${nft.nftSource.regArtist.nickname}</div>
-              </div>
-              <div>
+                </div>
+                <div>
                 <label for="edition-num" style="font-weight:bold;">에디션 번호</label>
                 <div id="edition-num">#. ${nft.editionNum}</div>
               </div>
@@ -884,13 +761,13 @@ export default {
           <div>
             <video src="${fileCid}" alt="비디오" autoplay muted style="height:500px; width:auto;"/>
 
-          </div>
+            </div>
           <div style="margin-left:10px; display:flex; flex-direction:column; text-align:start; width:100%;">
             <div>
               <label for="title" style="font-weight:bold; ">NFT 이름</label>
               <div id="title" style="text-align:right; margin-bottom:10px;">${nft.nftSource.title}</div>
-            </div>
-            <hr>
+              </div>
+              <hr>
             <div>
               <label for="nickname" style="font-weight:bold;">아티스트</label>
               <div id="artist-nickname" style="text-align:right; margin-bottom:10px;">by. ${nft.nftSource.regArtist.nickname}</div>
@@ -971,28 +848,28 @@ export default {
         <div v-if="${c}=='video'">
           비디오
           <video src="${b}" alt="비디오" autoplay muted style="height:400px"/>
-        </div>
-        <div v-else-if="${c}==='image'" >
-          이미지
+          </div>
+          <div v-else-if="${c}==='image'" >
+            이미지
           <img src="${b}" style="height:400px"/>
-        </div>
-        <div v-else-if="${c}==='audio'">
-          오디오
+          </div>
+          <div v-else-if="${c}==='audio'">
+            오디오
           <audio controls :src="${b}" alt="오디오"></audio>
-        </div>  
-        <div>
-          ${c}
-          시발 이게 왜 됨?
-        </div>
-        ${b}
-        이거임
+          </div>  
+          <div>
+            ${c}
+            시발 이게 왜 됨?
+            </div>
+            ${b}
+            이거임
         ${a}
         이미지 태그
         <div>
-        </div>
-        
+          </div>
+          
           `,
-        customClass: {
+          customClass: {
           confirmButton: 'btn-right',
           cancelButton: 'btn-left'
         },
@@ -1005,9 +882,10 @@ export default {
         }
       })
     },
+  
   },
   watch() {
-
+    
   },
   mounted() {
     if (this.profileImage === null) {
