@@ -17,7 +17,8 @@ public interface NFTService {
 
   NFTDetailDTO getNFT(long nftId);
 
-  void modifyNFT(NFTTradeDTO nftTradeDTO);
+  void modifyNFT(NFTTradeDTO nftTradeDTO)
+      throws IOException, ExecutionException, InterruptedException;
 
 
   List<NFTListDTO> getNFTListByOwnerId(long regArtistId, int type);

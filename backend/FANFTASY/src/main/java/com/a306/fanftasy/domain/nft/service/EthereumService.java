@@ -130,24 +130,22 @@ public class EthereumService {
     }
   }
 
-//  public Object ethCall(Function function)
-//      throws IOException, ExecutionException, InterruptedException {
-//    //1. CONNECT WEB3
-//    Admin web3j = Admin.build(new HttpService(NETWORK_URL));
-//    //2. CREATE TRANSACTION
-//    Transaction transaction = Transaction.createEthCallTransaction(ADMIN_ADDRESS,
-//        FT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
-//    //3. CALL ETHEREUM
-//    EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
-//    log.info("call transaction 전송");
-//    //4. DECODE RESULT
-//    List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
-//        function.getOutputParameters());
-//    log.info("nonce : ");
-//    return (String) decode.get(0).getValue();
-//    // transaction에 대한 transaction Hash값 얻기.
-//  }//ethCall
-
+  public String ethCall(Function function)
+      throws IOException, ExecutionException, InterruptedException {
+    //1. CONNECT WEB3
+    Admin web3j = Admin.build(new HttpService(NETWORK_URL));
+    //2. CREATE TRANSACTION
+    Transaction transaction = Transaction.createEthCallTransaction(ADMIN_ADDRESS, NFT_CONTRACT_ADDRESS, FunctionEncoder.encode(function));
+    //3. CALL ETHEREUM
+    EthCall ethCall = web3j.ethCall(transaction, DefaultBlockParameterName.LATEST).send();
+    log.info("call transaction 전송");
+    //4. DECODE RESULT
+    List<Type> decode = FunctionReturnDecoder.decode(ethCall.getResult(),
+        function.getOutputParameters());
+    log.info("decode : " + (String) decode.get(0).getValue() );
+    return (String) decode.get(0).getValue();
+    // transaction에 대한 transaction Hash값 얻기.
+  }//ethCall
 
   public long createNFT(Function function, String contractAddress)
       throws IOException, InterruptedException, ExecutionException {

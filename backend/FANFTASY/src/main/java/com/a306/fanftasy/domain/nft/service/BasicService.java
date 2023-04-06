@@ -72,12 +72,22 @@ public class BasicService{
 
   public void getNumber(int num)
   {
-    // this method implement next posting
   }
 
-  public void getOwner()
-  {
-    // this method implement next posting
+  public String getOwner(long nftId) throws IOException, ExecutionException, InterruptedException {
+    try{
+      log.info("getOwner 메소드 호출");
+      Function function = new Function(
+          "ownerOf",
+          Arrays.asList(new Uint256(nftId)),
+          Arrays.asList(new TypeReference<Address>() {
+          })
+      );
+      return ethereumService.ethCall(function);
+    }catch(Exception e){
+      throw e;
+    }
+    // 2. ethereum을 function 변수로 통해 호출
   }
 
 }

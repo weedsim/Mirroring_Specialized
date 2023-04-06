@@ -7,6 +7,7 @@ import com.a306.fanftasy.domain.nft.entity.NFT;
 import com.a306.fanftasy.domain.nft.entity.NFTSource;
 import com.a306.fanftasy.domain.nft.exception.NFTCreateException;
 import com.a306.fanftasy.domain.nft.exception.NFTsoldOutException;
+import com.a306.fanftasy.domain.nft.exception.TransactionException;
 import com.a306.fanftasy.domain.nft.repository.NFTRepository;
 import com.a306.fanftasy.domain.nft.repository.NFTSourceRepository;
 import com.a306.fanftasy.domain.user.dto.UserLoginDTO;
@@ -25,6 +26,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.a306.fanftasy.domain.user.service.UserSecurityService;
+import javax.transaction.TransactionalException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -333,13 +335,16 @@ public class NFTServiceImpl implements NFTService {
 
   //9. 개인의 NFT 구매
   @Override
-  public void modifyNFT(NFTTradeDTO nftTradeDTO) {
+  public void modifyNFT(NFTTradeDTO nftTradeDTO)
+      throws IOException, ExecutionException, InterruptedException {
     try {
       log.info("NFT 구매 반영 시작");
       long nftId = nftTradeDTO.getNftId();
+      //1. 블록체인 네트워크에 조회
+      User newOwner = userRepository.findByUserId(nftTradeDTO.getBuyerId());
+      if(newOwner.getAddress() != basicService.getOwner(nftId)) throw new TransactionException("블록체인 조회 결과 다름");
       NFT nftEntity = nftRepository.findById(nftId);
       User nowOwner = nftEntity.getOwner();
-      User newOwner = userRepository.findByUserId(nftTradeDTO.getBuyerId());
       double price = nftEntity.getCurrentPrice();
       //1. nftId에 해당되는 nft 소유자 newOwner로 변경해주고
       nftEntity.updateIsOnSale(false);
