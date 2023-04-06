@@ -321,7 +321,7 @@ public class NFTServiceImpl implements NFTService {
       long nftId = nftTradeDTO.getNftId();
       NFT nftEntity = nftRepository.findById(nftId);
       User nowOwner = nftEntity.getOwner();
-      User newOwner = User.builder().userId(nftTradeDTO.getBuyerId()).build();
+      User newOwner = userRepository.findByUserId(nftTradeDTO.getBuyerId());
       double price = nftEntity.getCurrentPrice();
       //1. nftId에 해당되는 nft 소유자 newOwner로 변경해주고
       nftEntity.updateIsOnSale(false);
@@ -338,7 +338,7 @@ public class NFTServiceImpl implements NFTService {
         }
         //판매 아티스트의 판매량과 총 판매금 업데이트
         artist.plusTotalSales(1);
-        artist.plusTotalPrice(nftSource.getOriginPrice());
+        artist.plusTotalPrice(price);
       }
       nftRepository.save(nftEntity);
     } catch (Exception e) {
@@ -366,6 +366,21 @@ public class NFTServiceImpl implements NFTService {
           .price(nft.getCurrentPrice())
           .build();
       return saleDTO;
+    }catch (Exception e){
+      throw e;
+    }
+  }
+
+  //11. resell 등록한 상품 판매 취소
+  @Override
+  public void resellCancel(long nftId){
+    try{
+      //remainNum>0인지 먼저 체크하고
+      NFT nftEntity = nftRepository.findById(nftId);
+      //1.isOnSale >>>> true
+      nftEntity.updateIsOnSale(false);
+      //수정 내역 반영
+      nftRepository.save(nftEntity);
     }catch (Exception e){
       throw e;
     }

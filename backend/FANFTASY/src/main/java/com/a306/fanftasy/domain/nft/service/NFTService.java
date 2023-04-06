@@ -28,4 +28,6 @@ public interface NFTService {
   void resell(SaleDTO saleDTO);
 
   SaleDTO getNFTfirstSale(long nftSourceId);
+
+  void resellCancel(long nftId);
 }

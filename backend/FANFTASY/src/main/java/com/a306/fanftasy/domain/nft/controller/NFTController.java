@@ -290,4 +290,26 @@ public class NFTController {
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }
+
+    //11. NFT resell로 등록된 상품 판매 취소
+    @GetMapping("/cancel/{nftId}")
+    public ResponseEntity<?> resellCancel(@PathVariable long nftId){
+        log.info("NFT 판매 취소 요청 : " + nftId);
+        ResponseDefault responseDefault = null;
+        try{
+            nftService.resellCancel(nftId);
+            responseDefault = ResponseDefault.builder()
+                .success(true)
+                .messege("SUCCESS")
+                .build();
+            log.info("거래 취소 성공");
+            return ResponseEntity.ok().body(responseDefault);
+        }catch (Exception e){
+            log.error("거래 취소 실패");
+            responseDefault = ResponseDefault.builder()
+                .success(false)
+                .messege(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDefault);
+        }
+    }
 }
