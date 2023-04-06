@@ -2,6 +2,7 @@ package com.a306.fanftasy.domain.nft.service;
 
 import com.a306.fanftasy.domain.nft.dto.NFTCreateDTO;
 
+import com.a306.fanftasy.domain.nft.exception.NFTCreateException;
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -77,6 +78,9 @@ public class PinataServiceImpl implements PinataService{
     mapper.setVisibility(PropertyAccessor.FIELD, Visibility.ANY);
     mapper.registerModule(new JavaTimeModule());
     NFTCreateDTO nftCreateDTO = mapper.readValue(jsonObject.toString(), NFTCreateDTO.class);
+    if(nftCreateDTO.getTotalNum()<=0||nftCreateDTO.getOriginPrice()<0||nftCreateDTO.getRegDate().isBefore(LocalDateTime.now())){
+      throw new NFTCreateException("잘못된 입력값입니다.");
+    }
     log.info("변환된 dto : "+ nftCreateDTO);
     return nftCreateDTO;
   }

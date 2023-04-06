@@ -33,6 +33,10 @@ public class NFTController {
         log.info("NFT 생성 요청 : " + info);
         ResponseDefault responseDefault = null;
         try{
+            if(file==null || info==null ||endDate==null){
+                responseDefault = ResponseDefault.builder().success(false).messege("File or Info or EndDate is null").build();
+                return ResponseEntity.badRequest().body(responseDefault);
+            }
             //받아온 file과 info를 통해서 IPFS에 저장하고 CID를 반환함.
             //해당 정보를 DB에 저장
             log.info("파일 pinata 저장 시작");
@@ -45,7 +49,7 @@ public class NFTController {
             responseDefault = ResponseDefault.builder().success(true).messege("SUCCESS").build();
             return ResponseEntity.ok().body(responseDefault);
         }catch (Exception e){
-            responseDefault = ResponseDefault.builder().success(false).messege("fail").build();
+            responseDefault = ResponseDefault.builder().success(false).messege(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDefault);
         }
     }
