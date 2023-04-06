@@ -881,22 +881,22 @@ export default {
       Swal.fire({
         title: 'NFT 리셀',
         showCancelButton: false,
-        confirmButtonText: '',
+        confirmButtonText: '판매하기',
         html:`
-          <input id="price" placeholder="가격" style="border-style:solid;"></input>
-          <img src="${fileCid}" style="height:50%; width:50%; border-radius: 15px;"/>
+          <div>
+            <img src="${fileCid}" style="height:50%; width:50%; border-radius: 15px;"/>
+          </div>
+          <div>
+            <input id="price" placeholder="가격" style="border-style:solid;"></input>
+          </div>  
           <div>
             <div>
               <label for="title" style="font-weight:bold;">NFT 이름</label>
-              <div id="title">${nft.nftSource.title}</div>
+              <span id="title">${nft.nftSource.title}</span>
             </div>
             <div>
               <label for="nickname" style="font-weight:bold;">아티스트</label>
-              <div id="artist-nickname">by. ${nft.nftSource.regArtist.nickname}</div>
-            </div>
-            <div>
-              <label for="edition-num" style="font-weight:bold;">에디션 번호</label>
-              <div id="edition-num">#. ${nft.editionNum}</div>
+              <span id="artist-nickname">by. ${nft.nftSource.regArtist.nickname}</span>
             </div>
           </div>
         `,
