@@ -13,7 +13,7 @@
     </span>
     <br>
     <br>
-    <label for="">파일선택</label>
+    <label for="">파일선택</label>  
     <!-- <input v-on:change="previewFiles(this.files)" type="file" accept="image/*, video/*, audio/*" style="border:solid"> -->
     <input type="file" @change="handleFileUpload" accept="image/*, video/*, audio/*"/>
     <br>
