@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import HomeView from '../views/mainpage/HomeView.vue';
 import MyPageView from '../views/account/MyPageView.vue';
-import MyPageUpdateView from '../views/account/MyPageUpdateView';
+import UserPageView from '../views/account/UserPageView.vue';
+// import MyPageUpdateView from '../views/account/MyPageUpdateView';
 import MarketListView from '../views/market/MarketListView.vue';
 import MarketDetailView from '../views/market/MarketDetailView.vue';
 import MarketAddView from '../views/market/MarketAddView.vue';
@@ -12,6 +13,7 @@ import CommunityDetailView from '../views/community/CommunityDetailView.vue';
 import ResellListView from '../views/resell/ResellListView.vue';
 import ResellDetailView from '../views/resell/ResellDetailView.vue';
 import SignUpSelectView from '../views/account/SignUpSelectView.vue';
+import UserNFTView from '../views/resell/UserNFTView.vue';
 
 const routes = [
   {
@@ -35,15 +37,20 @@ const routes = [
     component: CommunityDetailView
   },
   {
+    path: '/userpage/:id',
+    name: 'userpageview',
+    component: UserPageView
+  },
+  {
     path: '/mypage',
     name: 'mypageview',
     component: MyPageView
   },
-  {
-    path: '/mypageupdate',
-    name: 'mypageupdate',
-    component: MyPageUpdateView
-  },
+  // {
+  //   path: '/mypageupdate',
+  //   name: 'mypageupdate',
+  //   component: MyPageUpdateView
+  // },
   {
     path: '/drops',
     name: 'MarketListView',
@@ -68,6 +75,11 @@ const routes = [
     path: '/market/:id',
     name: 'ResellDetailView',
     component: ResellDetailView
+  },
+  {
+    path: '/mypage/:nftId',
+    name: 'UserNFTView',
+    component: UserNFTView
   },
   {
     path: '/signup',

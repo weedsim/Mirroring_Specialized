@@ -18,6 +18,7 @@
         <router-link to="/drops" v-else-if="currentRouteName==='MarketDetailView'" class="header-router font-k header-tab-clicked" style="margin: 0px 30px;">DROPS</router-link>
         <router-link to="/drops" v-else class="header-router font-k header-tab" style="margin: 0px 30px;">DROPS</router-link>
         <router-link to="/market" v-if="currentRouteName==='ResellListView'" class="header-router font-k header-tab-clicked" style="margin: 0px 30px;">MARKET</router-link>
+        <router-link to="/market" v-else-if="currentRouteName==='ResellDetailView'" class="header-router font-k header-tab-clicked" style="margin: 0px 30px;">MARKET</router-link>
         <router-link to="/market" v-else class="header-router font-k header-tab" style="margin: 0px 30px;">MARKET</router-link>
         <!-- <router-link to="/community" class="header-router"
           >커뮤니티</router-link
@@ -50,12 +51,15 @@
           /> -->
 
         <!-- </router-link> -->
-        <router-link v-if="IsLOGIN" to="/mypage" class="icon-profile">
-          <img
-          class="profile-image"
-          :src="this.profileImage"
-          alt=""
-          />
+        <router-link v-if="IsLOGIN" to="/mypage" class="icon-profile" style="display:flex;">
+          <p style="width:30px; height: 30px; border-radius: 50%; overflow: hidden; margin-right: 10px;">
+            <img
+            class="profile-image"
+            :src="this.profileImage"
+            alt=""
+            style="object-fit: fill;"
+            />
+          </p>
           <p class="nick">{{ this.nickname }} 님</p>
         </router-link>
         <p v-if="IsLOGIN" @click="logOut()" style="cursor: pointer;">로그아웃</p>

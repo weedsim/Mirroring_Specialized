@@ -28,7 +28,6 @@ const store = createStore({
     isSame: false,
     name: null,
     nickname: VueCookies.get("nickname"),
-    nickname2: null,
     address: null,
     phone: null,
     role: null,
@@ -45,8 +44,11 @@ const store = createStore({
     cards: [],
     card: [],
     userNFTs: [],
+    userLikeDropsNFTs: [],
+    userLikeMarketNFTs: [],
     mcards: [],
     mcard: [],
+    otheruser:[],
   },
   getters: {
     isLogin: function () {
@@ -241,6 +243,7 @@ const store = createStore({
           phone: this.state.phone, //전화번호
           role: this.state.role, //아티스트 or 팬
           company: this.state.company, //소속사
+          profileImg: "https://fanftasy.s3.ap-northeast-2.amazonaws.com/profileImg/8c64c983-1b80-40fb-bcc1-366f3322cbb2.png",
         },
       })
         .then((res) => {
@@ -266,26 +269,42 @@ const store = createStore({
         },
       })
         .then((res) => {
-          console.log('res :', res)
-          console.log('res.data :', res.data)
+          // console.log('res :', res)
+          // console.log('res.data :', res.data)
           console.log('res.data.data : ', res.data.data)
-          this.state.nickname2 = res.data.data.nickname
-          console.log(this.state.nickname2)
+          this.state.role = res.data.data.role
+          this.state.nickname = res.data.data.nickname
+          console.log(this.state.role)
+        })
+        .catch((err) => {
+          console.log(err)
+          alert("로그인 해주세요")
+        })
+    },
+
+    async otherUserDetail(context, uid) {
+      await axios({
+        method: "get",
+        url: `${API_URL}/user/other/${uid}`,
+      })
+        .then((res) => {
+          console.log('res.data.data : ', res.data)
+          this.state.otheruser = res.data
         })
         .catch((err) => {
           console.log(err)
         })
     },
 
-    async userNFTs(){
+    async userNFTs(context, type){
       const uid = VueCookies.get("userId"); 
       console.log('uid :',uid)
       await axios({
         method: "get",
         url: `${API_URL}/nft/user/${uid}`,
-        // data: {
-        //   ownerId: uid,
-        // }
+        params: {
+          type,
+        }
       })
       .then((res)=>{
         console.log('userNFTs : ', res)
@@ -306,21 +325,17 @@ const store = createStore({
         headers: {
           'Content-Type': 'multipart/form-data'
         },
-        method: "put",
+        method: "post",
         url: `${API_URL}/user/profile/${id}`,
         data: formData,
-        // data: {
-        //   profileImg: this.state.profileImg
-        // }
       })
       .then((res)=>{
         VueCookies.set('profileImage', res.data.data, '3h');
-        console.log('aaaaaaaaaaaaaaaaaaaaaaaaa')
         console.log(this.profileImg)
-        console.log('bbbbbbbbbbbbbbbbbbbbb')
         console.log(res.data.data)
         this.state.success = true
-        this.$router.go(0)
+        // this.$router.go(0)
+        router.go(0)
       })
       .catch((err)=>{
         console.log(err)
@@ -339,7 +354,6 @@ const store = createStore({
         data: {
           address: address,
           nickname: this.state.nickname,
-          profileImg: this.state.profileImg,
         },
       })
         .then((res) => {
@@ -379,9 +393,13 @@ const store = createStore({
     },
     
     async getDropsDetail(context, NFTId) {
+      const uid = VueCookies.get("userId")
       await axios({
         method: "get",
         url: `${API_URL}/nft/drops/${NFTId}`,
+        params: {
+          userId: uid
+        }
       })
         .then((res) => {
           console.log(res)
@@ -417,15 +435,16 @@ const store = createStore({
       
     async getMarketDetail(context, nftSourceId) {
       // const currentPrice = payload.currentPrice
+      const uid = VueCookies.get("userId")
       await axios({
         method: "get",
         url: `${API_URL}/nft/market/${nftSourceId}`,
         params: {
-          // nftSourceId:nftSourceId,
-          // currentPrice:currentPrice
+          userId: uid,
         }
       })
         .then((res) => {
+          console.log("123156453895125661548653468534")
           console.log(res)
           this.mcard = res.data
         })
@@ -443,12 +462,13 @@ const store = createStore({
         totalNum: payload.totalNum,
         originPrice : payload.originPrice,
         regArtistId : payload.regArtistId,
-        fileType : payload.fileType
+        fileType : payload.fileType,
       }
       console.log("qwerwqerqwerwqerqwer")
       console.log(ppayload)
       console.log("asaaaaaaaaaaaaaa")
       formData.append("info", JSON.stringify(ppayload));
+      formData.append("endDate", payload.endDate);
       
       console.log(formData)
       axios({
@@ -463,7 +483,109 @@ const store = createStore({
       .catch((err) => {
         console.log(err)
       })
-    }
+    },
+
+    dropsLike(context, nftSourceId) {
+      const uid = VueCookies.get("userId")
+      axios({
+        method: "get",
+        url: `${API_URL}/like/source`,
+        params: {
+          nftSourceId: nftSourceId,
+          userId: uid,
+        }
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+
+    dropsUnLike(context, nftSourceId) {
+      const uid = VueCookies.get("userId")
+      axios({
+        method: "get",
+        url: `${API_URL}/like/source-cancel`,
+        params: {
+          nftSourceId: nftSourceId,
+          userId: uid,
+        }
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+
+    marketLike(context, nftId) {
+      const uid = VueCookies.get("userId")
+      axios({
+        method: "get",
+        url: `${API_URL}/like/nft`,
+        params: {
+          nftId: nftId,
+          userId: uid,
+        }
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+
+    marketUnLike(context, nftId) {
+      const uid = VueCookies.get("userId")
+      axios({
+        method: "get",
+        url: `${API_URL}/like/nft-cancel`,
+        params: {
+          nftId: nftId,
+          userId: uid,
+        }
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+
+    getuserLikeDropsNFTs() {
+      const uid = VueCookies.get("userId")
+      axios({
+        method: "get",
+        url: `${API_URL}/like/source/${uid}`,
+      })
+      .then((res) => {
+        this.userLikeDropsNFTs = res.data.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
+    
+    getuserLikeMarketNFTs() {
+      const uid = VueCookies.get("userId")
+      axios({
+        method: "get",
+        url: `${API_URL}/like/nft/${uid}`,
+      })
+      .then((res) => {
+        console.log("123485678956")
+        console.log(res.data.data)
+        this.userLikeMarketNFTs = res.data.data
+      })
+      .catch((err) => {
+        console.log(err)
+      })
+    },
 
     },
     modules: {},

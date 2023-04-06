@@ -12,7 +12,7 @@
           <!-- <v-img src="@/assets/maingif.gif" style="width:350px; height: 550px;"></v-img> -->
         </span>
       </div>
-      <div style="text-align: center; font-size: 30px; margin-top: 90px;">스크롤</div>
+      <div style="text-align: center; font-size: 30px; margin-top: 14vh;">스크롤</div>
       <div style="text-align: center;">
         <v-img src="@/assets/chevron-double-down.png" alt="" style="width: 35px; margin: auto;"></v-img>
       </div>
@@ -116,7 +116,16 @@
           <!-- <NFTCardR v-for="i in 4" :key="i" class="nft-card-class"/> -->
 
         </div>
-        </div>
+        <span>
+          <router-link to="/market" style="text-decoration: none; color: #9B7CF8;">
+            <div class="go-my-box2">
+              <p style="padding-top: 7px; font-size: 16px;">
+                SEE MORE RESELLING NFT
+              </p> 
+            </div>
+          </router-link>
+        </span>
+      </div>
     </div>
 
     <div class="content section">
@@ -137,39 +146,33 @@
         </router-link>
         <br>
         <br>
-        <div class="df cen" v-if="a == 1">
-          <div style="width: 300px; height: 500px; margin: 0 40px;">
-            <v-img src="@/assets/nft_main(1).jpg" alt="" style=" border-radius: 3%;">
-            </v-img>
-          </div>
-          <div style="width: 300px; height: 500px; margin: 0 40px;">
-            <v-img src="@/assets/nft_main(1).jpg" alt="" style=" border-radius: 3%;">
-            </v-img>
-          </div>
-          <div style="width: 300px; height: 500px; margin: 0 40px;">
-            <v-img src="@/assets/nft_main(1).jpg" alt="" style=" border-radius: 3%;">
-            </v-img>
-          </div>
-        </div>
-        <div v-else style="margin: 33vh;">
-          <span style="font-size: 30px">
-            현재 보유하고 있는 NFT가 없습니다. NFT를 구매해보세요!
+
+        <!-- <div class="df" style="justify-content: center;">
+          <NFTCardR v-for="(card, index) in mcards.slice(0, 4)" :key="index" :card="card" class="" />
+        </div> -->
+        
+        <div v-if="uid===null" style="margin: 33vh;">
+        <span style="font-size: 30px">
+          현재 보유하고 있는 NFT가 없습니다. NFT를 구매해보세요!
+        </span>
+        <br>
+        <br>
+        <br>
+        <div class="">
+          <span class="">
+            <router-link to="/drops" style="text-decoration: none; color: black">
+              아티스트가 만든 NFT를 구매해보세요
+            </router-link>
+          </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <span class="">
+            <router-link to="/market" style="text-decoration: none; color: black">
+              사용자간 거래를 해보세요
+            </router-link>
           </span>
-          <br>
-          <br>
-          <br>
-          <div class="">
-            <span class="">
-              <router-link to="/drops" style="text-decoration: none; color: black">
-                아티스트가 만든 NFT를 구매해보세요
-              </router-link>
-            </span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span class="">
-              <router-link to="/market" style="text-decoration: none; color: black">
-                사용자간 거래를 해보세요
-              </router-link>
-            </span>
-          </div>
+        </div>
+      </div>
+        <div class="df cen" v-else>
+          <NFTphoto v-for="(card, index) in ocards.slice(0,3)" :key="index" :photo="card"/>
         </div>
         <br>
         <span>
@@ -190,10 +193,12 @@
 import animMain from "@/components/mainpage/anim.vue"
 import NFTCard from "@/components/market/NFTCard.vue"
 import NFTCardR from "@/components/resell/NFTCard.vue"
+import NFTphoto from "@/components/mainpage/NFTphoto.vue"
 // import RankingCard from "@/components/mainpage/RankingCard.vue"
 // import { Carousel, Slide, Pagination, Navigation } from "vue3-carousel"
 // import "vue3-carousel/dist/carousel.css"
-// import VueCookies from "vue-cookies"
+import VueCookies from "vue-cookies"
+
 // import Web3 from "web3"
 // import { Carousel, Slide} from 'vue3-carousel'
 
@@ -276,12 +281,14 @@ export default {
     NFTCard,
     NFTCardR,
     animMain,
+    NFTphoto,
   },
   data() {
     return {
-      a: 2,
+      a: 1,
       cards: [],
       mcards: [],
+      ocards: [],
       orderType: 1,
       saleType: 1,
       page: 0,
@@ -304,12 +311,15 @@ export default {
         },
       ],
       sortnum: 0,
+      uid:VueCookies.get('userId'),
+      
     }
   },
   watch: {},
   created() {
     this.getDrops()
     this.getMarket()
+    this.getOwns()
   },
   mounted() {},
   methods: {
@@ -341,6 +351,20 @@ export default {
       this.mcards = this.$store.mcards
 
     },
+    async getOwns(){
+      // const orderType = this.orderType
+      // const page = this.page
+      // const keyword = this.keyword
+      // const payload = {
+      //   orderType,
+      //   page,
+      //   keyword,
+      // }
+      await this.$store.dispatch("userNFTs",1)
+      this.ocards = this.$store.userNFTs
+    },
+
+    
   },
 }
 </script>
@@ -467,6 +491,18 @@ body {
   border-radius: 50px;
   margin: auto;
   background: #9B7CF8;
+  vertical-align: middle;
+  font-family: KCC-Ganpan;
+}
+
+.go-my-box2 {
+  width: 300px;
+  height: 40px;
+  /* font-size: 30px; */
+  border: solid 1px;
+  border-radius: 50px;
+  margin: auto;
+  background: white;
   vertical-align: middle;
   font-family: KCC-Ganpan;
 }
