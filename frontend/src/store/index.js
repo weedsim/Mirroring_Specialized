@@ -535,7 +535,7 @@ const store = createStore({
           text: "NFT 생성이 실패하였습니다.",
           icon: "error" //"info,success,warning,error" 중 택1
         });
-        router.go()
+        // router.go()
       })
     },
 
@@ -713,7 +713,11 @@ const store = createStore({
         })
       }
       else{
-        alert("error");
+        Swal.fire({
+          title: '구매에 실패하였습니다.',
+          text: 'METAMASK지갑주소가 유효하지 않습니다. 로그인 상태 및 지갑을 확인해주세요',
+          icon: 'error'
+        })
       }
     },
     async resellDetailNFTs(context, NFTId) {
