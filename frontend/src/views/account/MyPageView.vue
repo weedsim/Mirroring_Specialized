@@ -509,7 +509,7 @@ export default {
       // })
       const bankContractAddress = '0xbC7eeBAbbAd2E7427C7E3cF7B3B073ed51a91390';
       const bankContract = new web3.eth.Contract(BankABI, bankContractAddress);
-      // const  amount = web3.utils.toWei("100", "ether"); // 1 ETH를 wei 단위로 변환
+      const  amount = web3.utils.toWei("100", "ether"); // 1 ETH를 wei 단위로 변환
       // console.log(bankContract);
 
 
@@ -676,7 +676,7 @@ export default {
         
         
         // amount 만큼 은행에서 가져오기 amount 가 1 이더만큼인 걸 wei 단위로 변환 시켜둔 것
-        // bankContract.methods.withdraw(amount).send({ from: account });
+        bankContract.methods.withdraw(amount).send({ from: account });
         
         // // 은행에 얼마가 남아있는지 확인하는 기능
         bankContract.methods.getBalance().call((err, result) => {
